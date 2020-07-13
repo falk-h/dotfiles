@@ -22,7 +22,7 @@ if [ -e "$dotfile_dir" ]; then
 fi
 
 printf "Cloning repo...\n"
-git clone --bare https://github.com/falk-h/dotfiles.git "$dotfile_dir"
+git clone --bare git@github.com:falk-h/dotfiles.git "$dotfile_dir"
 
 # Ignore untracked files in $HOME
 dotfiles config --local status.showUntrackedFiles no
