@@ -1,0 +1,62 @@
+#!/bin/zsh
+# Use vim cli mode
+bindkey -v
+bindkey '^P' up-history
+bindkey '^N' down-history
+
+# Backspace and ^h working even after returning from command mode
+bindkey '^?' backward-delete-char
+bindkey '^H' backward-delete-char
+
+# ctrl-w removed word backwards
+bindkey '^W' backward-kill-word
+
+# ctrl-r starts searching history backward
+bindkey '^R' history-incremental-search-backward
+
+# Make arrow keys and jk search history
+bindkey -a 'j' down-line-or-search
+bindkey -a 'k' up-line-or-search
+bindkey -a "^[[B" down-line-or-search
+bindkey -a "^[[A" up-line-or-search
+bindkey "^[[B" down-line-or-search
+bindkey "^[[A" up-line-or-search
+
+# Aliases
+alias cb='popd 1> /dev/null' # silent popd
+alias :q=exit
+alias hibernate='sudo systemctl hibernate'
+alias cal='cal -m' # cal with monday as the week's first day
+alias bc='bc -lq' # bc with floats, without header
+alias -g dd='dd status=progress'
+alias rm='rm -I'
+alias vim="$VISUAL"
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+# mkdir and cd
+function mcdir ()
+{
+    mkdir -p -- "$1" &&
+    cd -P -- "$1"
+}
+
+# Syntax highlighting and autosuggestions
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Better command not found hook
+# command_not_found_handler() {
+#         RANDOM=$(date "+%N")
+#         catimg "$HOME/.thonk/$((RANDOM % $(ls -l $HOME/.thonk/ | egrep -c '^-'))).png" -w 100
+#         printf 'zsh: command not found: %s\n' "$1" 1>&2
+#         return 127
+# }
+
+# Function to add mode to the right prompt
+function zle-line-init zle-keymap-select {
+    RPS1="${${KEYMAP/vicmd/%B%F{9\}NORMAL%f%b}/(main|viins)/%F{12\}INSERT%f}"
+    # RPS2="$RPS1"
+    zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
