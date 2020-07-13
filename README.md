@@ -1,8 +1,7 @@
-# dotfiles
+# My dotfiles
 
 Installation:
 
 ```sh
-git clone --bare git@github.com:falk-h/dotfiles.git ~/.dotfiles
-~/.dotfiles/.init.sh
+curl -sL https://raw.githubusercontent.com/falk-h/dotfiles/master/.init.sh | sh -s
 ```
