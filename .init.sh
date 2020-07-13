@@ -11,7 +11,7 @@ dotfiles() {
 # Ensure we have git, etc. This might be a bit excessive.
 for cmd in git xargs grep awk; do
     if ! command -v "$cmd" > /dev/null 2>&1; then
-        printf "Couldn't find %s" "$cmd"
+        printf "Couldn't find %s\n" "$cmd"
         exit 1
     fi
 done
@@ -38,11 +38,11 @@ if ! dotfiles checkout; then
     mkdir -p "$backup_dir"
     dotfiles checkout 2>&1 | grep -E "\s+\." | awk '{print $1}' | xargs -I{} mv {} "$dotfile_dir"/{}
 
-    printf "Checking out again..."
+    printf "Checking out again...\n"
     if ! dotfiles checkout; then
-        printf "Checkout failed again, you're on your own"
+        printf "Checkout failed again, you're on your own\n"
 	exit 1
     fi
 fi
 
-printf "Done!"
+printf "Done!\n"
