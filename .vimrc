@@ -2,7 +2,7 @@
 " have made, as well as sanely reset options when re-sourcing .vimrc
 set nocompatible
 
-" vim-which-key requires timeout
+" vim-which-key requires timeout.
 set timeout
 
 call plug#begin('~/.vim/plugged')
@@ -17,21 +17,25 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
     Plug 'chriskempson/base16-vim'
     Plug 'mike-hearn/base16-vim-lightline'
+    Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 " Colorscheme
-" Use 24-bit colors (I think)
+" Use 24-bit colors (I think).
 if (has('termguicolors'))
     set termguicolors
 endif
 
-" Don't forget to change the colorscheme in g:lightline when changing this
+" Don't forget to change the colorscheme in g:lightline when changing this.
 colorscheme base16-tomorrow-night-eighties
 " Access colors present in 256 colorspace.
-" See https://github.com/chriskempson/base16-vim#256-colorspace
+" See https://github.com/chriskempson/base16-vim#256-colorspace.
 let base16colorspace=256
 
-" coc configuration
+" Don't use vim-gitgutter's predefined mappings because they break which-key.
+let g:gitgutter_map_keys = 0
+
+" coc configuration.
 
 " Some language servers have issues with backup files, see #649.
 set nobackup
@@ -50,7 +54,7 @@ set shortmess+=c
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
+  " Recently vim can merge signcolumn and number column into one.
   set signcolumn=number
 else
   set signcolumn=yes
@@ -108,7 +112,7 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-"" Map function and class text objects
+"" Map function and class text objects.
 "" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
 xmap if <Plug>(coc-funcobj-i)
 omap if <Plug>(coc-funcobj-i)
@@ -120,7 +124,7 @@ xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
 " Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
+" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver.
 nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
 
@@ -143,7 +147,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " and for plugins that are filetype specific.
 filetype indent plugin on
 
-" Enable syntax highlighting
+" Enable syntax highlighting.
 syntax on
 
 " Highlight current line.
@@ -154,9 +158,9 @@ set cursorline
 " displayed.
 set cursorlineopt=line
 
-" Enable spellcheck. This is smart enough to only spellcheck within comments
-" when editing code.
-set spell
+" Disable spellcheck by default. It can be toggled with <Space>ts. This is
+" smart enough to only spellcheck within comments when editing code.
+set nospell
 " Set English and Swedish as spellcheck languages. Adding "cjk" disables
 " spellchecking for East Asian characters. "sv" requires the package
 " "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the files
@@ -164,7 +168,7 @@ set spell
 " a different directory. Weird.
 set spelllang=en,sv,cjk
 
-" Persistent undo stored in ~/vim/undo
+" Persistent undo stored in ~/vim/undo.
 set undofile
 set undodir=~/.vim/undo
 
@@ -217,21 +221,19 @@ set ttyfast
 " crashes.
 set hidden
 
-" Note that not everyone likes working this way (with the hidden option).
-" Alternatives include using tabs or split windows instead of re-using the same
-" window as mentioned above, and/or either of the following options:
-" set confirm
-" set autowriteall
-
 " Better command-line completion. TODO: possibly set wildmode.
 set wildmenu
 
-" Show partial commands in the last line of the screen
+" Show partial commands in the last line of the screen.
 set showcmd
 
 " Highlight searches (use <C-L> to temporarily turn off highlighting; see the
-" mapping of <C-L> below)
+" mapping of <C-L> below).
 set hlsearch
+
+" Show the number of the current search result and the total number of search
+" results in the command line.
+set shortmess-=S
 
 " Modelines have historically been a source of security vulnerabilities. As
 " such, it may be a good idea to disable them and use the securemodelines
@@ -249,7 +251,7 @@ set clipboard=unnamedplus
 " which are considered to add usability. Which, if any, of these options to
 " use is very much a personal preference, but they are harmless.
 
-" Use case insensitive search, except when using capital letters
+" Use case insensitive search, except when using capital letters.
 set ignorecase
 set smartcase
 
@@ -258,7 +260,7 @@ set wildignorecase
 " Ignore case when using file names. Not sure what "using" means here.
 set fileignorecase
 
-" Allow backspacing over autoindent, line breaks and start of insert action
+" Allow backspacing over autoindent, line breaks and start of insert action.
 set backspace=indent,eol,start
 
 " When opening a new line and no filetype-specific indenting is enabled, keep
@@ -271,17 +273,17 @@ set autoindent
 set nostartofline
 
 " Display the cursor position on the last line of the screen or in the status
-" line of a window
+" line of a window.
 set ruler
 
-" Always display the status line, even if only one window is displayed
+" Always display the status line, even if only one window is displayed.
 set laststatus=2
 
 " Instead of failing a command because of unsaved changes, instead raise a
 " dialogue asking if you wish to save changed files.
 set confirm
 
-" Use visual bell instead of beeping when doing something wrong
+" Use visual bell instead of beeping when doing something wrong.
 set visualbell
 
 " And reset the terminal code for the visual bell. If visual bell is set, and
@@ -289,23 +291,23 @@ set visualbell
 " is unset, this does nothing.
 "set t_vb=
 
-" Enable use of the mouse for all modes
+" Enable use of the mouse for all modes.
 set mouse=a
 " Right click extends the selection, as opposed to opening a context menu,
 " since that only works in GUI mode anyway.
 set mousemodel=extend
 
 " Set the command window height to 2 lines, to avoid many cases of having to
-" "press <Enter> to continue"
+" "press <Enter> to continue".
 set cmdheight=1
 
-" Display line numbers on the left
+" Display line numbers on the left.
 set number
 
-" Quickly time out on keycodes, but never time out on mappings
+" Quickly time out on keycodes, but never time out on mappings.
 set notimeout ttimeout ttimeoutlen=200
 
-" Use <F11> to toggle between 'paste' and 'nopaste'
+" Use <F11> to toggle between 'paste' and 'nopaste'.
 set pastetoggle=<F11>
 
 
@@ -317,10 +319,10 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-" Also include the currently open file in CtrlP results
+" Also include the currently open file in CtrlP results.
 let g:ctrlp_match_current_file = 1
 
-" Make <C-P> and <C-N> work as they should in CtrlP buffers
+" Make <C-P> and <C-N> work as they should in CtrlP buffers.
 let g:ctrlp_prompt_mappings = {
     \ 'PrtSelectMove("j")':   ['<c-j>', '<down>', "<c-n>"],
     \ 'PrtSelectMove("k")':   ['<c-k>', '<up>', '<c-p>'],
@@ -337,7 +339,7 @@ let g:scratch_top = 0
 " Persist scratch buffer across vim restarts, but not across reboots.
 let g:scratch_persistence_file = '/tmp/vimscratch'
 
-" Disable default scratch mappings
+" Disable default scratch mappings. Use which-key instead.
 let g:scratch_no_mappings = 1
 
 " Use nice powerline-y symbols
@@ -369,11 +371,14 @@ let g:lightline = {
         \ },
 	\ }
 
+" Display LF, CRLF, or CR in lightline instead of "unix", "dos", etc.
 let LightlineFileformat = {-> &fileformat == 'unix' ? 'LF'
                           \ : &fileformat == 'dos' ? 'CRLF' : 'CR' }
 
+" Display a nice lock icon when the file is read only.
 let LightlineReadonly = {-> &readonly ? '' : ''}
 
+" Display Git branch in lightline.
 function! LightlineFugitive()
     if exists('*FugitiveHead')
         let branch = FugitiveHead(6)
@@ -382,30 +387,53 @@ function! LightlineFugitive()
     return ''
 endfunction
 
+" Fall through to native key mappings when a key is pressed that hasn't been
+" mapped through which-key.
+let g:which_key_fallback_to_native_key = 1
+
+" Use a popup window instead of opening a regular window. This way, all of the
+" other windows aren't shifted around when which-key opens.
+let g:which_key_use_floating_win = 1
+
+" Update which-key mappings every time the popup is displayed. This has
+" negligible performance impact according to the which-key help file.
+let g:which_key_run_map_on_popup = 1
+
+" Don't shift the popup over a bit to avoid covering the line number column.
+" This feature doesn't seem to work anyway, and the popup ends up covering
+" half of the number column.
+let g:which_key_disable_default_offset = 1
+
 " Mappings
-" Make Y work as it should
+" Make Y work as it should.
 map Y y$
 
-" Make > and < stay in visual mode
+" Make > and < stay in visual mode.
 vnoremap < <gv
 vnoremap > >gv
 
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
-" next search
+" next search.
 nnoremap <C-L> :nohl<CR><C-L>
 
-" Make ctrl-backspace delete the previous word in insert mode
+" Make ctrl-backspace delete the previous word in insert mode.
 noremap! <C-BS> <C-w>
 noremap! <C-h> <C-w>
 
-" Unbind space, and use it as leader
+" Text objects for Git hunks.
+omap ih <Plug>(GitGutterTextObjectInnerPending)
+omap ah <Plug>(GitGutterTextObjectOuterPending)
+xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+xmap ah <Plug>(GitGutterTextObjectOuterVisual)
+
+" Jump to previous/next Git hunk.
+nmap [c <Plug>(GitGutterPrevHunk)
+nmap ]c <Plug>(GitGutterNextHunk)
+
+" Unbind space, and use it as leader.
 let g:mapleader="\<Space>"
 nnoremap <silent> <leader> :WhichKey "<Space>"<CR>
 vnoremap <silent> <leader> :WhichKeyVisual "<Space>"<CR>
-
-let g:which_key_fallback_to_native_key = 1
-let g:which_key_use_floating_win = 1
-let g:which_key_run_map_on_popup = 1
 
 let g:leader = {}
 
@@ -414,12 +442,15 @@ let g:leader[' '] = [":CtrlP",          "Find file in project"]
 let g:leader[','] = [":CtrlPBuffer",    "Switch buffer"]
 let g:leader.x = [":ScratchInsert",     "Open scratch buffer"]
 
-let g:leader.a   = {'name':'Code actions...'}
+let g:leader.a   = {'name':'+Actions'}
 let g:leader.a.a = ["<Plug>(coc-codeaction-selected)",  "Code action on selected"]
 let g:leader.a.c = ["<Plug>(coc-codeaction)",           "Code action"]
 let g:leader.a.f = ["<Plug>(coc-fix-current)",          "Fix current"]
 
-let g:leader.c   = {'name':"Coc..."}
+let g:leader.b   = {'name':"+Buffer"}
+let g:leader.b.d = [":bdelete", "Delete"]
+
+let g:leader.c   = {'name':"+Coc"}
 let g:leader.c.a = [":CocList diagnostics",         "Diagnostics"]
 let g:leader.c.c = [":CocList commands",            "Commands"]
 let g:leader.c.e = [":CocList extensions",          "Extensions"]
@@ -435,15 +466,26 @@ let g:leader.c.s = [":CocList -I symbols",          "Symbols"]
 let g:leader.c.R = [":CocRebuild",                  "Rebuild extensions"]
 let g:leader.c.U = [":CocUpdateSync",               "Update extensions"]
 
-let g:leader.f = {'name':'File...'}
-let g:leader.f.p = [":e $MYVIMRC", "Open ~/.vimrc"]
+let g:leader.f = {'name':'+File'}
 let g:leader.f.o = [":options", "Open options"]
+let g:leader.f.p = [":edit $MYVIMRC", "Open ~/.vimrc"]
+let g:leader.f.r = [":source $MYVIMRC", "Reload ~/.vimrc"]
 
-let g:leader.b   = {'name':"Buffer..."}
-let g:leader.b.d = [":bdelete", "delete"]
+let g:leader.g = {'name':'+Git'}
+let g:leader.g.g = [':Git', 'Status (g? for help)']
+let g:leader.g.f = [':Git fetch', 'Fetch']
+let g:leader.g.F = {'name':'+Pull'}
+let g:leader.g.F.p = [':Git pull', 'Pull']
+let g:leader.g.F.a = [':Git pull --autostash', 'Pull --autostash']
+let g:leader.g.p = {'name':'+Push'}
+let g:leader.g.p.p = [':Git push', 'Push']
+let g:leader.g.P = [':GitGutterPreviewHunk', 'Preview hunk']
+let g:leader.g.s = [':GitGutterStageHunk', 'Stage hunk']
+let g:leader.g.x = [':GitGutterUndoHunk', 'Discard hunk']
+let g:leader.g.z = [':GitGutterFold', 'Fold all unchanged lines']
 
-let g:leader.h = {}
-let g:leader.h.g = {'name':'Miscellaneous...'}
+let g:leader.h = {'name':'+Help'}
+let g:leader.h.g = {'name':'+Miscellaneous'}
 let g:leader.h.g.d = ["<Plug>(coc-definition)", "Go to definition"]
 nmap <silent> gd <Plug>(coc-definition)
 let g:leader.h.g.y = ["<Plug>(coc-type-definition)", "Go to type definition"]
@@ -458,19 +500,23 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 let g:leader.h[']'] = {'name':'+]'}
 let g:leader.h[']'].d = ["<Plug>(coc-diagnostic-next)", "Next diagnostic"]
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
-let g:leader.h.z = {'name':'Folds and spelling...'}
+let g:leader.h.z = {'name':'+Folds/spelling'}
 let g:leader.h.z['='] = ["z=", "Correct word"]
 let g:leader.h.z.g = ["zg", "Add good to persistent dict"]
 let g:leader.h.z.G = ["zG", "Add good to temp dict"]
 let g:leader.h.z.w = ["zw", "Add bad to persistent dict"]
 let g:leader.h.z.W = ["zW", "Add bad to temp dict"]
-let g:leader.h.z.u = {'name':'Undo...'}
+let g:leader.h.z.u = {'name':'+Undo'}
 let g:leader.h.z.u.g = ["zug", "Undo add good to persistent dict"]
 let g:leader.h.z.u.G = ["zuG", "Undo add good to temp dict"]
 let g:leader.h.z.u.w = ["zuw", "Undo add bad to persistent dict"]
 let g:leader.h.z.u.W = ["zuW", "Undo add bad to temp dict"]
 
-let g:leader.w   = {'name':"+window"}
+let g:leader.t = {'name':'+Toggles'}
+let g:leader.t.s = [":set spell!", "Spellcheck"]
+let g:leader.t.g = [":GitGutterToggle", "Git gutter"]
+
+let g:leader.w   = {'name':"+Window"}
 let g:leader.w.d = ["<C-W>q", "Delete"]
 let g:leader.w.q = ["<C-W>q", "Delete"]
 let g:leader.w['='] = ["<C-W>=", "Balance windows"]
