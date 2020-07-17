@@ -20,6 +20,7 @@ call plug#begin('~/.vim/plugged')
 call plug#end()
 
 " Colorscheme
+" Use 24-bit colors (I think)
 if (has('termguicolors'))
     set termguicolors
 endif
@@ -145,13 +146,61 @@ filetype indent plugin on
 " Enable syntax highlighting
 syntax on
 
+" Highlight current line.
+set cursorline
+" But only highlight the text line, not the number in the number column. This
+" can also be set to "screenline" to only highlight part of the line when the
+" cursor is on a long line that is broken into multiple "screen" lines when
+" displayed.
+set cursorlineopt=line
+
+" Enable spellcheck. This is smart enough to only spellcheck within comments
+" when editing code.
+set spell
+" Set English and Swedish as spellcheck languages. Adding "cjk" disables
+" spellchecking for East Asian characters. "sv" requires the package
+" "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the files
+" in that package already seem to be included in "vim-runtime", but stored in
+" a different directory. Weird.
+set spelllang=en,sv,cjk
+
 " Persistent undo stored in ~/vim/undo
 set undofile
 set undodir=~/.vim/undo
 
+" Automatically re-read a file when it is updated on disk.
+set autoread
+
+" Don't insert an extra space after a period when joining lines with J.
+set nojoinspaces
+
+" Don't interpret numbers as octal for <C-A> and <C-X> (no "octal"). Also
+" allow incrementing and decrementing of single alphabetical characters (add
+" "alpha"). "bin" and "hex" are set by default.
+set nrformats=bin,hex,alpha
+
 " Store swap files in /tmp if possible, otherwise in the same directory as the
 " file that is being edited.
 set directory=/tmp,.
+
+" Display the last line in the buffer, even if it doesn't fit entirely. If
+" this isn't set, long lines aren't displayed at all if they don't fit
+" entirely. It's also possible to add "uhex" here to display unprintable
+" characters as hex instead of as ^@, ^M, etc.
+set display=lastline
+
+" Don't redundantly show the mode in the status line. Lightline already shows
+" it.
+set noshowmode
+
+" Don't redraw the screen while macros are executing. Possibly try turning
+" this off if there are visual bugs. Use <C-L> to redraw manually.
+set lazyredraw
+
+" Indicate to Vim that the terminal it's running in is fast. This is set by
+" default if $TERM is xterm or rxvt, but it's nice to set this explicitly in
+" case I switch to a terminal emulator that doesn't pretend to be xterm.
+set ttyfast
 
 " Vim with default settings does not allow easy switching between multiple files
 " in the same editor window. Users can use multiple split windows or multiple
@@ -174,7 +223,7 @@ set hidden
 " set confirm
 " set autowriteall
 
-" Better command-line completion
+" Better command-line completion. TODO: possibly set wildmode.
 set wildmenu
 
 " Show partial commands in the last line of the screen
@@ -187,7 +236,7 @@ set hlsearch
 " Modelines have historically been a source of security vulnerabilities. As
 " such, it may be a good idea to disable them and use the securemodelines
 " script, <http://www.vim.org/scripts/script.php?script_id=1876>.
-" set nomodeline
+set nomodeline
 
 " Use the X clipboard (ctrl-C, ctrl-V, etc.) for y, d, p, and so on.
 set clipboard=unnamedplus
@@ -203,6 +252,11 @@ set clipboard=unnamedplus
 " Use case insensitive search, except when using capital letters
 set ignorecase
 set smartcase
+
+" Ignore case when completing file names.
+set wildignorecase
+" Ignore case when using file names. Not sure what "using" means here.
+set fileignorecase
 
 " Allow backspacing over autoindent, line breaks and start of insert action
 set backspace=indent,eol,start
@@ -230,13 +284,16 @@ set confirm
 " Use visual bell instead of beeping when doing something wrong
 set visualbell
 
-" And reset the terminal code for the visual bell. If visualbell is set, and
-" this line is also included, vim will neither flash nor beep. If visualbell
+" And reset the terminal code for the visual bell. If visual bell is set, and
+" this line is also included, vim will neither flash nor beep. If visual bell
 " is unset, this does nothing.
-set t_vb=
+"set t_vb=
 
 " Enable use of the mouse for all modes
 set mouse=a
+" Right click extends the selection, as opposed to opening a context menu,
+" since that only works in GUI mode anyway.
+set mousemodel=extend
 
 " Set the command window height to 2 lines, to avoid many cases of having to
 " "press <Enter> to continue"
@@ -290,24 +347,48 @@ let g:lightline = {
 	\ },
         \ 'colorscheme': 'base16_tomorrow_night_eighties',
 	\ 'component_function': {
+        \   'fileformat': 'LightlineFileformat',
 	\   'readonly': 'LightlineReadonly',
-	\   'fugitive': 'LightlineFugitive'
+	\   'fugitive': 'LightlineFugitive',
 	\ },
+        \ 'active': {
+        \   'left': [ [ 'mode', 'paste' ],
+        \           [ 'readonly', 'filename', 'modified' ] ],
+        \   'right': [ [ 'lineinfo' ],
+        \            [ 'percent' ],
+        \            [ 'fileformat', 'fileencoding', 'filetype', 'fugitive' ] ],
+        \ },
+        \ 'inactive': {
+        \   'left': [ [ 'filename' ] ],
+        \   'right': [ [ 'lineinfo' ],
+        \            [ 'percent' ] ],
+        \ },
+        \ 'tabline': {
+        \   'left': [ [ 'tabs' ] ],
+        \   'right': [ [ 'close' ] ] ,
+        \ },
 	\ }
-function! LightlineReadonly()
-	return &readonly ? '' : ''
-endfunction
+
+let LightlineFileformat = {-> &fileformat == 'unix' ? 'LF'
+                          \ : &fileformat == 'dos' ? 'CRLF' : 'CR' }
+
+let LightlineReadonly = {-> &readonly ? '' : ''}
+
 function! LightlineFugitive()
-	if exists('*FugitiveHead')
-		let branch = FugitiveHead()
-		return branch !=# '' ? ''.branch : ''
-	endif
-	return ''
+    if exists('*FugitiveHead')
+        let branch = FugitiveHead(6)
+        return branch !=# '' ? ' '..branch : ''
+    endif
+    return ''
 endfunction
 
 " Mappings
 " Make Y work as it should
 map Y y$
+
+" Make > and < stay in visual mode
+vnoremap < <gv
+vnoremap > >gv
 
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
 " next search
@@ -333,12 +414,12 @@ let g:leader[' '] = [":CtrlP",          "Find file in project"]
 let g:leader[','] = [":CtrlPBuffer",    "Switch buffer"]
 let g:leader.x = [":ScratchInsert",     "Open scratch buffer"]
 
-let g:leader.a   = {'name':'+code-actions'}
+let g:leader.a   = {'name':'Code actions...'}
 let g:leader.a.a = ["<Plug>(coc-codeaction-selected)",  "Code action on selected"]
 let g:leader.a.c = ["<Plug>(coc-codeaction)",           "Code action"]
 let g:leader.a.f = ["<Plug>(coc-fix-current)",          "Fix current"]
 
-let g:leader.c   = {'name':"+coc"}
+let g:leader.c   = {'name':"Coc..."}
 let g:leader.c.a = [":CocList diagnostics",         "Diagnostics"]
 let g:leader.c.c = [":CocList commands",            "Commands"]
 let g:leader.c.e = [":CocList extensions",          "Extensions"]
@@ -354,14 +435,15 @@ let g:leader.c.s = [":CocList -I symbols",          "Symbols"]
 let g:leader.c.R = [":CocRebuild",                  "Rebuild extensions"]
 let g:leader.c.U = [":CocUpdateSync",               "Update extensions"]
 
-let g:leader.f = {'name':'+file'}
+let g:leader.f = {'name':'File...'}
 let g:leader.f.p = [":e $MYVIMRC", "Open ~/.vimrc"]
+let g:leader.f.o = [":options", "Open options"]
 
-let g:leader.b   = {'name':"+buffer"}
+let g:leader.b   = {'name':"Buffer..."}
 let g:leader.b.d = [":bdelete", "delete"]
 
 let g:leader.h = {}
-let g:leader.h.g = {'name':'+g'}
+let g:leader.h.g = {'name':'Miscellaneous...'}
 let g:leader.h.g.d = ["<Plug>(coc-definition)", "Go to definition"]
 nmap <silent> gd <Plug>(coc-definition)
 let g:leader.h.g.y = ["<Plug>(coc-type-definition)", "Go to type definition"]
@@ -376,6 +458,17 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 let g:leader.h[']'] = {'name':'+]'}
 let g:leader.h[']'].d = ["<Plug>(coc-diagnostic-next)", "Next diagnostic"]
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
+let g:leader.h.z = {'name':'Folds and spelling...'}
+let g:leader.h.z['='] = ["z=", "Correct word"]
+let g:leader.h.z.g = ["zg", "Add good to persistent dict"]
+let g:leader.h.z.G = ["zG", "Add good to temp dict"]
+let g:leader.h.z.w = ["zw", "Add bad to persistent dict"]
+let g:leader.h.z.W = ["zW", "Add bad to temp dict"]
+let g:leader.h.z.u = {'name':'Undo...'}
+let g:leader.h.z.u.g = ["zug", "Undo add good to persistent dict"]
+let g:leader.h.z.u.G = ["zuG", "Undo add good to temp dict"]
+let g:leader.h.z.u.w = ["zuw", "Undo add bad to persistent dict"]
+let g:leader.h.z.u.W = ["zuW", "Undo add bad to temp dict"]
 
 let g:leader.w   = {'name':"+window"}
 let g:leader.w.d = ["<C-W>q", "Delete"]
