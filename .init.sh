@@ -23,6 +23,7 @@ fi
 
 printf "Cloning repo...\n"
 git clone --bare git@github.com:falk-h/dotfiles.git "$dotfile_dir"
+dotfiles submodule update --init --recursive
 
 # Ignore untracked files in $HOME
 dotfiles config --local status.showUntrackedFiles no
