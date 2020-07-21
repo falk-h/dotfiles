@@ -32,6 +32,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-surround'
     " Provides some UNIX utilities such as :SudoWrite and :Move.
     Plug 'tpope/vim-eunuch'
+    " Provides commands for replacing text with the contents of the clipboard.
     Plug 'svermeulen/vim-subversive'
 call plug#end()
 
@@ -466,6 +467,11 @@ xmap ic <Plug>(coc-classobj-i)
 omap ic <Plug>(coc-classobj-i)
 xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
+
+" Use S to substitute with the contents of the clipboard. TODO: map range
+" substitutions, see vim-subversive's GitHub repo.
+nmap S  <Plug>(SubversiveSubstitute)
+nmap SS <Plug>(SubversiveSubstituteLine)
 
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver.
