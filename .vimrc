@@ -6,18 +6,33 @@ set nocompatible
 set timeout
 
 call plug#begin('~/.vim/plugged')
+    " Completions using language servers. (see :CocConfig for configuration)
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Spacemacs style popup for keybindings.
     Plug 'liuchengxu/vim-which-key'
+    " Remember cursor position in files.
     Plug 'farmergreg/vim-lastplace'
+    " Automatically strip trailing whitespace.
     Plug 'axelf4/vim-strip-trailing-whitespace'
+    " File finder.
     Plug 'ctrlpvim/ctrlp.vim'
+    " Pop-up scratch buffer.
     Plug 'mtth/scratch.vim'
-    Plug 'jacoborus/tender.vim'
+    " Lightweight statusbar.
     Plug 'itchyny/lightline.vim'
-    Plug 'tpope/vim-fugitive'
+    " Color scheme.
     Plug 'chriskempson/base16-vim'
+    " Color scheme for lightline.
     Plug 'mike-hearn/base16-vim-lightline'
+    " Show Git changes in the line number column.
     Plug 'airblade/vim-gitgutter'
+    " Git plugin, somewhat like magit.
+    Plug 'tpope/vim-fugitive'
+    " Text objects for working with things that are surrounded by other things.
+    Plug 'tpope/vim-surround'
+    " Provides some UNIX utilities such as :SudoWrite and :Move.
+    Plug 'tpope/vim-eunuch'
+    Plug 'svermeulen/vim-subversive'
 call plug#end()
 
 " Colorscheme
@@ -51,56 +66,6 @@ set updatetime=300
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one.
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -111,31 +76,6 @@ augroup mygroup
   " Update signature help on jump placeholder.
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
-
-"" Map function and class text objects.
-"" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
@@ -159,7 +99,7 @@ set cursorline
 set cursorlineopt=line
 
 " Disable spellcheck by default. It can be toggled with <Space>ts. This is
-" smart enough to only spellcheck within comments when editing code.
+" smart enough to only spellcheck within comments and strings when editing code.
 set nospell
 " Set English and Swedish as spellcheck languages. Adding "cjk" disables
 " spellchecking for East Asian characters. "sv" requires the package
@@ -185,7 +125,7 @@ set nrformats=bin,hex,alpha
 
 " Store swap files in /tmp if possible, otherwise in the same directory as the
 " file that is being edited.
-set directory=/tmp,.
+set directory=/tmp//,.
 
 " Display the last line in the buffer, even if it doesn't fit entirely. If
 " this isn't set, long lines aren't displayed at all if they don't fit
@@ -227,10 +167,6 @@ set wildmenu
 " Show partial commands in the last line of the screen.
 set showcmd
 
-" Highlight searches (use <C-L> to temporarily turn off highlighting; see the
-" mapping of <C-L> below).
-set hlsearch
-
 " Show the number of the current search result and the total number of search
 " results in the command line.
 set shortmess-=S
@@ -243,17 +179,15 @@ set nomodeline
 " Use the X clipboard (ctrl-C, ctrl-V, etc.) for y, d, p, and so on.
 set clipboard=unnamedplus
 
-"------------------------------------------------------------
-" Usability options {{{1
-"
-" These are options that users frequently set in their .vimrc. Some of them
-" change Vim's behaviour in ways which deviate from the true Vi way, but
-" which are considered to add usability. Which, if any, of these options to
-" use is very much a personal preference, but they are harmless.
-
-" Use case insensitive search, except when using capital letters.
+" Use case insensitive search...
 set ignorecase
+" except when there are any capital letters in the search pattern.
 set smartcase
+" Highlight searches (use <C-L> to temporarily turn off highlighting; see the
+" mapping of <C-L> below).
+set hlsearch
+" Also start highlighting while the search pattern is still being typed.
+set incsearch
 
 " Ignore case when completing file names.
 set wildignorecase
@@ -264,7 +198,7 @@ set fileignorecase
 set backspace=indent,eol,start
 
 " When opening a new line and no filetype-specific indenting is enabled, keep
-" the same indent as the line you're currently on. Useful for READMEs, etc.
+"  same indent as the line you're currently on. Useful for READMEs, etc.
 set autoindent
 
 " Stop certain movements from always going to the first character of a line.
@@ -301,6 +235,12 @@ set mousemodel=extend
 " "press <Enter> to continue".
 set cmdheight=1
 
+" Highlight column 80.
+set colorcolumn=80
+
+" Automatically wrap text longer than 79 characters. See also 'formatoptions'.
+set textwidth=79
+
 " Display line numbers on the left.
 set number
 
@@ -312,19 +252,23 @@ set pastetoggle=<F11>
 
 
 " Indentation options
-"
+
 " Indentation settings for using 4 spaces instead of tabs.
 " Do not change 'tabstop' from its default value of 8 with this setup.
 set shiftwidth=4
 set softtabstop=4
 set expandtab
 
+" Make <C-P> not open CtrlP, so we can rebind it to :put. Use <leader><leader>
+" to open CtrlP instead.
+let g:ctrlp_map = ''
+
 " Also include the currently open file in CtrlP results.
 let g:ctrlp_match_current_file = 1
 
 " Make <C-P> and <C-N> work as they should in CtrlP buffers.
 let g:ctrlp_prompt_mappings = {
-    \ 'PrtSelectMove("j")':   ['<c-j>', '<down>', "<c-n>"],
+    \ 'PrtSelectMove("j")':   ['<c-j>', '<down>', '<c-n>'],
     \ 'PrtSelectMove("k")':   ['<c-k>', '<up>', '<c-p>'],
     \ 'PrtHistory(-1)':       [],
     \ 'PrtHistory(1)':        [],
@@ -405,6 +349,56 @@ let g:which_key_run_map_on_popup = 1
 let g:which_key_disable_default_offset = 1
 
 " Mappings
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one.
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
 " Make Y work as it should.
 map Y y$
 
@@ -418,7 +412,30 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 " Make ctrl-backspace delete the previous word in insert mode.
 noremap! <C-BS> <C-w>
-noremap! <C-h> <C-w>
+noremap! <C-h>  <C-w>
+
+" Map <C-P> and <C-S-P> to paste like p and P, but always linewise. This is
+" useful when pasting from the system clipboard. Note: this requires terminal
+" emulator support. See https://stackoverflow.com/a/2179779 and
+" ~/.config/alacritty/alacritty.yml.
+nnoremap <C-p>       :put<CR>
+nnoremap <ESC>[80;5u :put!<CR>
+
+" Go to definition.
+nmap <silent> gd <Plug>(coc-definition)
+" Go to type definition.
+nmap <silent> gy <Plug>(coc-type-definition)
+" Go to implementation.
+nmap <silent> gi <Plug>(coc-implementation)
+" List references.
+nmap <silent> gr <Plug>(coc-references)
+" Go to previous/next diagnostic.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Jump to previous/next Git hunk.
+nmap [c <Plug>(GitGutterPrevHunk)
+nmap ]c <Plug>(GitGutterNextHunk)
 
 " Text objects for Git hunks.
 omap ih <Plug>(GitGutterTextObjectInnerPending)
@@ -426,99 +443,144 @@ omap ah <Plug>(GitGutterTextObjectOuterPending)
 xmap ih <Plug>(GitGutterTextObjectInnerVisual)
 xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
-" Jump to previous/next Git hunk.
-nmap [c <Plug>(GitGutterPrevHunk)
-nmap ]c <Plug>(GitGutterNextHunk)
+"" Map function and class text objects.
+"" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold   :call CocAction('fold', <f-args>)
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')
+
+" Save file as root with :sw.
+cabbrev sw SudoWrite
+
+" Make :w, :q and :a case insensitive.
+cabbrev W   w
+cabbrev Q   q
+cabbrev wQ  wq
+cabbrev Wq  wq
+cabbrev WQ  wq
+cabbrev qA  qa
+cabbrev Qa  qa
+cabbrev QA  qa
+cabbrev wqA wqa
+cabbrev wQa wqa
+cabbrev wQA wqa
+cabbrev WqA wqa
+cabbrev WQa wqa
+cabbrev WQA wqa
+" Also make :waq an alias for :wqa
+cabbrev waq wqa
+cabbrev waQ wqa
+cabbrev wAq wqa
+cabbrev wAQ wqa
+cabbrev Waq wqa
+cabbrev WaQ wqa
+cabbrev WAq wqa
+cabbrev WAQ wqa
 
 " Unbind space, and use it as leader.
 let g:mapleader="\<Space>"
 nnoremap <silent> <leader> :WhichKey "<Space>"<CR>
 vnoremap <silent> <leader> :WhichKeyVisual "<Space>"<CR>
 
+" Leader mappings.
 let g:leader = {}
 
-let g:leader['.'] = [":CtrlPCurWD",     "Find file"]
-let g:leader[' '] = [":CtrlP",          "Find file in project"]
-let g:leader[','] = [":CtrlPBuffer",    "Switch buffer"]
-let g:leader.x = [":ScratchInsert",     "Open scratch buffer"]
+let g:leader['.'] = [':CtrlPCurWD',    'Find file']
+let g:leader[' '] = [':CtrlP',         'Find file in project']
+let g:leader[','] = [':CtrlPBuffer',   'Switch buffer']
+let g:leader.x    = [':ScratchInsert', 'Open scratch buffer']
 
-let g:leader.a   = {'name':'+Actions'}
-let g:leader.a.a = ["<Plug>(coc-codeaction-selected)",  "Code action on selected"]
-let g:leader.a.c = ["<Plug>(coc-codeaction)",           "Code action"]
-let g:leader.a.f = ["<Plug>(coc-fix-current)",          "Fix current"]
+let g:leader.a   = {'name':                            '+Actions'}
+let g:leader.a.a = ['<Plug>(coc-codeaction-selected)', 'Code action on selected']
+let g:leader.a.c = ['<Plug>(coc-codeaction)',          'Code action']
+let g:leader.a.f = ['<Plug>(coc-fix-current)',         'Fix current']
 
-let g:leader.b   = {'name':"+Buffer"}
-let g:leader.b.d = [":bdelete", "Delete"]
+let g:leader.b   = {'name':     '+Buffer'}
+let g:leader.b.d = [':bdelete', 'Delete']
 
-let g:leader.c   = {'name':"+Coc"}
-let g:leader.c.a = [":CocList diagnostics",         "Diagnostics"]
-let g:leader.c.c = [":CocList commands",            "Commands"]
-let g:leader.c.e = [":CocList extensions",          "Extensions"]
-let g:leader.c.f = ["<Plug>(coc-format-selected)",  "Format"]
-let g:leader.c.j = [":CocNext",                     "Next"]
-let g:leader.c.k = [":CocPrev",                     "Previous"]
-let g:leader.c.l = ["<Plug>(coc-openlink)",         "Open link"]
-let g:leader.c.o = [":CocList outline",             "Outline"]
-let g:leader.c.o = [":CocList outline",             "Outline"]
-let g:leader.c.p = [":CocListResume",               "Resume"]
-let g:leader.c.r = ["<Plug>(coc-rename)",           "Rename"]
-let g:leader.c.s = [":CocList -I symbols",          "Symbols"]
-let g:leader.c.R = [":CocRebuild",                  "Rebuild extensions"]
-let g:leader.c.U = [":CocUpdateSync",               "Update extensions"]
+let g:leader.c   = {'name':                        '+Coc'}
+let g:leader.c.a = [':CocList diagnostics',        'Diagnostics']
+let g:leader.c.c = [':CocList commands',           'Commands']
+let g:leader.c.e = [':CocList extensions',         'Extensions']
+let g:leader.c.f = ['<Plug>(coc-format-selected)', 'Format selected']
+let g:leader.c.F = ['<Plug>(coc-format)',          'Format']
+let g:leader.c.j = [':CocNext',                    'Next']
+let g:leader.c.k = [':CocPrev',                    'Previous']
+let g:leader.c.l = ['<Plug>(coc-openlink)',        'Open link']
+let g:leader.c.o = [':CocList outline',            'Outline']
+let g:leader.c.O = [':OR',                         'Organize imports']
+let g:leader.c.p = [':CocListResume',              'Resume']
+let g:leader.c.r = ['<Plug>(coc-rename)',          'Rename']
+let g:leader.c.s = [':CocList -I symbols',         'Symbols']
+let g:leader.c.R = [':CocRebuild',                 'Rebuild extensions']
+let g:leader.c.U = [':CocUpdateSync',              'Update extensions']
+let g:leader.c.z = [':Fold',                       'Fold']
 
-let g:leader.f = {'name':'+File'}
-let g:leader.f.o = [":options", "Open options"]
-let g:leader.f.p = [":edit $MYVIMRC", "Open ~/.vimrc"]
-let g:leader.f.r = [":source $MYVIMRC", "Reload ~/.vimrc"]
+let g:leader.f   = {'name':             '+File'}
+let g:leader.f.c = [':CocConfig',       'Edit coc config']
+let g:leader.f.o = [':options',         'Open options']
+let g:leader.f.p = [':edit $MYVIMRC',   'Open ~/.vimrc']
+let g:leader.f.r = [':source $MYVIMRC', 'Reload ~/.vimrc']
 
-let g:leader.g = {'name':'+Git'}
-let g:leader.g.g = [':Git', 'Status (g? for help)']
-let g:leader.g.f = [':Git fetch', 'Fetch']
-let g:leader.g.F = {'name':'+Pull'}
-let g:leader.g.F.p = [':Git pull', 'Pull']
+let g:leader.g     = {'name':                  '+Git'}
+let g:leader.g.c   = [':Git commit',           'Commit']
+let g:leader.g.f   = [':Git fetch',            'Fetch']
+let g:leader.g.F   = {'name':                  '+Pull'}
+let g:leader.g.F.p = [':Git pull',             'Pull']
 let g:leader.g.F.a = [':Git pull --autostash', 'Pull --autostash']
-let g:leader.g.p = {'name':'+Push'}
-let g:leader.g.p.p = [':Git push', 'Push']
-let g:leader.g.P = [':GitGutterPreviewHunk', 'Preview hunk']
-let g:leader.g.s = [':GitGutterStageHunk', 'Stage hunk']
-let g:leader.g.x = [':GitGutterUndoHunk', 'Discard hunk']
-let g:leader.g.z = [':GitGutterFold', 'Fold all unchanged lines']
+let g:leader.g.g   = [':Git',                  'Status (g? for help)']
+let g:leader.g.p   = {'name':                  '+Push'}
+let g:leader.g.p.p = [':Git push',             'Push']
+let g:leader.g.P   = [':GitGutterPreviewHunk', 'Preview hunk']
+let g:leader.g.s   = [':GitGutterStageHunk',   'Stage hunk']
+let g:leader.g.S   = [':Gwrite',               'Save and stage current file']
+let g:leader.g.x   = [':GitGutterUndoHunk',    'Discard hunk']
+let g:leader.g.z   = [':GitGutterFold',        'Fold all unchanged lines']
 
-let g:leader.h = {'name':'+Help'}
-let g:leader.h.g = {'name':'+Miscellaneous'}
-let g:leader.h.g.d = ["<Plug>(coc-definition)", "Go to definition"]
-nmap <silent> gd <Plug>(coc-definition)
-let g:leader.h.g.y = ["<Plug>(coc-type-definition)", "Go to type definition"]
-nmap <silent> gy <Plug>(coc-type-definition)
-let g:leader.h.g.i = ["<Plug>(coc-implementation)", "Go to implementation"]
-nmap <silent> gi <Plug>(coc-implementation)
-let g:leader.h.g.r = ["<Plug>(coc-references)", "Go to references"]
-nmap <silent> gr <Plug>(coc-references)
-let g:leader.h['['] = {'name':'+['}
-let g:leader.h['['].d = ["<Plug>(coc-diagnostic-prev)", "Previous diagnostic"]
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-let g:leader.h[']'] = {'name':'+]'}
-let g:leader.h[']'].d = ["<Plug>(coc-diagnostic-next)", "Next diagnostic"]
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-let g:leader.h.z = {'name':'+Folds/spelling'}
-let g:leader.h.z['='] = ["z=", "Correct word"]
-let g:leader.h.z.g = ["zg", "Add good to persistent dict"]
-let g:leader.h.z.G = ["zG", "Add good to temp dict"]
-let g:leader.h.z.w = ["zw", "Add bad to persistent dict"]
-let g:leader.h.z.W = ["zW", "Add bad to temp dict"]
-let g:leader.h.z.u = {'name':'+Undo'}
-let g:leader.h.z.u.g = ["zug", "Undo add good to persistent dict"]
-let g:leader.h.z.u.G = ["zuG", "Undo add good to temp dict"]
-let g:leader.h.z.u.w = ["zuw", "Undo add bad to persistent dict"]
-let g:leader.h.z.u.W = ["zuW", "Undo add bad to temp dict"]
+let g:leader.h        = {'name':                        '+Help'}
+let g:leader.h.g      = {'name':                        '+Miscellaneous'}
+let g:leader.h.g.d    = ['<Plug>(coc-definition)',      'Go to definition']
+let g:leader.h.g.y    = ['<Plug>(coc-type-definition)', 'Go to type definition']
+let g:leader.h.g.i    = ['<Plug>(coc-implementation)',  'Go to implementation']
+let g:leader.h.g.r    = ['<Plug>(coc-references)',      'Go to references']
+let g:leader.h['[']   = {'name':                        '+['}
+let g:leader.h['['].d = ['<Plug>(coc-diagnostic-prev)', 'Previous diagnostic']
+let g:leader.h[']']   = {'name':                        '+]'}
+let g:leader.h[']'].d = ['<Plug>(coc-diagnostic-next)', 'Next diagnostic']
+let g:leader.h.z      = {'name':                        '+Folds/spelling'}
+let g:leader.h.z['='] = ['z=',                          'Correct word']
+let g:leader.h.z.g    = ['zg',                          'Add good to persistent dict']
+let g:leader.h.z.G    = ['zG',                          'Add good to temp dict']
+let g:leader.h.z.w    = ['zw',                          'Add bad to persistent dict']
+let g:leader.h.z.W    = ['zW',                          'Add bad to temp dict']
+let g:leader.h.z.u    = {'name':                        '+Undo'}
+let g:leader.h.z.u.g  = ['zug',                         'Undo add good to persistent dict']
+let g:leader.h.z.u.G  = ['zuG',                         'Undo add good to temp dict']
+let g:leader.h.z.u.w  = ['zuw',                         'Undo add bad to persistent dict']
+let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp dict']
 
-let g:leader.t = {'name':'+Toggles'}
-let g:leader.t.s = [":set spell!", "Spellcheck"]
-let g:leader.t.g = [":GitGutterToggle", "Git gutter"]
+let g:leader.t   = {'name':             '+Toggles'}
+let g:leader.t.s = [':set spell!',      'Spellcheck']
+let g:leader.t.g = [':GitGutterToggle', 'Git gutter']
 
-let g:leader.w   = {'name':"+Window"}
-let g:leader.w.d = ["<C-W>q", "Delete"]
-let g:leader.w.q = ["<C-W>q", "Delete"]
-let g:leader.w['='] = ["<C-W>=", "Balance windows"]
-
-call which_key#register('<Space>', "g:leader")
+let g:leader.w      = {'name':   '+Window'}
+let g:leader.w.d    = ['<C-W>q', 'Delete']
+let g:leader.w.q    = ['<C-W>q', 'Delete']
+let g:leader.w['='] = ['<C-W>=', 'Balance windows']
