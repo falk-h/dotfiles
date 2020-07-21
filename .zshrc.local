@@ -8,8 +8,9 @@ bindkey '^N' down-history
 bindkey '^?' backward-delete-char
 bindkey '^H' backward-delete-char
 
-# ctrl-w removed word backwards
-bindkey '^W' backward-kill-word
+# ctrl-w and ctrl-backspace delete the previous word in insert mode.
+bindkey '^W'  backward-kill-word
+#bindkey '^\b' backward-kill-word
 
 # ctrl-r starts searching history backward
 bindkey '^R' history-incremental-search-backward
