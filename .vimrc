@@ -288,32 +288,32 @@ let g:scratch_no_mappings = 1
 
 " Use nice powerline-y symbols
 let g:lightline = {
-	\ 'component': {
-	\   'lineinfo': ' %3l:%-2v',
-	\ },
-        \ 'colorscheme': 'base16_tomorrow_night_eighties',
-	\ 'component_function': {
-        \   'fileformat': 'LightlineFileformat',
-	\   'readonly': 'LightlineReadonly',
-	\   'fugitive': 'LightlineFugitive',
-	\ },
-        \ 'active': {
-        \   'left': [ [ 'mode', 'paste' ],
-        \           [ 'readonly', 'filename', 'modified' ] ],
-        \   'right': [ [ 'lineinfo' ],
-        \            [ 'percent' ],
-        \            [ 'fileformat', 'fileencoding', 'filetype', 'fugitive' ] ],
-        \ },
-        \ 'inactive': {
-        \   'left': [ [ 'filename' ] ],
-        \   'right': [ [ 'lineinfo' ],
-        \            [ 'percent' ] ],
-        \ },
-        \ 'tabline': {
-        \   'left': [ [ 'tabs' ] ],
-        \   'right': [ [ 'close' ] ] ,
-        \ },
-	\ }
+    \ 'component': {
+    \   'lineinfo': ' %3l:%-2v',
+    \ },
+    \ 'colorscheme': 'base16_tomorrow_night_eighties',
+    \ 'component_function': {
+    \   'fileformat': 'LightlineFileformat',
+    \   'readonly': 'LightlineReadonly',
+    \   'fugitive': 'LightlineFugitive',
+    \ },
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \           [ 'readonly', 'filename', 'modified' ] ],
+    \   'right': [ [ 'lineinfo' ],
+    \            [ 'percent' ],
+    \            [ 'fileformat', 'fileencoding', 'filetype', 'fugitive' ] ],
+    \ },
+    \ 'inactive': {
+    \   'left': [ [ 'filename' ] ],
+    \   'right': [ [ 'lineinfo' ],
+    \            [ 'percent' ] ],
+    \ },
+    \ 'tabline': {
+    \   'left': [ [ 'tabs' ] ],
+    \   'right': [ [ 'close' ] ] ,
+    \ },
+    \ }
 
 " Display LF, CRLF, or CR in lightline instead of "unix", "dos", etc.
 let LightlineFileformat = {-> &fileformat == 'unix' ? 'LF'
@@ -322,14 +322,36 @@ let LightlineFileformat = {-> &fileformat == 'unix' ? 'LF'
 " Display a nice lock icon when the file is read only.
 let LightlineReadonly = {-> &readonly ? '' : ''}
 
-" Display Git branch in lightline.
+" Display Git branch, and counts of added/deleted/modified lines in lightline.
 function! LightlineFugitive()
     if exists('*FugitiveHead')
         let branch = FugitiveHead(6)
-        return branch !=# '' ? ' '..branch : ''
+        if branch !=# ''
+            let ret = ' ' .. branch
+            let [added, modified, deleted] = GitGutterGetHunkSummary()
+            if added != 0
+                let ret = ret .. ' +' .. added
+            endif
+            if modified != 0
+                let ret = ret .. ' ~' .. modified
+            endif
+            if deleted != 0
+                let ret = ret .. ' -' .. deleted
+            endif
+            return ret
+        endif
     endif
     return ''
 endfunction
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" coc diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one.
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " Fall through to native key mappings when a key is pressed that hasn't been
 " mapped through which-key.
@@ -349,15 +371,6 @@ let g:which_key_run_map_on_popup = 1
 let g:which_key_disable_default_offset = 1
 
 " Mappings
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one.
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
-
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -505,7 +518,6 @@ let g:leader = {}
 let g:leader['.'] = [':CtrlPCurWD',    'Find file']
 let g:leader[' '] = [':CtrlP',         'Find file in project']
 let g:leader[','] = [':CtrlPBuffer',   'Switch buffer']
-let g:leader.x    = [':ScratchInsert', 'Open scratch buffer']
 
 let g:leader.a   = {'name':                            '+Actions'}
 let g:leader.a.a = ['<Plug>(coc-codeaction-selected)', 'Code action on selected']
@@ -584,3 +596,7 @@ let g:leader.w      = {'name':   '+Window'}
 let g:leader.w.d    = ['<C-W>q', 'Delete']
 let g:leader.w.q    = ['<C-W>q', 'Delete']
 let g:leader.w['='] = ['<C-W>=', 'Balance windows']
+
+let g:leader.x = [':ScratchInsert', 'Open scratch buffer']
+
+call which_key#register('<Space>', "g:leader")
