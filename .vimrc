@@ -551,11 +551,15 @@ let g:leader.c.R = [':CocRebuild',                 'Rebuild extensions']
 let g:leader.c.U = [':CocUpdateSync',              'Update extensions']
 let g:leader.c.z = [':Fold',                       'Fold']
 
-let g:leader.f   = {'name':             '+File'}
+let g:leader.f   = {'name':             '+File/config'}
 let g:leader.f.c = [':CocConfig',       'Edit coc config']
+let g:leader.f.C = [':PlugClean',       'Clean plugins']
+let g:leader.f.i = [':PlugInstall',     'Install plugins']
 let g:leader.f.o = [':options',         'Open options']
 let g:leader.f.p = [':edit $MYVIMRC',   'Open ~/.vimrc']
 let g:leader.f.r = [':source $MYVIMRC', 'Reload ~/.vimrc']
+let g:leader.f.u = [':PlugUpdate',      'Update plugins']
+let g:leader.f.U = [':PlugUpgrade',     'Update vim-plug']
 
 let g:leader.g     = {'name':                  '+Git'}
 let g:leader.g.c   = [':Git commit',           'Commit']
