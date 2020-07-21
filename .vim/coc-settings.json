@@ -14,5 +14,6 @@
   "list.normalMappings": {
     "<C-n>": "do:next",
     "<C-p>": "do:previous"
-  }
+  },
+  "coc.preferences.extensionUpdateCheck": "never"
 }
