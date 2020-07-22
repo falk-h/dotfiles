@@ -630,8 +630,9 @@ let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp di
 let g:leader.r = [':CtrlPMRU', 'Most recently used']
 
 let g:leader.t   = {'name':             '+Toggles'}
-let g:leader.t.s = [':set spell!',      'Spellcheck']
+let g:leader.t.c = [':CtrlPClearCach',  'Clear CtrlP cache']
 let g:leader.t.g = [':GitGutterToggle', 'Git gutter']
+let g:leader.t.s = [':set spell!',      'Spellcheck']
 
 let g:leader.w      = {'name':   '+Window'}
 let g:leader.w.d    = ['<C-W>q', 'Delete']
