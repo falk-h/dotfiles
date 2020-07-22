@@ -193,6 +193,9 @@ set hlsearch
 " Also start highlighting while the search pattern is still being typed.
 set incsearch
 
+" Larger search/command history. Also affects CtrlP.
+set history=200
+
 " Ignore case when completing file names.
 set wildignorecase
 " Ignore case when using file names. Not sure what "using" means here.
@@ -277,6 +280,25 @@ let g:ctrlp_prompt_mappings = {
     \ 'PrtHistory(-1)':       [],
     \ 'PrtHistory(1)':        [],
     \ }
+
+" Also show hidden files in CtrlP.
+let g:ctrlp_show_hidden = 1
+
+" Exit CtrlP when backspacing is pressed and there's no text in the prompt.
+let g:ctrlp_brief_prompt = 1
+
+" Ignore source control, cache directories and some compiled files in CtrlP.
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|cache)$',
+    \ 'file': '\v\.(exe|so|dll|o|d)$',
+    \ }
+
+" Include the current file's directory path in CtrlP.
+let g:ctrlp_default_input = 0
+
+" Store a persistent CtrlP cache in /tmp.
+let g:ctrlp_cache_dir = '/tmp/ctrlp-cache'
+let g:ctrlp_clear_cache_on_exit = 0
 
 " Don't close scratch buffer when leaving insert mode.
 let g:scratch_insert_autohide = 0
@@ -528,7 +550,7 @@ vnoremap <silent> <leader> :WhichKeyVisual "<Space>"<CR>
 " Leader mappings.
 let g:leader = {}
 
-let g:leader['.'] = [':CtrlPCurWD',    'Find file']
+let g:leader['.'] = [':CtrlPCurFile',  'Find file in cwd']
 let g:leader[' '] = [':CtrlP',         'Find file in project']
 let g:leader[','] = [':CtrlPBuffer',   'Switch buffer']
 
@@ -604,6 +626,8 @@ let g:leader.h.z.u.g  = ['zug',                         'Undo add good to persis
 let g:leader.h.z.u.G  = ['zuG',                         'Undo add good to temp dict']
 let g:leader.h.z.u.w  = ['zuw',                         'Undo add bad to persistent dict']
 let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp dict']
+
+let g:leader.r = [':CtrlPMRU', 'Most recently used']
 
 let g:leader.t   = {'name':             '+Toggles'}
 let g:leader.t.s = [':set spell!',      'Spellcheck']
