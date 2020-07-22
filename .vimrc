@@ -294,7 +294,10 @@ let g:ctrlp_custom_ignore = {
     \ }
 
 " Include the current file's directory path in CtrlP.
-let g:ctrlp_default_input = 0
+let g:ctrlp_default_input = 1
+
+" Write $HOME as ~ in the most recently used file list.
+let g:ctrlp_tilde_homedir = 1
 
 " Store a persistent CtrlP cache in /tmp.
 let g:ctrlp_cache_dir = '/tmp/ctrlp-cache'
