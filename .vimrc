@@ -245,8 +245,8 @@ set cmdheight=1
 " Highlight column 80.
 set colorcolumn=80
 
-" Automatically wrap text longer than 79 characters. See also 'formatoptions'.
-set textwidth=79
+" Automatically wrap text longer than 80 characters. See also 'formatoptions'.
+set textwidth=80
 
 " Display line numbers on the left.
 set number
