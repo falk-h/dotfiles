@@ -594,6 +594,7 @@ let g:leader.f.u = [':PlugUpdate',      'Update plugins']
 let g:leader.f.U = [':PlugUpgrade',     'Update vim-plug']
 
 let g:leader.g     = {'name':                  '+Git'}
+let g:leader.g.b   = [':Git blame',            'Blame']
 let g:leader.g.c   = [':Git commit',           'Commit']
 let g:leader.g.f   = [':Git fetch',            'Fetch']
 let g:leader.g.F   = {'name':                  '+Pull'}
