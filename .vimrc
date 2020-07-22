@@ -436,7 +436,11 @@ noremap! <C-h>  <C-w>
 " emulator support. See https://stackoverflow.com/a/2179779 and
 " ~/.config/alacritty/alacritty.yml.
 nnoremap <C-p>       :put<CR>
-nnoremap <ESC>[80;5u :put!<CR>
+if has('gui_running')
+    nnoremap <C-S-p> :put!<CR>
+else
+    nnoremap <ESC>[80;5u :put!<CR>
+endif
 
 " Go to definition.
 nmap <silent> gd <Plug>(coc-definition)
