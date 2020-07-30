@@ -497,6 +497,32 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nmap [c <Plug>(GitGutterPrevHunk)
 nmap ]c <Plug>(GitGutterNextHunk)
 
+" Make text objects for {}()[]<> jump forwards in the current line if there is a
+" pair of delimiters in the current line.
+" TODO: Make this work. This is intended to also catch opening parentheses on
+" the same line, even if the closing parenthesis is on another line.
+"onoremap a( :<C-u>execute "normal /\%#.*\zs[()]\rva("<CR>
+onoremap a[ :<C-u>normal! hf]va[<CR>
+onoremap a] :<C-u>normal! hf]va[<CR>
+onoremap i[ :<C-u>normal! hf]vi[<CR>
+onoremap i] :<C-u>normal! hf]vi[<CR>
+onoremap a< :<C-u>normal! hf>va<<CR>
+onoremap a> :<C-u>normal! hf>va<<CR>
+onoremap i< :<C-u>normal! hf>vi<<CR>
+onoremap i> :<C-u>normal! hf>vi<<CR>
+onoremap a( :<C-u>normal! hf)va(<CR>
+onoremap a) :<C-u>normal! hf)va(<CR>
+onoremap ab :<C-u>normal! hf)va(<CR>
+onoremap i( :<C-u>normal! hf)vi(<CR>
+onoremap i) :<C-u>normal! hf)vi(<CR>
+onoremap ib :<C-u>normal! hf)vi(<CR>
+onoremap a{ :<C-u>normal! hf}va{<CR>
+onoremap a} :<C-u>normal! hf}va{<CR>
+onoremap aB :<C-u>normal! hf}va{<CR>
+onoremap i{ :<C-u>normal! hf}vi{<CR>
+onoremap i} :<C-u>normal! hf}vi{<CR>
+onoremap iB :<C-u>normal! hf}vi{<CR>
+
 " Text objects for Git hunks.
 omap ih <Plug>(GitGutterTextObjectInnerPending)
 omap ah <Plug>(GitGutterTextObjectOuterPending)
