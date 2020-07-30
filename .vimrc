@@ -661,10 +661,17 @@ let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp di
 
 let g:leader.r = [':CtrlPMRU', 'Most recently used']
 
-let g:leader.t   = {'name':             '+Toggles'}
-let g:leader.t.c = [':CtrlPClearCach',  'Clear CtrlP cache']
-let g:leader.t.g = [':GitGutterToggle', 'Git gutter']
-let g:leader.t.s = [':set spell!',      'Spellcheck']
+let g:leader.t   = {'name':                           '+Toggles'}
+let g:leader.t.c = [':CtrlPClearCache',                'Clear CtrlP cache']
+let g:leader.t.g = [
+    \':GitGutterToggle | echo g:gitgutter_enabled?"GitGutter enabled":"GitGutter disabled"',
+    \'Git gutter']
+let g:leader.t.l = [
+    \':GitGutterLineHighlightsToggle | echo g:gitgutter_highlight_lines?"Line highlights enabled":"Line highlights disabled"',
+    \'Git gutter']
+let g:leader.t.s = [
+    \':set spell! | echo &spell?"Spellcheck enabled":"Spellcheck disabled"',
+    \'Spellcheck']
 
 let g:leader.w      = {'name':   '+Window'}
 let g:leader.w.d    = ['<C-W>q', 'Delete']
