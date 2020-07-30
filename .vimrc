@@ -227,11 +227,6 @@ set confirm
 " Use visual bell instead of beeping when doing something wrong.
 set visualbell
 
-" And reset the terminal code for the visual bell. If visual bell is set, and
-" this line is also included, vim will neither flash nor beep. If visual bell
-" is unset, this does nothing.
-"set t_vb=
-
 " Enable use of the mouse for all modes.
 set mouse=a
 " Right click extends the selection, as opposed to opening a context menu,
@@ -305,9 +300,6 @@ let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn|cache)$',
     \ 'file': '\v\.(exe|so|dll|o|d)$',
     \ }
-
-" Include the current file's directory path in CtrlP.
-let g:ctrlp_default_input = 1
 
 " Write $HOME as ~ in the most recently used file list.
 let g:ctrlp_tilde_homedir = 1
@@ -511,8 +503,8 @@ omap ah <Plug>(GitGutterTextObjectOuterPending)
 xmap ih <Plug>(GitGutterTextObjectInnerVisual)
 xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
-"" Map function and class text objects.
-"" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+" Map function and class text objects.
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
 xmap if <Plug>(coc-funcobj-i)
 omap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
