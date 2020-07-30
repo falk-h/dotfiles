@@ -268,6 +268,17 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
+if executable('rg')
+    " Use ripgrep to search if available.
+    let &grepprg='rg --column --line-number --no-heading --smart-case'
+
+    " Use ripgrep instead of CtrlP's built in search because it's faster.
+    let g:ctrlp_user_command = 'rg --files --color=never %s'
+    " Also disable caching as ripgrep is fast enough that we don't need it.
+    let g:ctrlp_use_caching = 0
+    set grepformat=%f:%l:%c:%m
+endif
+
 " Make <C-P> not open CtrlP, so we can rebind it to :put. Use <leader><leader>
 " to open CtrlP instead.
 let g:ctrlp_map = ''
@@ -451,8 +462,8 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
-" next search.
-nnoremap <C-L> :nohl<CR><C-L>
+" next search, and close the location list.
+nnoremap <C-L> :nohl<bar>:lclose<CR><C-L>
 
 " Make ctrl-backspace delete the previous word in insert mode.
 noremap! <C-BS> <C-w>
@@ -462,11 +473,20 @@ noremap! <C-h>  <C-w>
 " useful when pasting from the system clipboard. Note: this requires terminal
 " emulator support. See https://stackoverflow.com/a/2179779 and
 " ~/.config/alacritty/alacritty.yml.
-nnoremap <C-p>       :put<CR>
+nnoremap <C-p> :put<CR>
 if has('gui_running')
     nnoremap <C-S-p> :put!<CR>
 else
     nnoremap <ESC>[80;5u :put!<CR>
+endif
+
+" Use <C-N> and <C-S-N> to go to the next/previous result of searching with :rg.
+" TODO: Make this wrap around.
+noremap <C-n> :lnext!<CR>
+if has('gui_running')
+    nnoremap <C-S-n> :lprevious!<CR>
+else
+    nnoremap <ESC>[78;5u :lprevious!<CR>
 endif
 
 " Go to definition.
@@ -518,6 +538,11 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold   :call CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')
+
+" Shortcut for ripgrep.
+command! -nargs=+ -complete=file Rg
+    \ execute 'silent lgrep! <args>' | redraw! | lwindow | lfirst
+cabbrev rg Rg
 
 " Save file as root with :sw.
 cabbrev sw SudoWrite
