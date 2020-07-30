@@ -9,7 +9,7 @@ dotfiles() {
 }
 
 # Ensure we have git, etc. This might be a bit excessive.
-for cmd in git xargs grep awk; do
+for cmd in git xargs grep awk vim; do
     if ! command -v "$cmd" > /dev/null 2>&1; then
         printf "Couldn't find %s\n" "$cmd"
         exit 1
@@ -45,5 +45,8 @@ if ! dotfiles checkout; then
 	exit 1
     fi
 fi
+
+# Install pre-commit hook
+ln -s "$HOME/.clean-spell-hook.sh" "$dotfile_dir/hooks/pre-commit"
 
 printf "Done!\n"
