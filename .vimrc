@@ -41,7 +41,7 @@ call plug#end()
 
 " Colorscheme
 " Use 24-bit colors (I think).
-if (has('termguicolors'))
+if has('termguicolors')
     set termguicolors
 endif
 
