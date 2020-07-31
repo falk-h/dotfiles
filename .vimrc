@@ -36,6 +36,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'svermeulen/vim-subversive'
     " Automatically enter matching (){}[]"".
     Plug 'jiangmiao/auto-pairs'
+    " Support for EditorConfig per-project style definition files.
+    Plug 'editorconfig/editorconfig-vim'
 call plug#end()
 
 
@@ -386,6 +388,10 @@ if has("patch-8.1.1564")
 else
   set signcolumn=yes
 endif
+
+" Make EditorConfig not affect Fugitive buffers. This is recommended by the
+" EditorConfig README.
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 " Fall through to native key mappings when a key is pressed that hasn't been
 " mapped through which-key.
