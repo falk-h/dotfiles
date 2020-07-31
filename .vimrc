@@ -463,9 +463,18 @@ vnoremap > >gv
 " next search, and close the location list.
 nnoremap <C-L> :nohl<bar>:lclose<CR><C-L>
 
-" Make ctrl-backspace delete the previous word in insert mode.
+" Make ctrl-backspace delete the previous word in insert and command mode.
+if &runtimepath =~ 'auto-pairs'
+    " NOTE: This workaround is required because AutoPairs maps <C-h>.
+    " See https://vi.stackexchange.com/a/17587.
+    let g:AutoPairsMapCh = 0
+    inoremap <silent> <C-h> <C-R>=AutoPairsDelete()<CR><C-w>
+    cnoremap <C-h>  <C-w>
+else
+    noremap! <C-h> <C-w>
+endif
+" For Gvim.
 noremap! <C-BS> <C-w>
-noremap! <C-h>  <C-w>
 
 " Map <C-P> and <C-S-P> to paste like p and P, but always linewise. This is
 " useful when pasting from the system clipboard. Note: this requires terminal
