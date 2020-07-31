@@ -341,7 +341,7 @@ let g:lightline = {
     \            [ 'fileformat', 'fileencoding', 'filetype', 'fugitive' ] ],
     \ },
     \ 'inactive': {
-    \   'left': [ [ 'filename' ] ],
+    \   'left': [ [ 'relativepath' ] ],
     \   'right': [ [ 'lineinfo' ],
     \            [ 'percent' ] ],
     \ },
