@@ -267,6 +267,9 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
+" Print whitespace with nicer symbols. :set list to turn on.
+set listchars=tab:→\ ,eol:⏎,space:·,trail:!,nbsp:␣,
+
 if executable('rg')
     " Use ripgrep to search if available.
     let &grepprg='rg --column --line-number --no-heading --smart-case'
@@ -709,6 +712,10 @@ let g:leader.t.s = [
     \':set spell!' ..
     \'| echo &spell?"Spellcheck enabled":"Spellcheck disabled"',
     \'Spellcheck']
+let g:leader.t.w = [
+    \':set list!' ..
+    \'| echo &list?"Showing whitespace":"Hiding whitespace"',
+    \'Whitespace']
 
 let g:leader.w      = {'name':   '+Window'}
 let g:leader.w.d    = ['<C-W>q', 'Delete']
