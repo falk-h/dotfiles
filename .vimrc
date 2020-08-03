@@ -120,9 +120,6 @@ set spelllang=en,sv,cjk
 set undofile
 set undodir=~/.vim/undo
 
-" Automatically re-read a file when it is updated on disk.
-set autoread
-
 " Don't insert an extra space after a period when joining lines with J.
 set nojoinspaces
 
