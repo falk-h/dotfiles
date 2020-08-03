@@ -107,6 +107,8 @@ set cursorlineopt=line
 " Disable spellcheck by default. It can be toggled with <Space>ts. This is
 " smart enough to only spellcheck within comments and strings when editing code.
 set nospell
+" Treat CamelCased words sensibly.
+set spelloptions=camel
 " Set English and Swedish as spellcheck languages. Adding "cjk" disables
 " spellchecking for East Asian characters. "sv" requires the package
 " "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the files
