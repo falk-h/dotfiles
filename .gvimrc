@@ -1,6 +1,8 @@
 " GVim options
-" TODO: Fix the cursor in the command window so it's not a block when it's at
-" the end of the line and make the cursor in normal mode flash a bit less.
+
+" Disable cursor blinking in all modes. TODO: Maybe enable it in insert and
+" command mode.
+set guicursor+=a:blinkon0
 
 " Use dark theme variant if available.
 set guioptions+=d
