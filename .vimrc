@@ -328,16 +328,16 @@ let g:scratch_no_mappings = 1
 let g:lightline = {
     \ 'component': {
     \   'lineinfo': ' %3l:%-2v',
+    \   'fileformat': '%{&fileformat==#"unix"?"LF":&fileformat==#"dos"?"CRLF":"CR"}',
+    \   'readonly': '%{&readonly?"":""}',
     \ },
     \ 'colorscheme': 'base16_tomorrow_night_eighties',
     \ 'component_function': {
-    \   'fileformat': 'LightlineFileformat',
-    \   'readonly': 'LightlineReadonly',
     \   'fugitive': 'LightlineFugitive',
     \ },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \           [ 'readonly', 'relativepath', 'modified' ] ],
+    \           [ 'relativepath', 'readonly', 'modified' ] ],
     \   'right': [ [ 'lineinfo' ],
     \            [ 'percent' ],
     \            [ 'fileformat', 'fileencoding', 'filetype', 'fugitive' ] ],
@@ -351,14 +351,8 @@ let g:lightline = {
     \   'left': [ [ 'tabs' ] ],
     \   'right': [ [ 'close' ] ] ,
     \ },
+    \ 'subseparator': { 'left': '│', 'right': '│' }
     \ }
-
-" Display LF, CRLF, or CR in lightline instead of "unix", "dos", etc.
-let LightlineFileformat = {-> &fileformat == 'unix' ? 'LF'
-                          \ : &fileformat == 'dos' ? 'CRLF' : 'CR' }
-
-" Display a nice lock icon when the file is read only.
-let LightlineReadonly = {-> &readonly ? '' : ''}
 
 " Display Git branch, and counts of added/deleted/modified lines in lightline.
 function! LightlineFugitive()
