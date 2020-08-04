@@ -46,7 +46,10 @@ alias bc='bc -lq' # bc with floats, without header
 alias -g dd='dd status=progress'
 alias rm='rm -I'
 alias vim="$VISUAL"
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+function dotfiles() {
+    git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
+}
 
 # mkdir and cd
 function mcdir ()
