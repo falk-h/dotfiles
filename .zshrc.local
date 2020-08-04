@@ -58,9 +58,16 @@ function mcdir ()
     cd -P -- "$1"
 }
 
-# Syntax highlighting and autosuggestions
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Syntax highlighting, autosuggestions, and fzf
+plugins=(
+    /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+    /usr/share/fzf/key-bindings.zsh
+    /usr/share/fzf/completion.zsh
+)
+for plugin in $plugins; do
+    [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
+done
 
 # Better command not found hook
 # command_not_found_handler() {
