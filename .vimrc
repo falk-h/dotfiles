@@ -14,8 +14,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'farmergreg/vim-lastplace'
     " Automatically strip trailing whitespace.
     Plug 'axelf4/vim-strip-trailing-whitespace'
-    " File finder.
-    Plug 'ctrlpvim/ctrlp.vim'
     " Pop-up scratch buffer.
     Plug 'mtth/scratch.vim'
     " Lightweight statusbar.
@@ -38,6 +36,10 @@ call plug#begin('~/.vim/plugged')
     Plug 'jiangmiao/auto-pairs'
     " Support for EditorConfig per-project style definition files.
     Plug 'editorconfig/editorconfig-vim'
+    " File finder.
+    Plug 'junegunn/fzf'
+    " UI implementation for fzf.
+    Plug 'junegunn/fzf.vim'
 call plug#end()
 
 
@@ -266,50 +268,16 @@ set cino+=l1
 " Print whitespace with nicer symbols. :set list to turn on.
 set listchars=tab:→\ ,eol:⏎,space:·,trail:!,nbsp:␣,
 
-if executable('rg')
-    " Use ripgrep to search if available.
-    let &grepprg='rg --column --line-number --no-heading --smart-case'
-
-    " Use ripgrep instead of CtrlP's built in search because it's faster.
-    let g:ctrlp_user_command = 'rg --files --color=never %s'
-    " Also disable caching as ripgrep is fast enough that we don't need it.
-    let g:ctrlp_use_caching = 0
-    set grepformat=%f:%l:%c:%m
-endif
-
-" Make <C-P> not open CtrlP, so we can rebind it to :put. Use <leader><leader>
-" to open CtrlP instead.
-let g:ctrlp_map = ''
-
-" Also include the currently open file in CtrlP results.
-let g:ctrlp_match_current_file = 1
-
-" Make <C-P> and <C-N> work as they should in CtrlP buffers.
-let g:ctrlp_prompt_mappings = {
-    \ 'PrtSelectMove("j")':   ['<c-j>', '<down>', '<c-n>'],
-    \ 'PrtSelectMove("k")':   ['<c-k>', '<up>', '<c-p>'],
-    \ 'PrtHistory(-1)':       [],
-    \ 'PrtHistory(1)':        [],
-    \ }
-
-" Also show hidden files in CtrlP.
-let g:ctrlp_show_hidden = 1
-
-" Exit CtrlP when backspacing is pressed and there's no text in the prompt.
-let g:ctrlp_brief_prompt = 1
-
-" Ignore source control, cache directories and some compiled files in CtrlP.
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn|cache)$',
-    \ 'file': '\v\.(exe|so|dll|o|d)$',
-    \ }
-
-" Write $HOME as ~ in the most recently used file list.
-let g:ctrlp_tilde_homedir = 1
-
-" Store a persistent CtrlP cache in /tmp.
-let g:ctrlp_cache_dir = '/tmp/ctrlp-cache'
-let g:ctrlp_clear_cache_on_exit = 0
+"if executable('rg')
+"    " Use ripgrep to search if available.
+"    let &grepprg='rg --column --line-number --no-heading --smart-case'
+"
+"    " Use ripgrep instead of CtrlP's built in search because it's faster.
+"    let g:ctrlp_user_command = 'rg --files --color=never %s'
+"    " Also disable caching as ripgrep is fast enough that we don't need it.
+"    let g:ctrlp_use_caching = 0
+"    set grepformat=%f:%l:%c:%m
+"endif
 
 " Don't close scratch buffer when leaving insert mode.
 let g:scratch_insert_autohide = 0
@@ -573,8 +541,8 @@ command! -nargs=? Fold   :call CocAction('fold', <f-args>)
 command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " Shortcut for ripgrep.
-command! -nargs=+ -complete=file Rg
-    \ execute 'silent lgrep! <args>' | redraw! | lwindow | lfirst
+"command! -nargs=+ -complete=file Rg
+"    \ execute 'silent lgrep! <args>' | redraw! | lwindow | lfirst
 " TODO: Echo the number of results.
 "| echo getloclist(0, {'size': 1})['size'] .. ' results'
 cabbrev rg Rg
@@ -619,9 +587,9 @@ vnoremap <silent> <leader> :WhichKeyVisual "<Space>"<CR>
 " Leader mappings.
 let g:leader = {}
 
-let g:leader['.'] = [':CtrlPCurFile',  'Find file in cwd']
-let g:leader[' '] = [':CtrlP',         'Find file in project']
-let g:leader[','] = [':CtrlPBuffer',   'Switch buffer']
+let g:leader['.'] = [':Files',   'Find file in cwd']
+let g:leader[' '] = [':GFiles',  'Find file in project']
+let g:leader[','] = [':Buffers', 'Switch buffer']
 
 let g:leader.a   = {'name':                            '+Actions'}
 let g:leader.a.a = ['<Plug>(coc-codeaction-selected)', 'Code action on selected']
@@ -698,7 +666,19 @@ let g:leader.h.z.u.G  = ['zuG',                         'Undo add good to temp d
 let g:leader.h.z.u.w  = ['zuw',                         'Undo add bad to persistent dict']
 let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp dict']
 
-let g:leader.r = [':CtrlPMRU', 'Most recently used']
+let g:leader.r = [':History', 'Most recently used files']
+
+let g:leader.s      = {'name':       '+Search'}
+let g:leader.s['/'] = [':History/',  'Search history']
+let g:leader.s[':'] = [':History:',  'Command history']
+let g:leader.s.c    = [':Commits',   'Commits']
+let g:leader.s.C    = [':BCommits',  'Commits for current buffer']
+let g:leader.s.e    = [':Commands',  'Commands']
+let g:leader.s.f    = [':Filetypes', 'File types']
+let g:leader.s.h    = [':Helptags',  'Help']
+let g:leader.s.m    = [':Maps',      'Mappings']
+let g:leader.s.t    = [':Tags',      'Tags']
+let g:leader.s.T    = [':BTags',     'Tags in current buffer']
 
 let g:leader.t   = {'name': '+Toggles'}
 let g:leader.t.g = [
