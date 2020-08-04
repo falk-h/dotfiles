@@ -83,11 +83,6 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
 " and for plugins that are filetype specific.
@@ -334,10 +329,12 @@ let g:lightline = {
     \ 'colorscheme': 'base16_tomorrow_night_eighties',
     \ 'component_function': {
     \   'fugitive': 'LightlineFugitive',
+    \   'cocstatus': 'coc#status',
     \ },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \           [ 'relativepath', 'readonly', 'modified' ] ],
+    \           [ 'relativepath', 'readonly', 'modified' ],
+    \           [ 'cocstatus' ] ],
     \   'right': [ [ 'lineinfo' ],
     \            [ 'percent' ],
     \            [ 'fileformat', 'fileencoding', 'filetype', 'fugitive' ] ],
@@ -375,6 +372,9 @@ function! LightlineFugitive()
     endif
     return ''
 endfunction
+
+" Use autocmd to force lightline update. Recommended in coc-status-lightline.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " coc diagnostics appear/become resolved.
