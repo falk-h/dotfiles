@@ -259,6 +259,10 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
+" Put closing braces inside switch cases on the same indentation level as the
+" case label. See cino-l.
+set cino+=l1
+
 " Print whitespace with nicer symbols. :set list to turn on.
 set listchars=tab:→\ ,eol:⏎,space:·,trail:!,nbsp:␣,
 
