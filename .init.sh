@@ -37,7 +37,11 @@ if ! dotfiles checkout; then
     fi
 
     mkdir -p "$backup_dir"
-    dotfiles checkout 2>&1 | grep -E -e "\s+\." -e "\s+README.md" | awk '{print $1}' | xargs -I{} mv {} "$dotfile_dir"/{}
+    files=$(dotfiles checkout 2>&1 | grep -E -e "\s+\." -e "\s+README.md" | awk '{print $1}')
+    for file in $files; do
+        mkdir -p "$dotfile_dir/$(dirname $file)"
+	mv "$file" "$dotfile_dir/$file"
+    done
 
     printf "Checking out again...\n"
     if ! dotfiles checkout; then
