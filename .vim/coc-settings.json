@@ -2,13 +2,30 @@
   "languageserver": {
     "ccls": {
       "command": "ccls",
-      "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
-      "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+      "filetypes": [ "c", "cc", "cpp", "c++", "objc", "objcpp" ],
+      "rootPatterns": [ ".ccls", "compile_commands.json", ".git/", ".hg/" ],
       "initializationOptions": {
-         "cache": {
-           "directory": "/tmp/ccls"
-         }
-       }
+        "cache": {
+          "directory": "/tmp/ccls"
+        }
+      }
+    }
+  },
+  "diagnostic-languageserver.filetypes": {
+    "sh": "shellcheck"
+  },
+  "diagnostic-languageserver.formatFiletypes": {
+    "bash": "shfmt-bash",
+    "sh": "shfmt-posix"
+  },
+  "diagnostic-languageserver.formatters": {
+    "shfmt-posix": {
+      "command": "shfmt",
+      "args": [ "-i", "4", "-bn", "-ci", "-sr", "-ln", "posix" ]
+    },
+    "shfmt-bash": {
+      "command": "shfmt",
+      "args": [ "-i", "4", "-bn", "-ci", "-sr", "-ln", "bash" ]
     }
   },
   "list.normalMappings": {
