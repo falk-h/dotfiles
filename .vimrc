@@ -109,7 +109,9 @@ set cursorlineopt=line
 " smart enough to only spellcheck within comments and strings when editing code.
 set nospell
 " Treat CamelCased words sensibly.
-set spelloptions=camel
+if has("patch-8.2.1185")
+    set spelloptions=camel
+endif
 " Set English and Swedish as spellcheck languages. Adding "cjk" disables
 " spellchecking for East Asian characters. "sv" requires the package
 " "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the files
