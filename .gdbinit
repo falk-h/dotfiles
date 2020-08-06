@@ -18,3 +18,9 @@ set extended-prompt \[\e[1m\]> \[\e[0m\]
 
 # Don't ask for confirmation on quit/run/return, etc.
 set confirm off
+
+# Format and indent data structures when printing
+set print pretty on
+
+# Sensible assembly syntax
+set disassembly-flavor intel
