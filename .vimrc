@@ -107,19 +107,30 @@ set cursorline
 " displayed.
 set cursorlineopt=line
 
-" Disable spellcheck by default. It can be toggled with <Space>ts. This is
-" smart enough to only spellcheck within comments and strings when editing code.
-set nospell
-" Treat CamelCased words sensibly.
-if has("patch-8.2.1185")
-    set spelloptions=camel
+if has('spell')
+    " Disable spellcheck by default. It can be toggled with <Space>ts. This is
+    " smart enough to only spellcheck within comments and strings when editing
+    " code.
+    set nospell
+    " Turn on spelling automatically for some text files.
+    autocmd BufRead,BufNewFile *.md,*.rst,*.adoc setlocal spell
+    autocmd FileType gitcommit setlocal spell
+    " Treat CamelCased words sensibly.
+    if has("patch-8.2.1185")
+        set spelloptions=camel
+    endif
+    " Set English and Swedish as spellcheck languages. Adding "cjk" disables
+    " spellchecking for East Asian characters. "sv" requires the package
+    " "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the
+    " files in that package already seem to be included in "vim-runtime", but
+    " stored in a different directory. Weird.
+    " TODO: Automatically select the language. |set-spc-auto|
+    set spelllang=en,sv,cjk
+    " Autocorrect the word under the cursor. The default mapping for &
+    " doesn't seem all that useful. TODO: Only override the mapping if spell
+    " checking is turned on.
+    nnoremap & 1z=
 endif
-" Set English and Swedish as spellcheck languages. Adding "cjk" disables
-" spellchecking for East Asian characters. "sv" requires the package
-" "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the files
-" in that package already seem to be included in "vim-runtime", but stored in
-" a different directory. Weird.
-set spelllang=en,sv,cjk
 
 " Persistent undo stored in ~/vim/undo.
 set undofile
