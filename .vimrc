@@ -570,8 +570,8 @@ command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeIm
 cabbrev rg Rg
 
 " Search for the current word or currently selected text with <C-k>
-nnoremap <C-k> viwy:Rg ""<C-f>hP<CR>
-vnoremap <C-k> y:Rg ""<C-f>hP<CR>
+nnoremap <C-k> yiw:Rg <C-f>p<CR>
+vnoremap <C-k> y:Rg <C-f>p<CR>
 
 " Save file as root with :sw.
 cabbrev sw SudoWrite
