@@ -28,6 +28,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
     " Text objects for working with things that are surrounded by other things.
     Plug 'tpope/vim-surround'
+    " Lets vim-surround actions be repeated with '.'.
+    Plug 'tpope/vim-repeat'
     " Provides some UNIX utilities such as :SudoWrite and :Move.
     Plug 'tpope/vim-eunuch'
     " Provides commands for replacing text with the contents of the clipboard.
