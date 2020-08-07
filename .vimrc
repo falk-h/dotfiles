@@ -376,6 +376,9 @@ else
   set signcolumn=yes
 endif
 
+" Make fzf's window 12 rows high.
+let g:fzf_layout = {'down': 12}
+
 " Make EditorConfig not affect Fugitive buffers. This is recommended by the
 " EditorConfig README.
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
