@@ -71,7 +71,7 @@ set nobackup
 set nowritebackup
 
 " Give more space for displaying messages.
-set cmdheight=2
+set cmdheight=1
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -249,10 +249,6 @@ set mouse=a
 " Right click extends the selection, as opposed to opening a context menu,
 " since that only works in GUI mode anyway.
 set mousemodel=extend
-
-" Set the command window height to 2 lines, to avoid many cases of having to
-" "press <Enter> to continue".
-set cmdheight=1
 
 " Highlight column 80.
 set colorcolumn=80
