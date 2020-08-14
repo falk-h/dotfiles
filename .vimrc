@@ -80,15 +80,17 @@ set updatetime=300
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" TODO: Only run this if Coc is loaded.
+augroup coc
+    autocmd!
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType rust,c setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    " Use autocmd to force lightline update. Recommended in coc-status-lightline.
+    autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 augroup end
 
 " Attempt to determine the type of a file based on its name and possibly its
@@ -112,9 +114,14 @@ if has('spell')
     " smart enough to only spellcheck within comments and strings when editing
     " code.
     set nospell
-    " Turn on spelling automatically for some text files.
-    autocmd BufRead,BufNewFile *.md,*.rst,*.adoc setlocal spell
-    autocmd FileType gitcommit setlocal spell
+
+    augroup spell
+        autocmd!
+        " Turn on spelling automatically for some text files.
+        autocmd BufRead,BufNewFile *.md,*.rst,*.adoc setlocal spell
+        autocmd FileType gitcommit setlocal spell
+    augroup end
+
     " Treat CamelCased words sensibly.
     if has("patch-8.2.1185")
         set spelloptions=camel
@@ -359,9 +366,6 @@ function! LightlineFugitive()
     endif
     return ''
 endfunction
-
-" Use autocmd to force lightline update. Recommended in coc-status-lightline.
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " coc diagnostics appear/become resolved.
