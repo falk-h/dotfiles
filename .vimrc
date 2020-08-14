@@ -137,6 +137,19 @@ if has('spell')
     " doesn't seem all that useful. TODO: Only override the mapping if spell
     " checking is turned on.
     nnoremap & 1z=
+    " Turn off ugly background for misspelled words.
+    highlight SpellBad   ctermbg=NONE
+    highlight SpellCap   ctermbg=NONE
+    highlight SpellRare  ctermbg=NONE
+    highlight SpellLocal ctermbg=NONE
+    " Use foreground color instead.
+    highlight SpellBad   ctermfg=9
+    highlight SpellCap   ctermfg=12
+    highlight SpellRare  ctermfg=13
+    highlight SpellRare  ctermfg=14
+    " And underline.
+    highlight SpellBad   cterm=NONE
+    highlight SpellBad   cterm=underline
 endif
 
 " Persistent undo stored in ~/vim/undo.
