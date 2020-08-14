@@ -32,5 +32,7 @@
     "<C-n>": "do:next",
     "<C-p>": "do:previous"
   },
-  "coc.preferences.extensionUpdateCheck": "never"
+  "coc.preferences.extensionUpdateCheck": "never",
+  "rust-analyzer.cargo.loadOutDirsFromCheck": false,
+  "rust-analyzer.checkOnSave.enable": false
 }
