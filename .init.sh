@@ -22,7 +22,7 @@ if [ -e "$dotfile_dir" ]; then
     exit 1
 fi
 
-printf "Cloning repo...\n"
+printf "Cloning from %s...\n" "$url"
 git clone --bare "$url" "$dotfile_dir"
 dotfiles submodule update --init --recursive
 
