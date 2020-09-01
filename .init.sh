@@ -3,6 +3,7 @@ set -eu
 
 dotfile_dir="$HOME/.dotfiles"
 backup_dir="$dotfile_dir-backup"
+url="$([ -f "$HOME/.ssh/id_rsa" ] && echo 'git@github.com:falk-h/dotfiles.git' || echo 'https://github.com/falk-h/dotfiles.git')"
 
 dotfiles() {
     git --git-dir="$dotfile_dir" --work-tree="$HOME" "$@"
@@ -22,7 +23,7 @@ if [ -e "$dotfile_dir" ]; then
 fi
 
 printf "Cloning repo...\n"
-git clone --bare git@github.com:falk-h/dotfiles.git "$dotfile_dir"
+git clone --bare "$url" "$dotfile_dir"
 dotfiles submodule update --init --recursive
 
 # Ignore untracked files in $HOME
