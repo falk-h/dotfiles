@@ -23,6 +23,9 @@ bindkey -a "^[[A" up-line-or-search
 bindkey "^[[B" down-line-or-search
 bindkey "^[[A" up-line-or-search
 
+# Eliminate the wait time after pressing escape
+KEYTIMEOUT=1
+
 # Toggle stopping programs with ^Z
 fancy-ctrl-z () {
     if [[ $#BUFFER -eq 0 ]]; then
