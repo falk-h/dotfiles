@@ -27,7 +27,7 @@ set guioptions+=k
 set mousemodel=popup_setpos
 
 " Font
-if has('gui_gtk2') || has('gui_gt3')
+if has('gui_gtk2') || has('gui_gtk3')
     " Linux font.
     set guifont=Roboto\ Mono\ 10.5
 elseif has('gui_win32')
