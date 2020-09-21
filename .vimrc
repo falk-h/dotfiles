@@ -462,6 +462,10 @@ map Y y$
 vnoremap < <gv
 vnoremap > >gv
 
+" Switch windows with H and L.
+nnoremap H <C-W>W
+nnoremap L <C-W>w
+
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
 " next search, and close the location list.
 nnoremap <C-L> :nohl<bar>:lclose<CR><C-L>
