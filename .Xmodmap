@@ -1,7 +1,2 @@
-keycode  21 = acute grave acute grave plusminus notsign plusminus
-keycode  25 = comma semicolon comma semicolon braceright VoidSymbol braceright
-keycode  26 = period colon period colon bracketleft VoidSymbol bracketleft
-keycode  34 = odiaeresis Odiaeresis odiaeresis Odiaeresis Greek_DELTA VoidSymbol Greek_DELTA
-keycode  35 = udiaeresis Udiaeresis udiaeresis Udiaeresis dead_diaeresis VoidSymbol dead_diaeresis
-keycode  52 = adiaeresis Adiaeresis adiaeresis Adiaeresis apostrophe VoidSymbol apostrophe
-keycode  49 = dead_greek dead_greek dead_greek dead_greek dead_greek dead_greek dead_greek
+keycode 197 = udiaeresis Udiaeresis udiaeresis Udiaeresis dead_diaeresis VoidSymbol dead_diaeresis
+keycode 202 = ssharp U1e9e ssharp U1e9e
