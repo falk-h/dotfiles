@@ -22,5 +22,8 @@ set confirm off
 # Format and indent data structures when printing
 set print pretty on
 
+# Format and indent arrays when printing
+set print array on
+
 # Sensible assembly syntax
 set disassembly-flavor intel
