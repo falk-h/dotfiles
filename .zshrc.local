@@ -72,14 +72,6 @@ for plugin in $plugins; do
     [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
 done
 
-# Better command not found hook
-# command_not_found_handler() {
-#         RANDOM=$(date "+%N")
-#         catimg "$HOME/.thonk/$((RANDOM % $(ls -l $HOME/.thonk/ | egrep -c '^-'))).png" -w 100
-#         printf 'zsh: command not found: %s\n' "$1" 1>&2
-#         return 127
-# }
-
 # Base16 Shell
 BASE16_SHELL="$HOME/.dotfiles-submodules/base16-shell/"
 [ -n "$PS1" ] && \
