@@ -38,7 +38,4 @@ for test in "${tests[@]}"; do
     docker run --rm --tty "dotfiles-test-$test:latest" | sed -e 's/^/    /'
 done
 
-try 'Removing images' docker image rm --force "dotfiles-test-$test:latest"
-
 echo 'All tests succeeded'
-
