@@ -4,6 +4,7 @@ set -eu
 hoster="github.com"
 repo="falk-h/dotfiles"
 dotfile_dir="$HOME/.dotfiles"
+extra_dir="$dotfile_dir-extra"
 backup_dir="$dotfile_dir-backup"
 dotfiles() {
     git --git-dir="$dotfile_dir" --work-tree="$HOME" "$@"
@@ -67,5 +68,5 @@ if ! try "Checking out" dotfiles checkout > /dev/null; then
     fi
 fi
 
-try "Installing pre-commit hook" ln -s "$HOME/.clean-spell-hook.sh" "$dotfile_dir/hooks/pre-commit"
+try "Installing pre-commit hook" ln -s "$extra_dir/clean-spell-hook.sh" "$dotfile_dir/hooks/pre-commit"
 echo "$(tput setaf 2)All Done!$(tput sgr0)"
