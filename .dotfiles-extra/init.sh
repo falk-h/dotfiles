@@ -11,7 +11,6 @@ dotfiles() {
 }
 
 get_url() {
-    url="$([ -f "$HOME/.ssh/id_rsa" ] && echo 'git@github.com:falk-h/dotfiles.git' || echo 'https://github.com/falk-h/dotfiles.git')"
     if try "Checking for SSH key" [ -f "$HOME/.ssh/id_rsa" ] > /dev/null; then
         if try "Checking if the key works" ssh -T "git@$hoster" > /dev/null; then
             echo "git@$hoster:$repo.git"

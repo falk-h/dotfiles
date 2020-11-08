@@ -3,8 +3,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")" || exit 1
 
-# shellcheck disable=1090
-source "$(dirname "$0")/utils.sh"
+# shellcheck disable=1091
+source utils.sh
 
 check_commands shellcheck docker sed
 
@@ -27,7 +27,10 @@ tests=("${tests[@]/\.Dockerfile}")
 
 echo 'Building images...'
 for test in "${tests[@]}"; do
-    try "  Building image $test" docker build -t "dotfiles-test-$test:latest" -f "dockerfiles/$test.Dockerfile" .
+    try "  Building image $test" \
+        docker build \
+        --tag "dotfiles-test-$test:latest" \
+        --file "dockerfiles/$test.Dockerfile" .
 done
 echo 'Running tests...'
 for test in "${tests[@]}"; do

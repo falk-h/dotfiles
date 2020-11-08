@@ -52,10 +52,9 @@ try() {
     fi
 }
 
+# Checks wether the given executables exist.
 check_commands() {
     for cmd in "$@"; do
-        if ! try "Checking for $cmd" command -v "$cmd" > /dev/null; then
-            return 1
-        fi
+        try "Checking for $cmd" command -v "$cmd" > /dev/null || return 1
     done
 }
