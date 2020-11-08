@@ -61,17 +61,6 @@ function mcdir ()
     cd -P -- "$1"
 }
 
-# Syntax highlighting, autosuggestions, and fzf
-plugins=(
-    ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
-    ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
-    ~/.dotfiles-submodules/fzf/shell/completion.zsh
-    ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-)
-for plugin in $plugins; do
-    [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
-done
-
 # Base16 Shell
 BASE16_SHELL="$HOME/.dotfiles-submodules/base16-shell/"
 [ -n "$PS1" ] && \
@@ -86,3 +75,14 @@ function zle-line-init zle-keymap-select {
 }
 zle -N zle-line-init
 zle -N zle-keymap-select
+
+# Syntax highlighting, autosuggestions, and fzf
+plugins=(
+    ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
+    ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
+    ~/.dotfiles-submodules/fzf/shell/completion.zsh
+    ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+)
+for plugin in $plugins; do
+    [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
+done
