@@ -4,3 +4,12 @@
 [submodule ".dotfiles-submodules/vim-plug"]
 	path = .dotfiles-submodules/vim-plug
 	url = git@github.com:junegunn/vim-plug.git
+[submodule ".dotfiles-submodules/zsh-autosuggestions"]
+	path = .dotfiles-submodules/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
+[submodule ".dotfiles-submodules/zsh-syntax-highlighting"]
+	path = .dotfiles-submodules/zsh-syntax-highlighting
+	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
+[submodule ".dotfiles-submodules/fzf"]
+	path = .dotfiles-submodules/fzf
+	url = git@github.com:junegunn/fzf.git

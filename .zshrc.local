@@ -63,10 +63,10 @@ function mcdir ()
 
 # Syntax highlighting, autosuggestions, and fzf
 plugins=(
-    /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-    /usr/share/fzf/key-bindings.zsh
-    /usr/share/fzf/completion.zsh
+    ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
+    ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
+    ~/.dotfiles-submodules/fzf/shell/completion.zsh
+    ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 )
 for plugin in $plugins; do
     [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
