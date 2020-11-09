@@ -35,7 +35,7 @@ call plug#begin('~/.vim/plugged')
     " Provides commands for replacing text with the contents of the clipboard.
     Plug 'svermeulen/vim-subversive'
     " Automatically enter matching (){}[]"".
-    Plug 'jiangmiao/auto-pairs'
+    "Plug 'jiangmiao/auto-pairs'
     " Support for EditorConfig per-project style definition files.
     Plug 'editorconfig/editorconfig-vim'
     " File finder.
@@ -43,7 +43,6 @@ call plug#begin('~/.vim/plugged')
     " UI implementation for fzf.
     Plug 'junegunn/fzf.vim'
 call plug#end()
-
 
 " Colorscheme
 " Use 24-bit colors (I think).
