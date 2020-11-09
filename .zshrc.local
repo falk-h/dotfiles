@@ -49,6 +49,8 @@ alias bc='bc -lq' # bc with floats, without header
 alias -g dd='dd status=progress'
 alias rm='rm -I'
 alias vim="$VISUAL"
+# Hide the license header
+alias gdb='gdb -q'
 
 function dotfiles() {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
