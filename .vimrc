@@ -42,6 +42,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf'
     " UI implementation for fzf.
     Plug 'junegunn/fzf.vim'
+    " Autodetect build system.
+    Plug 'falk-h/vim-makeshift'
 call plug#end()
 
 " Colorscheme
@@ -482,6 +484,11 @@ endif
 " For Gvim.
 noremap! <C-BS> <C-w>
 
+" Tell Makeshift about Meson.
+let g:makeshift_systems = {
+    \'meson.build': 'ninja -C builddir',
+    \}
+
 " Map <C-P> and <C-S-P> to paste like p and P, but always linewise. This is
 " useful when pasting from the system clipboard. Note: this requires terminal
 " emulator support. See https://stackoverflow.com/a/2179779 and
@@ -703,6 +710,10 @@ let g:leader.h.z.u.g  = ['zug',                         'Undo add good to persis
 let g:leader.h.z.u.G  = ['zuG',                         'Undo add good to temp dict']
 let g:leader.h.z.u.w  = ['zuw',                         'Undo add bad to persistent dict']
 let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp dict']
+
+let g:leader.m = [':silent wall | LMakeshiftBuild', 'Save and make']
+
+let g:leader.M = [':LMakeshiftBuild', 'Make']
 
 let g:leader.r = [':History', 'Most recently used files']
 
