@@ -1,0 +1,22 @@
+BasedOnStyle: LLVM
+
+# Group #include blocks according to if they're system headers or not.
+IncludeBlocks: Regroup
+
+# Indent preprocessor directives, but keep the # in the first column.
+IndentPPDirectives: AfterHash
+
+# Indent with 4 spaces.
+IndentWidth: 4
+
+# Remove empty lines at the start of blocks.
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# ((int) foo) instead of ((int)foo).
+SpaceAfterCStyleCast: true
+
+# foo() { } instead of foo() {}.
+SpaceInEmptyBlock: true
+
+# Tabs are 4 spaces.
+TabWidth: 4
