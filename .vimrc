@@ -110,23 +110,35 @@ set cursorline
 " displayed.
 set cursorlineopt=line
 
+augroup text
+    autocmd!
+    " Automatically wrap text longer than 80 characters.
+    " See also 'formatoptions'.
+    autocmd FileType markdown,rst,asciidoc,gitcommit setlocal textwidth=80
+    " Avoid splitting words when wrapping lines.
+    autocmd FileType markdown,rst,asciidoc,gitcommit setlocal linebreak
+
+    if has('spell')
+        " Turn on spelling automatically for some text files.
+        autocmd FileType markdown,rst,asciidoc,gitcommit setlocal spell
+
+        " Autocorrect the word under the cursor. The default mapping for &
+        " doesn't seem all that useful.
+        autocmd FileType markdown,rst,asciidoc,gitcommit nnoremap <buffer> & 1z=
+    endif
+augroup end
+
 if has('spell')
     " Disable spellcheck by default. It can be toggled with <Space>ts. This is
     " smart enough to only spellcheck within comments and strings when editing
     " code.
     set nospell
 
-    augroup spell
-        autocmd!
-        " Turn on spelling automatically for some text files.
-        autocmd BufRead,BufNewFile *.md,*.rst,*.adoc setlocal spell
-        autocmd FileType gitcommit setlocal spell
-    augroup end
-
     " Treat CamelCased words sensibly.
     if has("patch-8.2.1185")
         set spelloptions=camel
     endif
+
     " Set English and Swedish as spellcheck languages. Adding "cjk" disables
     " spellchecking for East Asian characters. "sv" requires the package
     " "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the
@@ -134,10 +146,6 @@ if has('spell')
     " stored in a different directory. Weird.
     " TODO: Automatically select the language. |set-spc-auto|
     set spelllang=en,sv,cjk
-    " Autocorrect the word under the cursor. The default mapping for &
-    " doesn't seem all that useful. TODO: Only override the mapping if spell
-    " checking is turned on.
-    nnoremap & 1z=
     " Turn off ugly background for misspelled words.
     highlight SpellBad   ctermbg=NONE
     highlight SpellCap   ctermbg=NONE
@@ -273,9 +281,6 @@ set mousemodel=extend
 
 " Highlight column 80.
 set colorcolumn=80
-
-" Automatically wrap text longer than 80 characters. See also 'formatoptions'.
-set textwidth=80
 
 " Display line numbers on the left.
 set number
