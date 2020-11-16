@@ -33,8 +33,8 @@ set lines=45
 " Font
 if has('gui_gtk2') || has('gui_gtk3')
     " Linux font.
-    set guifont=Roboto\ Mono\ 10.5
+    set guifont=Roboto\ Mono\ 10
 elseif has('gui_win32')
     " Windows font. TODO.
-    set guifont=Roboto\ Mono\ 10.5
+    set guifont=Roboto\ Mono\ 10
 endif
