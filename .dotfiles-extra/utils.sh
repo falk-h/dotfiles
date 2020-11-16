@@ -36,9 +36,14 @@ yesno() {
 
 # Show a message ($1) and try a given command. Return its output if it fails.
 try() {
-    red="$(tput setaf 1)"
-    green="$(tput setaf 2)"
-    reset="$(tput sgr0)"
+    red=
+    green=
+    reset=
+    if type tput > /dev/null 2>&1; then
+        red="$(tput setaf 1)"
+        green="$(tput setaf 2)"
+        reset="$(tput sgr0)"
+    fi
 
     printf "%s..." "$1" >&2
     shift
