@@ -69,9 +69,19 @@ BASE16_SHELL="$HOME/.dotfiles-submodules/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
+# Set prompt color according to host
+# Also affects the color of the mode indicator
+hostname="$(uname -n)"
+prompt_color=blue
+case "$hostname" in
+    dt|lt) prompt_color=blue;;
+    pi)    prompt_color=green;;
+esac
+zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
+
 # Function to add mode to the right prompt
 function zle-line-init zle-keymap-select {
-    RPS1="${${KEYMAP/vicmd/%B%F{9\}NORMAL%f%b}/(main|viins)/%F{12\}INSERT%f}"
+    RPS1="${${KEYMAP/vicmd/%B%F{9\}NORMAL%f%b}/(main|viins)/%F{$prompt_color\}INSERT%f}"
     # RPS2="$RPS1"
     zle reset-prompt
 }
