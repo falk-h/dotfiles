@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -eu
 
 hoster="github.com"
@@ -23,7 +23,7 @@ get_url() {
 }
 
 # shellcheck disable=1090
-source "$(dirname "$0")/utils.sh"
+. "$(dirname "$0")/utils.sh"
 
 # Ensure we have git, etc. This might be a bit excessive.
 check_commands grep awk xargs ssh git vim
