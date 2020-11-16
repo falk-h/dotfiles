@@ -1,13 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
 # Ask a yes/no question with $1 ('y'/'n') as the default.
 yesno() {
     default=
-
-    if [ "$1" = "y" ]; then
+    prompt="$2"
+    if [ "$1" = y ]; then
         default=0
-    elif [ "$1" = "n" ]; then
+        prompt="$prompt [Y/n] "
+    elif [ "$1" = n ]; then
         default=1
+        prompt="$prompt [y/N] "
     else
         echo "Invalid argument to $0: '$1'"
         exit 1
@@ -15,11 +17,8 @@ yesno() {
 
     while true; do
         answer=
-        if [ "$1" = "y" ]; then
-            read -r -n 1 -p "$2 [Y/n] " answer
-        elif [ "$1" = "n" ]; then
-            read -r -n 1 -p "$2 [y/N] " answer
-        fi
+        printf "%s" "$prompt"
+        read -r answer
         case $answer in
             "") return $default ;;
             [Yy])
