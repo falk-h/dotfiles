@@ -304,17 +304,6 @@ set cino+=l1
 " Print whitespace with nicer symbols. :set list to turn on.
 set listchars=tab:→\ ,eol:⏎,space:·,trail:!,nbsp:␣,
 
-"if executable('rg')
-"    " Use ripgrep to search if available.
-"    let &grepprg='rg --column --line-number --no-heading --smart-case'
-"
-"    " Use ripgrep instead of CtrlP's built in search because it's faster.
-"    let g:ctrlp_user_command = 'rg --files --color=never %s'
-"    " Also disable caching as ripgrep is fast enough that we don't need it.
-"    let g:ctrlp_use_caching = 0
-"    set grepformat=%f:%l:%c:%m
-"endif
-
 " Don't close scratch buffer when leaving insert mode.
 let g:scratch_insert_autohide = 0
 
