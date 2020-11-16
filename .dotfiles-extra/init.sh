@@ -76,4 +76,9 @@ fi
 
 try "Creating directory to hold Vim undo files" mkdir "$HOME/.vim/undo"
 try "Installing pre-commit hook" ln -s "$extra_dir/clean-spell-hook.sh" "$dotfile_dir/hooks/pre-commit"
-echo "$(tput setaf 2)All Done!$(tput sgr0)"
+
+if type tput > /dev/null 2>&1; then
+    echo "$(tput setaf 2)All Done!$(tput sgr0)"
+else
+    echo "All Done!"
+fi
