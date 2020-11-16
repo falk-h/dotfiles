@@ -319,9 +319,9 @@ let g:scratch_no_mappings = 1
 " Use nice powerline-y symbols
 let g:lightline = {
     \ 'component': {
-    \   'lineinfo': ' %3l:%-2v',
+    \   'lineinfo': "\uE0A1 %3l:%-2v",
     \   'fileformat': '%{&fileformat==#"unix"?"LF":&fileformat==#"dos"?"CRLF":"CR"}',
-    \   'readonly': '%{&readonly?"":""}',
+    \   'readonly': "%{&readonly?\"\uE0A2\":\"\"}",
     \ },
     \ 'colorscheme': 'base16_tomorrow_night_eighties',
     \ 'component_function': {
@@ -345,7 +345,8 @@ let g:lightline = {
     \   'left': [ [ 'tabs' ] ],
     \   'right': [ [ 'close' ] ] ,
     \ },
-    \ 'subseparator': { 'left': '│', 'right': '│' }
+    \ 'separator': { 'left': "\uE0B0", 'right': "\uE0B2" },
+    \ 'subseparator': { 'left': "\uE0b1", 'right': "\uE0B3" }
     \ }
 
 " Display Git branch, and counts of added/deleted/modified lines in lightline.
@@ -353,7 +354,7 @@ function! LightlineFugitive()
     if exists('*FugitiveHead')
         let branch = FugitiveHead(6)
         if branch !=# ''
-            let ret = ' ' .. branch
+            let ret = "\uE0A0 " .. branch
             let [added, modified, deleted] = GitGutterGetHunkSummary()
             if added != 0
                 let ret = ret .. ' +' .. added
