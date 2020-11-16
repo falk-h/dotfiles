@@ -22,8 +22,14 @@ get_url() {
     echo "https://$hoster/$repo.git"
 }
 
-# shellcheck disable=1090
-. "$(dirname "$0")/utils.sh"
+# Ensure that our utility functions were loaded
+if ! type try; then
+    # shellcheck disable=1090
+    if ! . "$(dirname "$0")/utils.sh"; then
+        echo "Couldn't load utility functions."
+        exit 1
+    fi
+fi
 
 # Ensure we have git, etc. This might be a bit excessive.
 check_commands grep awk xargs ssh git vim
