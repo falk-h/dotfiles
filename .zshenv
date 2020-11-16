@@ -1,5 +1,5 @@
 #!/bin/sh
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 for editor in vim nvim vi nano; do
     which "$editor" > /dev/null 2>&1 && export EDITOR="$editor" && break
