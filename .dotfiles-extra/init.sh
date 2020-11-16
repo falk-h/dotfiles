@@ -23,7 +23,7 @@ get_url() {
 }
 
 # Ensure that our utility functions were loaded
-if ! type try; then
+if ! type try > /dev/null 2>&1; then
     # shellcheck disable=1090
     if ! . "$(dirname "$0")/utils.sh"; then
         echo "Couldn't load utility functions."
