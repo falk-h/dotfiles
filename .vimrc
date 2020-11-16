@@ -56,7 +56,7 @@ endif
 colorscheme base16-tomorrow-night-eighties
 " Access colors present in 256 colorspace.
 " See https://github.com/chriskempson/base16-vim#256-colorspace.
-let base16colorspace=256
+let base16colorspace = 256
 
 " Don't use vim-gitgutter's predefined mappings because they break which-key.
 let g:gitgutter_map_keys = 0
@@ -615,7 +615,7 @@ cabbrev WAq wqa
 cabbrev WAQ wqa
 
 " Unbind space, and use it as leader.
-let g:mapleader="\<Space>"
+let g:mapleader = "\<Space>"
 nnoremap <silent> <leader> :WhichKey "<Space>"<CR>
 vnoremap <silent> <leader> :WhichKeyVisual "<Space>"<CR>
 
@@ -741,6 +741,12 @@ let g:leader.t.w = [
     \':set list!' ..
     \'| echo &list?"Showing whitespace":"Hiding whitespace"',
     \'Whitespace']
+
+let g:leader.t.S      = {'name':                          '+Languages'}
+let g:leader.t.S.d    = [':setlocal spelllang=de_de,cjk', 'German']
+let g:leader.t.S.s    = [':setlocal spelllang=sv,cjk',    'Swedish']
+let g:leader.t.S.e    = [':setlocal spelllang=en_us,cjk', 'English (US)']
+let g:leader.t.S.u    = [':setlocal spelllang=en_gb,cjk', 'English (UK)']
 
 let g:leader.w      = {'name':   '+Window'}
 let g:leader.w.d    = ['<C-W>q', 'Delete']
