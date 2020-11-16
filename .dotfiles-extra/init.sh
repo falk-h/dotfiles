@@ -42,6 +42,7 @@ fi
 cd
 
 try "Cloning from $url" git clone --bare "$url" "$dotfile_dir"
+# TODO: This line doesn't work for whatever reason
 try "Fetching submodules" dotfiles submodule update --init --recursive
 try "Ignoring untracked files in ~/" dotfiles config --local status.showUntrackedFiles no
 
