@@ -26,6 +26,10 @@ set guioptions+=k
 " Enable the context menu for right clicks.
 set mousemodel=popup_setpos
 
+" Set size on startup.
+set columns=140
+set lines=45
+
 " Font
 if has('gui_gtk2') || has('gui_gtk3')
     " Linux font.
