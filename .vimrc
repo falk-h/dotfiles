@@ -110,6 +110,15 @@ set cursorline
 " displayed.
 set cursorlineopt=line
 
+" Load Vim's plugin for reading manpages.
+runtime ftplugin/man.vim
+
+augroup man
+    autocmd!
+    " Use K to look up other manpages.
+    autocmd FileType man nmap <buffer> K <C-]>
+augroup end
+
 augroup text
     autocmd!
     " Automatically wrap text longer than 80 characters.

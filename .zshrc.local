@@ -51,9 +51,32 @@ alias rm='rm -I'
 alias vim="$VISUAL"
 # Hide the license header
 alias gdb='gdb -q'
+alias man=vim_man # Read manpages in Vim. Defined further down.
 
 function dotfiles() {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
+}
+
+# Test if a string could be a section of manpages
+function is_man_section() {
+    [[ "$1" =~ '^[0-9][a-z0-9]*?$' ]]
+}
+
+# Test if a string start with a dash
+function is_flag() {
+    [[ "$1" =~ '^-' ]]
+}
+
+# Look up manpages in Vim, or fallback to man if the arguments don't look like
+# a regular `man [section] [page]` invocation.
+function vim_man() {
+    if (( $# == 1 )) && ! is_flag "$1"; then
+        vim -c "Man $1" -c 'only'
+    elif (( $# == 2 )) && is_man_section "$1" && ! is_flag "$2"; then
+        vim -c "Man $1 $2" -c 'only'
+    else
+        man "$@"
+    fi
 }
 
 # mkdir and cd
