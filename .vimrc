@@ -5,6 +5,7 @@ set nocompatible
 " vim-which-key requires timeout.
 set timeout
 
+" TODO: Load plugins only when needed
 call plug#begin('~/.vim/plugged')
     " Completions using language servers. (see :CocConfig for configuration)
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -450,6 +451,7 @@ else
 endif
 
 " Use K to show documentation in preview window.
+" TODO: make this look up manpages when Coc can't find anything.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
