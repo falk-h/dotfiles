@@ -50,7 +50,6 @@ alias -g dd='dd status=progress'
 alias rm='rm -I'
 alias vim="$VISUAL"
 alias gdb='gdb -q' # Hide the license header
-alias man=vim_man # Read manpages in Vim. Defined further down.
 
 function dotfiles() {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
@@ -70,13 +69,19 @@ function is_flag() {
 # a regular `man [section] [page]` invocation.
 function vim_man() {
     if (( $# == 1 )) && ! is_flag "$1"; then
-        vim -c "Man $1" -c 'only'
+        vim -c "silent Man $1" \
+            -c "if &ft != 'man' | cquit | endif | only" \
+            || (echo "No manual entry for $1" && return 16)
     elif (( $# == 2 )) && is_man_section "$1" && ! is_flag "$2"; then
-        vim -c "Man $1 $2" -c 'only'
+        vim -c "silent Man $1 $2" \
+            -c "if &ft != 'man' | cquit | endif | only" \
+            || (echo "No manual entry for $2 in section $1" && return 16)
     else
         man "$@"
     fi
 }
+compdef vim_man=man # Tell zsh to treat vim_man as man for completions.
+alias man=vim_man
 
 # mkdir and cd
 function mcdir()
