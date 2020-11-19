@@ -763,6 +763,7 @@ let g:leader.t.S.d    = [':setlocal spelllang=de_de,cjk', 'German']
 let g:leader.t.S.s    = [':setlocal spelllang=sv,cjk',    'Swedish']
 let g:leader.t.S.e    = [':setlocal spelllang=en_us,cjk', 'English (US)']
 let g:leader.t.S.u    = [':setlocal spelllang=en_gb,cjk', 'English (UK)']
+let g:leader.t.S.r    = [':setlocal spelllang=en,sv,cjk', 'Reset']
 
 let g:leader.w      = {'name':   '+Window'}
 let g:leader.w.d    = ['<C-W>q', 'Delete']
