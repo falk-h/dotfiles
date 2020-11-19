@@ -49,8 +49,7 @@ alias bc='bc -lq' # bc with floats, without header
 alias -g dd='dd status=progress'
 alias rm='rm -I'
 alias vim="$VISUAL"
-# Hide the license header
-alias gdb='gdb -q'
+alias gdb='gdb -q' # Hide the license header
 alias man=vim_man # Read manpages in Vim. Defined further down.
 
 function dotfiles() {
@@ -80,7 +79,7 @@ function vim_man() {
 }
 
 # mkdir and cd
-function mcdir ()
+function mcdir()
 {
     mkdir -p -- "$1" &&
     cd -P -- "$1"
@@ -88,9 +87,9 @@ function mcdir ()
 
 # Base16 Shell
 BASE16_SHELL="$HOME/.dotfiles-submodules/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
+[ -n "$PS1" ] \
+    && [ -s "$BASE16_SHELL/profile_helper.sh" ] \
+    && eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 # Set prompt color according to host
 # Also affects the color of the mode indicator
