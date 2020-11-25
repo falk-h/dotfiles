@@ -604,7 +604,7 @@ endif
 " Go to definition.
 nmap <silent> gd <Plug>(coc-definition)
 " Go to type definition.
-nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
 " Go to implementation.
 nmap <silent> gi <Plug>(coc-implementation)
 " List references.
@@ -767,7 +767,7 @@ let g:leader.g.z   = [':GitGutterFold',        'Fold all unchanged lines']
 let g:leader.h        = {'name':                        '+Help'}
 let g:leader.h.g      = {'name':                        '+Miscellaneous'}
 let g:leader.h.g.d    = ['<Plug>(coc-definition)',      'Go to definition']
-let g:leader.h.g.y    = ['<Plug>(coc-type-definition)', 'Go to type definition']
+let g:leader.h.g.t    = ['<Plug>(coc-type-definition)', 'Go to type definition']
 let g:leader.h.g.i    = ['<Plug>(coc-implementation)',  'Go to implementation']
 let g:leader.h.g.r    = ['<Plug>(coc-references-used)', 'Go to references']
 let g:leader.h['[']   = {'name':                        '+['}
