@@ -191,7 +191,6 @@ if has('spell') && has('syntax')
     " "vim-spell-sv" on Arch. There's also a package "vim-spell-en", but the
     " files in that package already seem to be included in "vim-runtime", but
     " stored in a different directory. Weird.
-    " TODO: Automatically select the language. |set-spc-auto|
     set spelllang=en,sv,cjk
     " Turn off ugly background for misspelled words.
     highlight SpellBad   ctermbg=NONE
