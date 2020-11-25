@@ -533,12 +533,19 @@ endif
 " TODO: make this look up manpages when Coc can't find anything.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
+" TODO: Fallback to manpages.
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        try
+            execute 'h '.expand('<cword>')
+        catch
+            echohl ErrorMsg
+            echo 'Sorry, no help for '.expand('<cword>')
+            echohl None
+        endtry
+    else
+        call CocAction('doHover')
+    endif
 endfunction
 
 " Make Y work as it should.
@@ -650,6 +657,10 @@ command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeIm
 " TODO: Echo the number of results.
 "| echo getloclist(0, {'size': 1})['size'] .. ' results'
 cabbrev rg Rg
+
+" Abbreviations for :Man.
+cabbrev man Man
+cabbrev m Man
 
 " Search for the current word or currently selected text with <C-k>
 nnoremap <C-k> yiw:Rg <C-f>p<CR>
