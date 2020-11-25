@@ -68,21 +68,38 @@ colorscheme base16-tomorrow-night-eighties
 " Don't use vim-gitgutter's predefined mappings because they break which-key.
 let g:gitgutter_map_keys = 0
 
-" coc configuration.
-" Coc extensions to install. These can also be installed with :CocInstall, but I
-" much prefer specifying them declaratively. FIXME: This caused Vim to segfault
-" when adding 'coc-diagnostic'. Investigate.
-let g:coc_global_extensions = [
-    \'coc-json',
-    \'coc-rust-analyzer',
-    \'coc-diagnostic',
-    \'coc-clangd',
-    \'coc-tsserver',
-    \'coc-python',
-    \'coc-pairs',
-    \'coc-yaml',
-    \'coc-html',
-    \'coc-vimtex']
+" Close gitgutter previews when escape is pressed.
+let g:gitgutter_close_preview_on_escape = 1
+
+" Coc configuration.
+if exists('g:coc_enabled') && g:coc_enabled
+    " Coc extensions to install. These can also be installed with :CocInstall, but I
+    " much prefer specifying them declaratively. FIXME: This caused Vim to segfault
+    " when adding 'coc-diagnostic'. Investigate.
+    let g:coc_global_extensions = [
+        \'coc-json',
+        \'coc-rust-analyzer',
+        \'coc-diagnostic',
+        \'coc-clangd',
+        \'coc-tsserver',
+        \'coc-python',
+        \'coc-pairs',
+        \'coc-yaml',
+        \'coc-html',
+        \'coc-vimtex']
+
+    augroup coc
+        autocmd!
+        " Highlight the symbol and its references when holding the cursor.
+        autocmd CursorHold * silent call CocActionAsync('highlight')
+        " Setup formatexpr specified filetype(s).
+        autocmd FileType rust,c setl formatexpr=CocAction('formatSelected')
+        " Update signature help on jump placeholder.
+        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        " Use autocmd to force lightline update. Recommended in coc-status-lightline.
+        autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+    augroup end
+endif
 
 " Some language servers have issues with backup files, see #649.
 set nobackup
@@ -95,34 +112,29 @@ set updatetime=300
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-" TODO: Only run this if Coc is loaded.
-augroup coc
-    autocmd!
-    " Highlight the symbol and its references when holding the cursor.
-    autocmd CursorHold * silent call CocActionAsync('highlight')
-    " Setup formatexpr specified filetype(s).
-    autocmd FileType rust,c setl formatexpr=CocAction('formatSelected')
-    " Update signature help on jump placeholder.
-    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-    " Use autocmd to force lightline update. Recommended in coc-status-lightline.
-    autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-augroup end
+" Show the number of the current search result and the total number of search
+" results in the command line.
+set shortmess-=S
 
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
 " and for plugins that are filetype specific.
 filetype indent plugin on
 
-" Enable syntax highlighting.
-syntax on
+if has('syntax')
+    " Enable syntax highlighting.
+    syntax on
+    " Highlight current line.
+    set cursorline
+    " Highlight column 80.
+    set colorcolumn=80
+endif
 
-" Highlight current line.
-set cursorline
 " But only highlight the text line, not the number in the number column. This
 " can also be set to "screenline" to only highlight part of the line when the
 " cursor is on a long line that is broken into multiple "screen" lines when
 " displayed.
-if exists('&cursorlineopt')
+if exists('+cursorlineopt')
     set cursorlineopt=line
 endif
 
@@ -163,14 +175,14 @@ augroup text
     endif
 augroup end
 
-if has('spell')
+if has('spell') && has('syntax')
     " Disable spellcheck by default. It can be toggled with <Space>ts. This is
     " smart enough to only spellcheck within comments and strings when editing
     " code.
     set nospell
 
     " Treat CamelCased words sensibly.
-    if has("patch-8.2.1185")
+    if exists('+spelloptions')
         set spelloptions=camel
     endif
 
@@ -197,8 +209,10 @@ if has('spell')
 endif
 
 " Persistent undo stored in ~/vim/undo.
-set undofile
-set undodir=~/.vim/undo
+if has('persistent_undo')
+    set undofile
+    set undodir=~/.vim/undo
+endif
 
 " Don't insert an extra space after a period when joining lines with J.
 set nojoinspaces
@@ -207,6 +221,9 @@ set nojoinspaces
 " allow incrementing and decrementing of single alphabetical characters (add
 " "alpha"). "bin" and "hex" are set by default.
 set nrformats=bin,hex,alpha
+" Handle numbers with dashes properly. Not supported by all versions of
+" (neo)vim.
+silent! set nrformats=bin,hex,alpha,unsigned
 
 " Store swap files in /tmp if possible, otherwise in the same directory as the
 " file that is being edited.
@@ -246,15 +263,20 @@ set ttyfast
 " crashes.
 set hidden
 
-" Better command-line completion. TODO: possibly set wildmode.
-set wildmenu
+if has('wildmenu')
+    " Better command-line completion.
+    set wildmenu
+    " Make wildmenu behave more or less like zsh's tab completion.
+    set wildmode=longest,full
+endif
 
-" Show partial commands in the last line of the screen.
-set showcmd
-
-" Show the number of the current search result and the total number of search
-" results in the command line.
-set shortmess-=S
+if has('cmdline_info')
+    " Show partial commands in the last line of the screen.
+    set showcmd
+    " Display the cursor position on the last line of the screen or in the
+    " status line of a window.
+    set ruler
+endif
 
 " Modelines have historically been a source of security vulnerabilities. As
 " such, it may be a good idea to disable them and use the securemodelines
@@ -262,17 +284,21 @@ set shortmess-=S
 set nomodeline
 
 " Use the X clipboard (ctrl-C, ctrl-V, etc.) for y, d, p, and so on.
-set clipboard=unnamedplus
+if has('nvim') || has('xterm_clipboard') || has('gui_running')
+    set clipboard=unnamedplus
+endif
 
 " Use case insensitive search...
 set ignorecase
 " except when there are any capital letters in the search pattern.
 set smartcase
-" Highlight searches (use <C-L> to temporarily turn off highlighting; see the
-" mapping of <C-L> below).
-set hlsearch
-" Also start highlighting while the search pattern is still being typed.
-set incsearch
+if has('extra_search')
+    " Highlight searches (use <C-L> to temporarily turn off highlighting; see the
+    " mapping of <C-L> below).
+    set hlsearch
+    " Also start highlighting while the search pattern is still being typed.
+    set incsearch
+endif
 
 " Larger search/command history. Also affects CtrlP.
 set history=200
@@ -294,9 +320,10 @@ set autoindent
 " coming from other editors would expect.
 set nostartofline
 
-" Display the cursor position on the last line of the screen or in the status
-" line of a window.
-set ruler
+" Set the terminal window's title to the current file.
+if has('title')
+    set title
+endif
 
 " Always display the status line, even if only one window is displayed.
 set laststatus=2
@@ -313,9 +340,6 @@ set mouse=a
 " Right click extends the selection, as opposed to opening a context menu,
 " since that only works in GUI mode anyway.
 set mousemodel=extend
-
-" Highlight column 80.
-set colorcolumn=80
 
 " Display line numbers on the left.
 set number
@@ -339,7 +363,9 @@ set expandtab
 
 " Put closing braces inside switch cases on the same indentation level as the
 " case label. See cino-l.
-set cino+=l1
+if has('cindent')
+    set cino+=l1
+endif
 
 " Print whitespace with nicer symbols. :set list to turn on.
 set listchars=tab:→\ ,eol:⏎,space:·,trail:!,nbsp:␣,
@@ -442,11 +468,10 @@ endfunction
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " coc diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one.
-  set signcolumn=number
-else
-  set signcolumn=yes
+if exists('+signcolumn')
+    set signcolumn=yes
+    " Recently vim can merge signcolumn and number column into one.
+    silent! set signcolumn=number
 endif
 
 " Make fzf's window 12 rows high.
