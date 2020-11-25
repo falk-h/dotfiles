@@ -658,10 +658,6 @@ command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeIm
 "| echo getloclist(0, {'size': 1})['size'] .. ' results'
 cabbrev rg Rg
 
-" Abbreviations for :Man.
-cabbrev man Man
-cabbrev m Man
-
 " Search for the current word or currently selected text with <C-k>
 nnoremap <C-k> yiw:Rg <C-f>p<CR>
 vnoremap <C-k> y:Rg <C-f>p<CR>
