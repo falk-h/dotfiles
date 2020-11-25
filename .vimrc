@@ -746,7 +746,7 @@ let g:leader.f.r = [':source $MYVIMRC',                        'Reload ~/.vimrc'
 let g:leader.f.u = [':PlugUpdate',                             'Update plugins']
 let g:leader.f.U = [':PlugUpgrade',                            'Update vim-plug']
 let g:leader.f.z = [':edit ~/.zshrc.local',                    'Open ~/.zshrc.local']
-let g:leader.f.Z = [':edit ~/.zshrc',                          'Open ~/.zshrc.local']
+let g:leader.f.Z = [':edit ~/.zshrc',                          'Open ~/.zshrc']
 
 let g:leader.g     = {'name':                  '+Git'}
 let g:leader.g.b   = [':Git blame',            'Blame']
