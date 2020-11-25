@@ -50,38 +50,13 @@ alias -g dd='dd status=progress'
 alias rm='rm -I'
 alias vim="$VISUAL"
 alias gdb='gdb -q' # Hide the license header
+if whence nvim &> /dev/null; then
+    alias man='MANPAGER="nvim +Man!" man'
+fi
 
 function dotfiles() {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
 }
-
-# Test if a string could be a section of manpages
-function is_man_section() {
-    [[ "$1" =~ '^[0-9][a-z0-9]*?$' ]]
-}
-
-# Test if a string start with a dash
-function is_flag() {
-    [[ "$1" =~ '^-' ]]
-}
-
-# Look up manpages in Vim, or fallback to man if the arguments don't look like
-# a regular `man [section] [page]` invocation.
-function vim_man() {
-    if (( $# == 1 )) && ! is_flag "$1"; then
-        vim -c "silent Man $1" \
-            -c "if &ft != 'man' | cquit | endif | only" \
-            || (echo "No manual entry for $1" && return 16)
-    elif (( $# == 2 )) && is_man_section "$1" && ! is_flag "$2"; then
-        vim -c "silent Man $1 $2" \
-            -c "if &ft != 'man' | cquit | endif | only" \
-            || (echo "No manual entry for $2 in section $1" && return 16)
-    else
-        man "$@"
-    fi
-}
-compdef vim_man=man # Tell zsh to treat vim_man as man for completions.
-alias man=vim_man
 
 # mkdir and cd
 function mcdir()
