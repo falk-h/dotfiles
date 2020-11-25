@@ -736,6 +736,7 @@ let g:leader.f   = {'name':                                    '+File/config'}
 let g:leader.f.a = [':edit ~/.config/alacritty/alacritty.yml', 'Open alacritty.yml']
 let g:leader.f.c = [':CocConfig',                              'Edit coc config']
 let g:leader.f.C = [':PlugClean',                              'Clean plugins']
+let g:leader.f.e = [':edit ~/.zshenv',                         'Open ~/.zshenv']
 let g:leader.f.g = [':edit ~/.gvimrc',                         'Open ~/.gvimrc']
 let g:leader.f.G = [':edit ~/.gdbinit',                        'Open ~/.gdbinit']
 let g:leader.f.i = [':PlugInstall',                            'Install plugins']
