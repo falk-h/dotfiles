@@ -810,11 +810,11 @@ let g:leader.t   = {'name': '+Toggles'}
 let g:leader.t.g = [
     \':GitGutterToggle' ..
     \'| echo g:gitgutter_enabled?"GitGutter enabled":"GitGutter disabled"',
-    \'Git gutter']
+    \'GitGutter']
 let g:leader.t.l = [
     \':GitGutterLineHighlightsToggle' ..
-    \'| echo g:gitgutter_highlight_lines?"Line highlights enabled":"Line highlights disabled"',
-    \'Git gutter line highlights']
+    \'| echo g:gitgutter_highlight_lines?"GitGutter line highlights enabled":"GitGutter line highlights disabled"',
+    \'GitGutter line highlights']
 let g:leader.t.n = [
     \':set number!' ..
     \'| echo &number?"Line numbers enabled":"Line numbers disabled"',
