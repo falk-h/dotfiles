@@ -148,7 +148,7 @@ let g:ft_man_no_sect_fallback = 1
 augroup help
     autocmd!
     " Quit help buffers with q.
-    autocmd FileType help nnoremap <buffer> q :quit<CR>
+    autocmd FileType help nnoremap <buffer> q :silent quit<CR>
 augroup end
 
 augroup man
