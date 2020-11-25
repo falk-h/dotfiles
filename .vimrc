@@ -815,6 +815,14 @@ let g:leader.t.l = [
     \':GitGutterLineHighlightsToggle' ..
     \'| echo g:gitgutter_highlight_lines?"Line highlights enabled":"Line highlights disabled"',
     \'Git gutter line highlights']
+let g:leader.t.n = [
+    \':set number!' ..
+    \'| echo &number?"Line numbers enabled":"Line numbers disabled"',
+    \'Line numbers']
+let g:leader.t.r = [
+    \':set relativenumber!' ..
+    \'| echo &relativenumber?"Relative line numbers enabled":"Relative line numbers disabled"',
+    \'Relative line numbers']
 let g:leader.t.s = [
     \':set spell!' ..
     \'| echo &spell?"Spellcheck enabled":"Spellcheck disabled"',
