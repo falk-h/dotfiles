@@ -530,10 +530,8 @@ else
 endif
 
 " Use K to show documentation in preview window.
-" TODO: make this look up manpages when Coc can't find anything.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" TODO: Fallback to manpages.
 function! s:show_documentation()
     if (index(['vim','help'], &filetype) >= 0)
         try
@@ -782,6 +780,8 @@ let g:leader.h.z.u.g  = ['zug',                         'Undo add good to persis
 let g:leader.h.z.u.G  = ['zuG',                         'Undo add good to temp dict']
 let g:leader.h.z.u.w  = ['zuw',                         'Undo add bad to persistent dict']
 let g:leader.h.z.u.W  = ['zuW',                         'Undo add bad to temp dict']
+
+let g:leader.k = ['Man', 'Open manpage']
 
 let g:leader.m = [':silent wall | LMakeshiftBuild', 'Save and make']
 
