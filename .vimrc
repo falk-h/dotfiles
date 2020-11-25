@@ -55,11 +55,11 @@ if has('termguicolors')
     set termguicolors
 endif
 
-" Don't forget to change the colorscheme in g:lightline when changing this.
-colorscheme base16-tomorrow-night-eighties
 " Access colors present in 256 colorspace.
 " See https://github.com/chriskempson/base16-vim#256-colorspace.
 let base16colorspace = 256
+" Don't forget to change the colorscheme in g:lightline when changing this.
+colorscheme base16-tomorrow-night-eighties
 
 " Don't use vim-gitgutter's predefined mappings because they break which-key.
 let g:gitgutter_map_keys = 0
