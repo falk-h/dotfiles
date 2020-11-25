@@ -48,7 +48,7 @@ call plug#begin('~/.vim/plugged')
     " UI implementation for fzf.
     Plug 'junegunn/fzf.vim'
     " Autodetect build system.
-    Plug 'falk-h/vim-makeshift'
+    Plug 'johnsyweb/vim-makeshift'
 call plug#end()
 
 " Colorscheme
