@@ -49,6 +49,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf.vim'
     " Autodetect build system.
     Plug 'johnsyweb/vim-makeshift'
+    " Fancy startup screen.
+    Plug 'mhinz/vim-startify'
 call plug#end()
 
 " Colorscheme
@@ -344,6 +346,35 @@ set cino+=l1
 
 " Print whitespace with nicer symbols. :set list to turn on.
 set listchars=tab:→\ ,eol:⏎,space:·,trail:!,nbsp:␣,
+
+" Change directory to repo root when opening a file from startify.
+let g:startify_change_to_vcs_root = 1
+
+" Custom header and footer for startify. TODO: check that we have startify.
+redir => s:ver " Capture the output of :version into s:ver.
+    silent version
+redir END
+let s:ver = split(s:ver, '\n') " Split s:ver into lines.
+if has('nvim')
+    let s:ver = s:ver[0]
+else
+    " Remove some unnecessary info and add the patch number.
+    let s:ver = substitute(s:ver[0], ' (.*)', '', '') . ', ' . s:ver[1]
+endif
+let g:startify_custom_footer =
+    \startify#pad(['Host: ' . hostname() . ', Vim: ' . s:ver])
+let g:startify_custom_header = [
+\'                  ::::::::::   :::   :::       :::      ::::::::   ::::::::',
+\'                 :*:         :*:*: :*:*:    :*: :*:   :*:    :*: :*:    :*:',
+\'                *:*        *:* *:*:* *:*  *:*   *:*  *:*        *:*',
+\'               *#**:**#   *#*  *:*  *#* *#**:**#**: *#*        *#**:**#**',
+\'              *#*        *#*       *#* *#*     *#* *#*               *#*',
+\'             #*#        #*#       #*# #*#     #*# #*#    #*# #*#    #*#',
+\'            ########## ###       ### ###     ###  ########   ########','']
+
+" Enable 'cursorline' and hide the tildes in the left fringe in startify.
+autocmd User Startified setlocal cursorline
+autocmd User Startified let &l:fcs = 'eob: '
 
 " Don't close scratch buffer when leaving insert mode.
 let g:scratch_insert_autohide = 0
@@ -727,6 +758,8 @@ let g:leader.m = [':silent wall | LMakeshiftBuild', 'Save and make']
 let g:leader.M = [':LMakeshiftBuild', 'Make']
 
 let g:leader.r = [':History', 'Most recently used files']
+
+let g:leader.R = [':Startify', 'Home screen']
 
 let g:leader.s      = {'name':       '+Search'}
 let g:leader.s['/'] = [':History/',  'Search history']
