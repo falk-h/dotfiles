@@ -121,7 +121,9 @@ set cursorline
 " can also be set to "screenline" to only highlight part of the line when the
 " cursor is on a long line that is broken into multiple "screen" lines when
 " displayed.
-set cursorlineopt=line
+if exists('&cursorlineopt')
+    set cursorlineopt=line
+endif
 
 " Load Vim's plugin for reading manpages.
 runtime ftplugin/man.vim
