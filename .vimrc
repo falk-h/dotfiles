@@ -546,7 +546,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 " Go to implementation.
 nmap <silent> gi <Plug>(coc-implementation)
 " List references.
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gr <Plug>(coc-references-used)
 " Go to previous/next diagnostic.
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
@@ -729,7 +729,7 @@ let g:leader.h.g      = {'name':                        '+Miscellaneous'}
 let g:leader.h.g.d    = ['<Plug>(coc-definition)',      'Go to definition']
 let g:leader.h.g.y    = ['<Plug>(coc-type-definition)', 'Go to type definition']
 let g:leader.h.g.i    = ['<Plug>(coc-implementation)',  'Go to implementation']
-let g:leader.h.g.r    = ['<Plug>(coc-references)',      'Go to references']
+let g:leader.h.g.r    = ['<Plug>(coc-references-used)', 'Go to references']
 let g:leader.h['[']   = {'name':                        '+['}
 let g:leader.h['['].d = ['<Plug>(coc-diagnostic-prev)', 'Previous diagnostic']
 let g:leader.h[']']   = {'name':                        '+]'}
