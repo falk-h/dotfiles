@@ -139,7 +139,9 @@ if exists('+cursorlineopt')
 endif
 
 " Load Vim's plugin for reading manpages.
-runtime ftplugin/man.vim
+if ! has('nvim')
+    runtime ftplugin/man.vim
+endif
 " Enable folding the sections of manpages.
 let g:ft_man_folding_enable = 1
 " Don't search in other sections if the page wasn't found.
