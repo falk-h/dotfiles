@@ -7,6 +7,8 @@ set timeout
 
 " TODO: Load plugins only when needed
 call plug#begin('~/.vim/plugged')
+    " Register vim-plug as a plugin to get documentation for it in vim.
+    Plug 'junegunn/vim-plug'
     " Completions using language servers. (see :CocConfig for configuration)
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Spacemacs style popup for keybindings.
