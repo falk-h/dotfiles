@@ -1,6 +1,10 @@
 #!/bin/sh
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
+if which rustup &> /dev/null; then
+    export MANPATH="$(rustup toolchain list -v | grep '(default)' | cut -f 2)/share/man:${MANPATH:-$(manpath)}"
+fi
+
 for editor in nvim vim vi nano; do
     which "$editor" > /dev/null 2>&1 && export EDITOR="$editor" && break
 done
