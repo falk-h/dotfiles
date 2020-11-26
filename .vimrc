@@ -421,11 +421,12 @@ let g:lightline = {
     \ 'colorscheme': 'base16_tomorrow_night_eighties',
     \ 'component_function': {
     \   'fugitive': 'LightlineFugitive',
+    \   'function': 'LightlineFunction',
     \   'cocstatus': 'coc#status',
     \ },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \           [ 'relativepath', 'readonly', 'modified' ],
+    \           [ 'relativepath', 'readonly', 'function', 'modified' ],
     \           [ 'cocstatus' ] ],
     \   'right': [ [ 'lineinfo' ],
     \            [ 'percent' ],
@@ -443,6 +444,12 @@ let g:lightline = {
     \ 'separator': { 'left': "\uE0B0", 'right': "\uE0B2" },
     \ 'subseparator': { 'left': "\uE0b1", 'right': "\uE0B3" }
     \ }
+
+function! LightlineFunction()
+    if exists('b:coc_current_function')
+        return b:coc_current_function[3:]
+    endif
+endfunction
 
 " Display Git branch, and counts of added/deleted/modified lines in lightline.
 function! LightlineFugitive()
