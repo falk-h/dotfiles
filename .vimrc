@@ -86,6 +86,7 @@ if exists('g:coc_enabled') && g:coc_enabled
         \'coc-pairs',
         \'coc-yaml',
         \'coc-html',
+        \'coc-snippets',
         \'coc-vimtex']
 
     augroup coc
