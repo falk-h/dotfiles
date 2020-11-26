@@ -539,11 +539,17 @@ else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
+" Show the outline of the current file.
+nnoremap <expr> gO &ft=='man' ? "gO" : ":CocList outline<CR>"
+
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
+
+    if coc#float#has_scroll()
+        call coc#float#scroll(1)
+    elseif index(['vim','help'], &filetype) >= 0
         try
             execute 'h '.expand('<cword>')
         catch
