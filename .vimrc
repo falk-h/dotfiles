@@ -51,6 +51,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'johnsyweb/vim-makeshift'
     " Fancy startup screen.
     Plug 'mhinz/vim-startify'
+    " Loads of ready-made snippets.
+    Plug 'honza/vim-snippets'
 call plug#end()
 
 " Colorscheme
@@ -516,12 +518,14 @@ inoremap <silent><expr> <TAB>
   \ <SID>check_back_space() ? "\<TAB>" :
   \ coc#refresh()
 
-let g:coc_snippet_next = '<tab>'
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+" Jump to next/previous position in snippet with tab/shift-tab.
+let g:coc_snippet_next = '<TAB>'
+let g:coc_snippet_prev = '<S-TAB>'
 
 " Use <c-space> to trigger completion.
 if has('nvim')
