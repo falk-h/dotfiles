@@ -591,6 +591,7 @@ noremap! <C-BS> <C-w>
 " Tell Makeshift about Meson.
 let g:makeshift_systems = {
     \'meson.build': 'ninja -C builddir',
+    \'Cargo.toml' : 'cargo build',
     \}
 
 " Map <C-P> and <C-S-P> to paste like p and P, but always linewise. This is
