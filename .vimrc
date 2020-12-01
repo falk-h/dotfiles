@@ -336,6 +336,45 @@ set mouse=a
 " Right click extends the selection, as opposed to opening a context menu,
 " since that only works in GUI mode anyway.
 set mousemodel=extend
+" 200 ms timeout for double clicking.
+set mousetime=200
+" Prevent mouse clicks from moving the cursor, but allow them to switch focus
+" to another window. This works by setting the mark 'z', and jumping back to
+" it after the mouse click has moved the cursor. Additional hackery is needed
+" to preserve insert mode, but only when not switching to another window.
+noremap <LeftMouse> mz<LeftMouse>g`z
+inoremap <expr><silent> <LeftMouse> "<ESC>mz<LeftMouse>:call <SID>mouse_insert(" .. getpos('.')[0] .. ")<CR>"
+function! s:mouse_insert(pos)
+    let [l:buf, _, _, _] = getpos('.')
+    normal g`zl
+    if a:pos == l:buf
+        startinsert
+    endif
+endfunction
+" Make the right mouse button do what the left mouse usually does, and unmap
+" the left mouse button from everything but a single click.
+noremap  <RightMouse> <LeftMouse>
+cnoremap <RightMouse> <LeftMouse>
+noremap  <RightDrag> <LeftDrag>
+cnoremap <RightDrag> <LeftDrag>
+noremap  <RightRelease> <LeftRelease>
+cnoremap <RightRelease> <LeftRelease>
+noremap  <2-RightMouse> <2-LeftMouse>
+cnoremap <2-RightMouse> <2-LeftMouse>
+noremap  <3-RightMouse> <3-LeftMouse>
+cnoremap <3-RightMouse> <3-LeftMouse>
+noremap  <LeftDrag> <NOP>
+cnoremap <LeftDrag> <NOP>
+noremap  <LeftRelease> <NOP>
+cnoremap <LeftRelease> <NOP>
+noremap  <2-LeftMouse> <NOP>
+cnoremap <2-LeftMouse> <NOP>
+noremap  <3-LeftMouse> <NOP>
+cnoremap <3-LeftMouse> <NOP>
+
+" Scroll six lines for each step on the scroll wheel.
+noremap <ScrollWheelUp> 6<C-Y>
+noremap <ScrollWheelDown> 6<C-E>
 
 " Display line numbers on the left.
 set number
