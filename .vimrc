@@ -91,17 +91,6 @@ if exists('g:coc_enabled') && g:coc_enabled
         \'coc-snippets',
         \'coc-vimtex']
 
-    augroup coc
-        autocmd!
-        " Highlight the symbol and its references when holding the cursor.
-        autocmd CursorHold * silent call CocActionAsync('highlight')
-        " Setup formatexpr specified filetype(s).
-        autocmd FileType rust,c setl formatexpr=CocAction('formatSelected')
-        " Update signature help on jump placeholder.
-        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-        " Use autocmd to force lightline update. Recommended in coc-status-lightline.
-        autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-    augroup end
 endif
 
 " Some language servers have issues with backup files, see #649.
@@ -148,25 +137,21 @@ endif
 " Don't search in other sections if the page wasn't found.
 let g:ft_man_no_sect_fallback = 1
 
-augroup help
+augroup vimrc
     autocmd!
     " Quit help buffers with q.
     autocmd FileType help nnoremap <buffer> q :silent quit<CR>
-augroup end
 
-augroup man
-    autocmd!
     " Use K to look up other manpages.
-    autocmd FileType man nmap <buffer> K <C-]>
-augroup end
+    verbose autocmd FileType man nmap <buffer> K <C-]>
 
-augroup text
-    autocmd!
     " Automatically wrap text longer than 80 characters.
     " See also 'formatoptions'.
-    autocmd FileType markdown,rst,asciidoc,gitcommit setlocal textwidth=80
+    autocmd FileType markdown,rst,asciidoc setlocal textwidth=80
     " Avoid splitting words when wrapping lines.
     autocmd FileType markdown,rst,asciidoc,gitcommit setlocal linebreak
+    " Highlight column 50 in commit messages.
+    autocmd FileType gitcommit set colorcolumn=50
 
     if has('spell')
         " Turn on spelling automatically for some text files.
@@ -176,6 +161,15 @@ augroup text
         " doesn't seem all that useful.
         autocmd FileType markdown,rst,asciidoc,gitcommit nnoremap <buffer> & 1z=
     endif
+
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType rust,c setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    " Use autocmd to force lightline update. Recommended in coc-status-lightline.
+    autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 augroup end
 
 if has('spell') && has('syntax')
