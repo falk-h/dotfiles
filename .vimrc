@@ -759,6 +759,7 @@ let g:leader.f.z = [':edit ~/.zshrc.local',                    'Open ~/.zshrc.lo
 let g:leader.f.Z = [':edit ~/.zshrc',                          'Open ~/.zshrc']
 
 let g:leader.g     = {'name':                  '+Git'}
+let g:leader.g.a   = [':Git commit --amend',   'Commit --amend']
 let g:leader.g.b   = [':Git blame',            'Blame']
 let g:leader.g.c   = [':Git commit',           'Commit']
 let g:leader.g.f   = [':Git fetch',            'Fetch']
@@ -766,6 +767,8 @@ let g:leader.g.F   = {'name':                  '+Pull'}
 let g:leader.g.F.p = [':Git pull',             'Pull']
 let g:leader.g.F.a = [':Git pull --autostash', 'Pull --autostash']
 let g:leader.g.g   = [':Git',                  'Status (g? for help)']
+let g:leader.g.l   = [':Git log',              'Log']
+let g:leader.g.L   = [':Gllog',                'Log to location list']
 let g:leader.g.p   = {'name':                  '+Push'}
 let g:leader.g.p.p = [':Git push',             'Push']
 let g:leader.g.P   = [':GitGutterPreviewHunk', 'Preview hunk']
