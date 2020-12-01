@@ -53,6 +53,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'mhinz/vim-startify'
     " Loads of ready-made snippets.
     Plug 'honza/vim-snippets'
+    " Some Rust features.
+    Plug 'rust-lang/rust.vim'
 call plug#end()
 
 " Colorscheme
