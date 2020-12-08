@@ -50,6 +50,9 @@ alias -g dd='dd status=progress'
 alias rm='rm -I'
 alias vim="$VISUAL"
 alias vi="$VISUAL"
+if [[ "$VISUAL" =~ "vim" ]]; then
+    alias vimdiff="$VISUAL -d"
+fi
 alias gdb='gdb -q' # Hide the license header
 if whence nvim &> /dev/null; then
     alias man='MANPAGER="nvim +Man!" man'
