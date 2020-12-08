@@ -378,8 +378,10 @@ noremap  <3-LeftMouse> <NOP>
 cnoremap <3-LeftMouse> <NOP>
 
 " Scroll six lines for each step on the scroll wheel.
-noremap <ScrollWheelUp> 6<C-Y>
-noremap <ScrollWheelDown> 6<C-E>
+noremap <ScrollWheelUp> <ScrollWheelUp><ScrollWheelUp>
+noremap <ScrollWheelDown> <ScrollWheelDown><ScrollWheelDown>
+cnoremap <ScrollWheelUp> <ScrollWheelUp><ScrollWheelUp>
+cnoremap <ScrollWheelDown> <ScrollWheelDown><ScrollWheelDown>
 
 " Display line numbers on the left.
 set number
