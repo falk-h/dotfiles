@@ -85,6 +85,22 @@ case "$hostname" in
 esac
 zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
 
+# just type '...' to get '../..'
+rationalise-dot() {
+local MATCH
+if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
+  LBUFFER+=/
+  zle self-insert
+  zle self-insert
+else
+  zle self-insert
+fi
+}
+zle -N rationalise-dot
+bindkey . rationalise-dot
+# without this, typing a . aborts incremental history search
+bindkey -M isearch . self-insert
+
 # Function to add mode to the right prompt
 function zle-line-init zle-keymap-select {
     RPS1="${${KEYMAP/vicmd/%B%F{9\}NORMAL%f%b}/(main|viins)/%F{$prompt_color\}INSERT%f}"
