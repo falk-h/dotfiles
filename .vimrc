@@ -147,6 +147,9 @@ augroup vimrc
     " Use K to look up other manpages.
     autocmd FileType man nmap <buffer> K <C-]>
 
+    " Ensure that colorcolumn always shows the current textwidth.
+    "autocmd BufEnter * let &colorcolumn = &textwidth == 0 ? 0 : &textwidth + 1
+
     " Automatically wrap text longer than 80 characters.
     " See also 'formatoptions'.
     autocmd FileType markdown,rst,asciidoc setlocal textwidth=80
