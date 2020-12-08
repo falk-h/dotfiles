@@ -40,6 +40,9 @@ zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
 bindkey -a '^Z' fancy-ctrl-z
 
+# Assume dvorak layout for spelling corrections
+setopt dvorak
+
 # Aliases
 alias cb='popd 1> /dev/null' # silent popd
 alias :q=exit
