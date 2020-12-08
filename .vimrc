@@ -526,6 +526,10 @@ endif
 " Make fzf's window 12 rows high.
 let g:fzf_layout = {'down': 12}
 
+" Make fzf's preview window take up 70% of the width (default is 50%), and use
+" C-/ to toggle the preview window (default).
+let g:fzf_preview_window = ['right:70%', 'ctrl-/']
+
 " Make EditorConfig not affect Fugitive buffers. This is recommended by the
 " EditorConfig README.
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
