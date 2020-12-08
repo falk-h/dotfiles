@@ -145,7 +145,7 @@ augroup vimrc
     autocmd FileType help nnoremap <buffer> q :silent quit<CR>
 
     " Use K to look up other manpages.
-    verbose autocmd FileType man nmap <buffer> K <C-]>
+    autocmd FileType man nmap <buffer> K <C-]>
 
     " Automatically wrap text longer than 80 characters.
     " See also 'formatoptions'.
