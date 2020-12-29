@@ -766,10 +766,9 @@ let g:leader['.'] = [':Files',   'Find file in cwd']
 let g:leader[' '] = [':GFiles',  'Find file in project']
 let g:leader[','] = [':Buffers', 'Switch buffer']
 
-let g:leader.a   = {'name':                            '+Actions'}
-let g:leader.a.a = ['<Plug>(coc-codeaction-selected)', 'Code action on selected']
-let g:leader.a.c = ['<Plug>(coc-codeaction)',          'Code action']
-let g:leader.a.f = ['<Plug>(coc-fix-current)',         'Fix current']
+let g:leader.a   = ['<Plug>(coc-codeaction)',          'Code action']
+
+let g:leader.A   = ['<Plug>(coc-codeaction-selected)', 'Code action on selected']
 
 let g:leader.b   = {'name':     '+Buffer'}
 let g:leader.b.d = [':bdelete', 'Delete']
@@ -808,6 +807,8 @@ let g:leader.f.u = [':PlugUpdate',                             'Update plugins']
 let g:leader.f.U = [':PlugUpgrade',                            'Update vim-plug']
 let g:leader.f.z = [':edit ~/.zshrc.local',                    'Open ~/.zshrc.local']
 let g:leader.f.Z = [':edit ~/.zshrc',                          'Open ~/.zshrc']
+
+let g:leader.F = ['<Plug>(coc-fix-current)', 'Quickfix']
 
 let g:leader.g     = {'name':                  '+Git'}
 let g:leader.g.a   = [':Git commit --amend',   'Commit --amend']
