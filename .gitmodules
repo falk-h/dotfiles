@@ -13,3 +13,6 @@
 [submodule ".dotfiles-submodules/fzf"]
 	path = .dotfiles-submodules/fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule ".dotfiles-submodules/zsh-notify"]
+	path = .dotfiles-submodules/zsh-notify
+	url = git@github.com:marzocchi/zsh-notify.git

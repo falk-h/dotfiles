@@ -141,7 +141,16 @@ plugins=(
     ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
     ~/.dotfiles-submodules/fzf/shell/completion.zsh
     ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    ~/.dotfiles-submodules/zsh-notify/notify.plugin.zsh
 )
 for plugin in $plugins; do
     [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
 done
+
+zstyle ':notify:*' success-icon "$HOME/.dotfiles-extra/pictures/Pog.png"
+zstyle ':notify:*' error-icon "$HOME/.dotfiles-extra/pictures/Nog.png"
+zstyle ':notify:*' command-complete-timeout 15
+zstyle ':notify:*' expire-time 10000
+zstyle ':notify:*' enable-on-ssh yes
+zstyle ':notify:*' success-title 'Command succeeded after #{time_elapsed}'
+zstyle ':notify:*' error-title 'Command failed after #{time_elapsed}'
