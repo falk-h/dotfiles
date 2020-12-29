@@ -69,6 +69,24 @@ function dotfiles() {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
 }
 
+function g() {
+
+    if [[ $# -eq 0 ]]; then
+        gdb
+        return
+    fi
+
+    local prg="$1"
+    shift
+
+    if ! [[ -f "$prg" ]]; then
+        echo "$prg: No such file" 1>&2
+        return 1
+    fi
+
+    gdb "$prg" -ex "run $*"
+}
+
 # mkdir and cd
 function mcdir()
 {
