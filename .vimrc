@@ -91,6 +91,7 @@ if exists('g:coc_enabled') && g:coc_enabled
         \'coc-yaml',
         \'coc-html',
         \'coc-snippets',
+        \'coc-tabnine',
         \'coc-vimtex']
 
 endif
