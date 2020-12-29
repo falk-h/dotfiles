@@ -60,6 +60,7 @@ if [[ "$VISUAL" =~ "vim" ]]; then
     alias vimdiff="$VISUAL -d"
 fi
 alias gdb='gdb -q' # Hide the license header
+alias cgdb='cuda-gdb -q' # Hide the license header
 if whence nvim &> /dev/null; then
     alias man='MANPAGER="nvim +Man!" man'
 fi
