@@ -74,7 +74,7 @@ if ! try "Checking out" dotfiles checkout > /dev/null; then
     fi
 fi
 
-try "Creating directory to hold Vim undo files" mkdir "$HOME/.vim/undo"
+try "Creating directory to hold Vim undo files" mkdir -p "$HOME/.vim/undo"
 try "Installing pre-commit hook" ln -s "$extra_dir/clean-spell-hook.sh" "$dotfile_dir/hooks/pre-commit"
 
 if type tput > /dev/null 2>&1; then
