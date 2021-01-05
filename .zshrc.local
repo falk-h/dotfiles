@@ -110,6 +110,7 @@ prompt_color=blue
 case "$hostname" in
     dt|lt) prompt_color=blue;;
     pi)    prompt_color=green;;
+    tv)    prompt_color=yellow;;
 esac
 zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
 
