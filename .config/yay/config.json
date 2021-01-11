@@ -1,0 +1,8 @@
+{
+	"answerdiff": "All",
+	"batchinstall": true,
+	"cleanmenu": false,
+	"removemake": "no",
+	"requestsplitn": 300,
+	"useask": true
+}
