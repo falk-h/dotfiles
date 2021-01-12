@@ -75,26 +75,22 @@ let g:gitgutter_map_keys = 0
 " Close gitgutter previews when escape is pressed.
 let g:gitgutter_close_preview_on_escape = 1
 
-" Coc configuration.
-if exists('g:coc_enabled') && g:coc_enabled
-    " Coc extensions to install. These can also be installed with :CocInstall, but I
-    " much prefer specifying them declaratively. FIXME: This caused Vim to segfault
-    " when adding 'coc-diagnostic'. Investigate.
-    let g:coc_global_extensions = [
-        \'coc-json',
-        \'coc-rust-analyzer',
-        \'coc-diagnostic',
-        \'coc-clangd',
-        \'coc-tsserver',
-        \'coc-python',
-        \'coc-pairs',
-        \'coc-yaml',
-        \'coc-html',
-        \'coc-snippets',
-        \'coc-tabnine',
-        \'coc-vimtex']
-
-endif
+" Coc extensions to install. These can also be installed with :CocInstall, but I
+" much prefer specifying them declaratively. FIXME: This caused Vim to segfault
+" when adding 'coc-diagnostic'. Investigate.
+let g:coc_global_extensions = [
+    \'coc-json',
+    \'coc-rust-analyzer',
+    \'coc-diagnostic',
+    \'coc-clangd',
+    \'coc-tsserver',
+    \'coc-python',
+    \'coc-pairs',
+    \'coc-yaml',
+    \'coc-html',
+    \'coc-snippets',
+    \'coc-tabnine',
+    \'coc-vimtex']
 
 " Some language servers have issues with backup files, see #649.
 set nobackup
