@@ -1,80 +1,127 @@
-#!/bin/sh
-set -eu
+#!/bin/env python3
+# TODO: update PIP packages
+"""Updates packages from various package managers. See the definitions of
+UPDATERS and EXTRA_UPDATERS below."""
+import signal
+from shutil import which
+from typing import Optional, List, Final
+import subprocess as sp
+from argparse import ArgumentParser, Namespace
+from dataclasses import dataclass
+import sys
 
-usage() {
-    echo "Usage: $0 [-ag]"
-    exit 1
-}
+MIN_VERSION = (3, 8)
+if sys.version_info < MIN_VERSION:
+    min_version: str = f'{MIN_VERSION[0]}.{MIN_VERSION[1]}'
+    actual_version: str = f'{sys.version_info[0]}.{sys.version_info[1]}'
+    sys.exit(f"Need Python {min_version}! Have {actual_version}")
 
-all=
-git=
-while getopts 'ag' o; do
-    case "$o" in
-        a)
-            all=true
-            ;;
-        g)
-            git=true
-            ;;
-        *)
-            usage
-            ;;
-    esac
-done
+# Exit gracefully on keyboard interrupt
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-if command -v yay > /dev/null; then
-    if [ -n "$git" ]; then
-        yay -Syu --devel --needed
-    else
-        yay -Syu
-    fi
-else
-    echo "yay not found, using pacman..."
-    sudo pacman -Syu
-fi
 
-if command -v flatpak > /dev/null; then
-    echo "updating global flatpak applications..."
-    sudo flatpak update -y
-    echo "updating user flatpak applications..."
-    flatpak update --user -y
-else
-    echo "flatpak not found, skipping..."
-fi
+def print_bold(*args: str) -> None:
+    """Concatenates arguments and prints them in bold"""
+    bold: Final[str] = '\033[1m'
+    reset: Final[str] = '\033[0m'
+    print(bold, *args, reset, sep='')
 
-if [ -n "$all" ]; then
-    if command -v cargo > /dev/null; then
-        echo 'updating cargo crates...'
-        if [ -n "$git" ]; then
-            cargo install-update --all --git
-        else
-            cargo install-update --all
-        fi
-    else
-        echo 'cargo not found, skipping...'
-    fi
 
-    if command -v rustup > /dev/null; then
-        echo 'updating rustup toolchains...'
-        rustup update
-    else
-        echo 'rustup not found, skipping...'
-    fi
+class Updater:
+    # TODO: Don't really need a class here. Could just run updates immediately
+    # instead of constructing objects and calling .run().
+    """Defines a method to update some set of packages"""
+    command: List[str]
+    as_root: bool
+    description: str
+    fallback: Optional['Updater']
 
-    # TODO: Fix this
-    # if command -v pip > /dev/null; then
-    #     echo 'updating user-local pip packages...'
-    #     pip list --user --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -r pip install --user -U --upgrade-strategy eager
-    #     echo 'updating globally installed pip packages...'
-    #     pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -r -n1 sudo pip install -U --upgrade-strategy eager
-    # else
-    #     echo 'pip not found, skipping...'
-    # fi
+    def __init__(
+        self,
+        command: str,
+        description: str,
+        fallback: Optional['Updater'] = None,
+        as_root: bool = False
+    ):
+        if len(command) == 0:
+            raise ValueError('Empty command')
 
-    if command -v npm > /dev/null; then
-        echo 'updating npm packages...'
-        npm -g outdated --parseable --depth=0 | cut -d: -f2 | xargs -r -n1 sudo npm -g install
-    else
-        echo 'npm not found, skipping...'
-    fi
-fi
+        self.description = description
+        self.fallback = fallback
+        self.as_root = as_root
+        self.command = command.split(' ')
+
+    def __program_exists(self) -> bool:
+        """Checks whether the program that is to be run exists"""
+        return which(self.command[0]) is not None
+
+    def __fallback(self) -> None:
+        """Fall back to running self.fallback"""
+        if self.fallback is not None:
+            print_bold(
+                f'Program `{self.command[0]}` not found, running fallback')
+            self.fallback.run()
+
+    def __run(self) -> None:
+        command = self.command
+        if self.as_root:
+            command.insert(0, 'sudo')
+        print_bold(f'Updating {self.description}...')
+        sp.run(command, check=True)
+
+    def run(self) -> None:
+        """Runs the updater"""
+        if not self.__program_exists():
+            self.__fallback()
+        else:
+            try:
+                self.__run()
+            except sp.CalledProcessError as err:
+                command_str: str = ' '.join(self.command)
+                print_bold(
+                    f'Command `{command_str}` failed with return code {err.returncode}')
+
+
+@dataclass(frozen=True)
+class Options:
+    """Represents the parsed command line options"""
+    extra: bool
+    git: bool
+
+
+def parse_args() -> Options:
+    """Parses command line arguments"""
+    parser: ArgumentParser = ArgumentParser(description='Update packages.')
+    parser.add_argument('-e', '--extra', action='store_true',
+                        default=False, help='update all packages')
+    parser.add_argument('-g', '--git', action='store_true', default=False)
+    parsed: Namespace = parser.parse_args(sys.argv[1:])
+    return Options(extra=parsed.extra, git=parsed.git)
+
+
+options: Options = parse_args()
+
+# TODO: add npm -g outdated --parseable --depth=0 | cut -d: -f2 | xargs -r -n1 sudo npm -g install
+UPDATERS: Final[List[Updater]] = [
+    Updater('pacman -Syu', 'pacman packages', as_root=True),
+    Updater('yay -Syua --needed' +
+            (' --devel' if options.git else ''), 'aur packages'),
+]
+
+EXTRA_UPDATERS: Final[List[Updater]] = [
+    Updater('pacman -Fy', 'pacman file database', as_root=True),
+    Updater('nvim +:PlugUpdate +:qa', 'neovim plugins'),
+    Updater('nvim +:CocUpdate +:qa', 'neovim coc extensions'),
+    Updater('flatpak update -y', 'global flatpak applications', as_root=True),
+    Updater('flatpak update --user -y', 'user flatpak applications'),
+    Updater('cargo install-update --all' +
+            (' --git' if options.git else ''), 'cargo crates'),
+    Updater('rustup update', 'rust toolchains'),
+]
+
+for updater in UPDATERS:
+    updater.run()
+
+if options.extra:
+    for updater in EXTRA_UPDATERS:
+        updater.run()
