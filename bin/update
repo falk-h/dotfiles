@@ -19,12 +19,17 @@ if sys.version_info < MIN_VERSION:
 # Exit gracefully on keyboard interrupt
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+@dataclass
+class Format:
+    """String constants for styling terminal output"""
+    # pylint: disable=invalid-name
+    BOLD: Final[str] = '\033[1m'
+    RESET: Final[str] = '\033[0m'
+    RED: Final[str] = '\033[31m'
 
-def print_bold(*args: str) -> None:
+def print_bold(*args: str, end: str = '\n') -> None:
     """Concatenates arguments and prints them in bold"""
-    bold: Final[str] = '\033[1m'
-    reset: Final[str] = '\033[0m'
-    print(bold, *args, reset, sep='')
+    print(bold, *args, reset, sep='', end=end)
 
 
 class Updater:
@@ -58,8 +63,6 @@ class Updater:
     def __fallback(self) -> None:
         """Fall back to running self.fallback"""
         if self.fallback is not None:
-            print_bold(
-                f'Program `{self.command[0]}` not found, running fallback')
             self.fallback.run()
 
     def __run(self) -> None:
@@ -72,6 +75,7 @@ class Updater:
     def run(self) -> None:
         """Runs the updater"""
         if not self.__program_exists():
+            print_bold(Format.RED, f'Program `{self.command[0]}` not found')
             self.__fallback()
         else:
             try:
