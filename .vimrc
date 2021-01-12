@@ -29,7 +29,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'airblade/vim-gitgutter'
     " Git plugin, somewhat like magit.
     Plug 'tpope/vim-fugitive'
-    " Text objects for working with things that are surrounded by other things.
+    " Text objects for working with things that are surrounded by other
+    " things.
     Plug 'tpope/vim-surround'
     " Lets vim-surround actions be repeated with '.'.
     Plug 'tpope/vim-repeat'
@@ -75,9 +76,9 @@ let g:gitgutter_map_keys = 0
 " Close gitgutter previews when escape is pressed.
 let g:gitgutter_close_preview_on_escape = 1
 
-" Coc extensions to install. These can also be installed with :CocInstall, but I
-" much prefer specifying them declaratively. FIXME: This caused Vim to segfault
-" when adding 'coc-diagnostic'. Investigate.
+" Coc extensions to install. These can also be installed with :CocInstall, but
+" I much prefer specifying them declaratively. FIXME: This caused Vim to
+" segfault when adding 'coc-diagnostic'. Investigate.
 let g:coc_global_extensions = [
     \'coc-json',
     \'coc-rust-analyzer',
@@ -144,7 +145,7 @@ augroup vimrc
     " Use K to look up other manpages.
     autocmd FileType man nmap <buffer> K <C-]>
 
-    " Ensure that colorcolumn always shows the current textwidth.
+    " Ensure that colorcolumn always shows the current textwidth. TODO: Fix
     "autocmd BufEnter * let &colorcolumn = &textwidth == 0 ? 0 : &textwidth + 1
 
     " Automatically wrap text longer than 80 characters.
@@ -170,7 +171,8 @@ augroup vimrc
     autocmd FileType rust,c setl formatexpr=CocAction('formatSelected')
     " Update signature help on jump placeholder.
     autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-    " Use autocmd to force lightline update. Recommended in coc-status-lightline.
+    " Use autocmd to force lightline update. Recommended in
+    " coc-status-lightline.
     autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 augroup end
 
@@ -246,19 +248,19 @@ set lazyredraw
 " case I switch to a terminal emulator that doesn't pretend to be xterm.
 set ttyfast
 
-" Vim with default settings does not allow easy switching between multiple files
-" in the same editor window. Users can use multiple split windows or multiple
-" tab pages to edit multiple files, but it is still best to enable an option to
-" allow easier switching between files.
+" Vim with default settings does not allow easy switching between multiple
+" files in the same editor window. Users can use multiple split windows or
+" multiple tab pages to edit multiple files, but it is still best to enable an
+" option to allow easier switching between files.
 "
 " One such option is the 'hidden' option, which allows you to re-use the same
-" window and switch from an unsaved buffer without saving it first. Also allows
-" you to keep an undo history for multiple files when re-using the same window
-" in this way. Note that using persistent undo also lets you undo in multiple
-" files even in the same window, but is less efficient and is actually designed
-" for keeping undo history after closing Vim entirely. Vim will complain if you
-" try to quit without saving, and swap files will keep you safe if your computer
-" crashes.
+" window and switch from an unsaved buffer without saving it first. Also
+" allows you to keep an undo history for multiple files when re-using the same
+" window in this way. Note that using persistent undo also lets you undo in
+" multiple files even in the same window, but is less efficient and is
+" actually designed for keeping undo history after closing Vim entirely. Vim
+" will complain if you try to quit without saving, and swap files will keep
+" you safe if your computer crashes.
 set hidden
 
 if has('wildmenu')
@@ -291,8 +293,8 @@ set ignorecase
 " except when there are any capital letters in the search pattern.
 set smartcase
 if has('extra_search')
-    " Highlight searches (use <C-L> to temporarily turn off highlighting; see the
-    " mapping of <C-L> below).
+    " Highlight searches (use <C-L> to temporarily turn off highlighting; see
+    " the mapping of <C-L> below).
     set hlsearch
     " Also start highlighting while the search pattern is still being typed.
     set incsearch
@@ -652,8 +654,8 @@ else
     nnoremap <ESC>[80;5u :put!<CR>
 endif
 
-" Use <C-N> and <C-S-N> to go to the next/previous result of searching with :rg.
-" TODO: Make this wrap around.
+" Use <C-N> and <C-S-N> to go to the next/previous result of searching with
+" :rg. TODO: Make this wrap around.
 noremap <C-n> :lnext!<CR>
 if has('gui_running')
     nnoremap <C-S-n> :lprevious!<CR>
@@ -684,7 +686,8 @@ xmap ih <Plug>(GitGutterTextObjectInnerVisual)
 xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
 " Map function and class text objects.
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+" NOTE: Requires 'textDocument.documentSymbol' support from the language
+" server.
 xmap if <Plug>(coc-funcobj-i)
 omap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
@@ -694,8 +697,8 @@ omap ic <Plug>(coc-classobj-i)
 xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
-" Use S to substitute with the contents of the clipboard. TODO: map range
-" substitutions, see vim-subversive's GitHub repo.
+" Use S to substitute with the contents of the clipboard.
+" TODO: map range substitutions, see vim-subversive's GitHub repo.
 nmap S  <Plug>(SubversiveSubstitute)
 nmap SS <Plug>(SubversiveSubstituteLine)
 
