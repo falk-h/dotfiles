@@ -1,10 +1,10 @@
 #!/bin/env python3
-# TODO: update PIP packages
-"""Updates packages from various package managers. See the definitions of
-UPDATERS and EXTRA_UPDATERS below."""
+"""Updates packages from various package managers. See the calls to do_update()
+at the end of the file."""
+
 import signal
 from shutil import which
-from typing import Optional, List, Final
+from typing import Optional, List, Final, Callable
 import subprocess as sp
 from argparse import ArgumentParser, Namespace
 from dataclasses import dataclass
@@ -19,6 +19,7 @@ if sys.version_info < MIN_VERSION:
 # Exit gracefully on keyboard interrupt
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+
 @dataclass
 class Format:
     """String constants for styling terminal output"""
@@ -27,67 +28,85 @@ class Format:
     RESET: Final[str] = '\033[0m'
     RED: Final[str] = '\033[31m'
 
+
 def print_error(*args: str, end: str = '\n') -> None:
     """Concatenates arguments and prints them in bold red text"""
     print_bold(Format.RED, *args, end=end)
+
 
 def print_bold(*args: str, end: str = '\n') -> None:
     """Concatenates arguments and prints them in bold"""
     print(Format.BOLD, *args, Format.RESET, sep='', end=end)
 
 
-class Updater:
-    # TODO: Don't really need a class here. Could just run updates immediately
-    # instead of constructing objects and calling .run().
+@dataclass
+class Update:
     """Defines a method to update some set of packages"""
     command: List[str]
     as_root: bool
     description: str
-    fallback: Optional['Updater']
+    fallback: Optional['Update']
+    extra_checks: Callable[[], bool]
+    # TODO: actually implement calling custom functions
+    custom_function: Callable[[], bool]
 
-    def __init__(
-        self,
-        command: str,
-        description: str,
-        fallback: Optional['Updater'] = None,
-        as_root: bool = False
-    ):
-        if len(command) == 0:
-            raise ValueError('Empty command')
 
-        self.description = description
-        self.fallback = fallback
-        self.as_root = as_root
-        self.command = command.split(' ')
+def program_exists(update: Update) -> bool:
+    """Checks whether the program that is to be run exists"""
+    return which(update.command[0]) is not None and update.extra_checks()  # type: ignore
 
-    def __program_exists(self) -> bool:
-        """Checks whether the program that is to be run exists"""
-        return which(self.command[0]) is not None
 
-    def __fallback(self) -> None:
-        """Fall back to running self.fallback"""
-        if self.fallback is not None:
-            self.fallback.run()
+def check(update: Update) -> bool:
+    """Checks that the program exists and that any additional checks pass"""
+    if not program_exists(update):
+        print_error(f'Program `{update.command[0]}` not found')
+        return False
 
-    def __run(self) -> None:
-        command = self.command
-        if self.as_root:
-            command.insert(0, 'sudo')
-        print_bold(f'Updating {self.description}...')
-        sp.run(command, check=True)
+    return update.extra_checks()  # type: ignore
 
-    def run(self) -> None:
-        """Runs the updater"""
-        if not self.__program_exists():
-            print_bold(Format.RED, f'Program `{self.command[0]}` not found')
-            self.__fallback()
-        else:
-            try:
-                self.__run()
-            except sp.CalledProcessError as err:
-                command_str: str = ' '.join(self.command)
-                print_bold(Format.RED,
-                    f'Command `{command_str}` failed with return code {err.returncode}')
+
+def run(update: Update) -> None:
+    """Runs an update, possibly falling back to a fallback update"""
+    if not check(update):
+        if update.fallback is not None:
+            run(update.fallback)
+    else:
+        try:
+            execute(update)
+        except sp.CalledProcessError as err:
+            command_str: str = ' '.join(update.command)
+            print_error(
+                f'Command `{command_str}` failed with return code {err.returncode}')
+
+
+def execute(update: Update) -> None:
+    """Executes an argument's command"""
+    command = update.command
+    if update.as_root:
+        command.insert(0, 'sudo')
+    print_bold(f'Updating {update.description}...')
+    sp.run(command, check=True)
+
+
+# pylint: disable=too-many-arguments
+def do_update(
+    command: str,
+    description: str,
+    as_root: bool = False,
+    fallback: Optional['Update'] = None,
+    extra_checks: Optional[Callable[[], bool]] = None,
+    custom_function: Optional[Callable[[], bool]] = None
+):
+    """Creates and runs an update"""
+    if len(command) == 0:
+        raise ValueError('Empty command')
+
+    extra_checks = extra_checks if extra_checks is not None else lambda: True
+    custom_function = custom_function if custom_function is not None else lambda: True
+    update = Update(command.split(' '), as_root, description, fallback,
+                    extra_checks, custom_function)
+
+    run(update)
 
 
 @dataclass(frozen=True)
@@ -110,26 +129,17 @@ def parse_args() -> Options:
 options: Options = parse_args()
 
 # TODO: add npm -g outdated --parseable --depth=0 | cut -d: -f2 | xargs -r -n1 sudo npm -g install
-UPDATERS: Final[List[Updater]] = [
-    Updater('pacman -Syu', 'pacman packages', as_root=True),
-    Updater('yay -Syua --needed' +
-            (' --devel' if options.git else ''), 'aur packages'),
-]
-
-EXTRA_UPDATERS: Final[List[Updater]] = [
-    Updater('pacman -Fy', 'pacman file database', as_root=True),
-    Updater('nvim +:PlugUpdate +:qa', 'neovim plugins'),
-    Updater('nvim +:CocUpdate +:qa', 'neovim coc extensions'),
-    Updater('flatpak update -y', 'global flatpak applications', as_root=True),
-    Updater('flatpak update --user -y', 'user flatpak applications'),
-    Updater('cargo install-update --all' +
-            (' --git' if options.git else ''), 'cargo crates'),
-    Updater('rustup update', 'rust toolchains'),
-]
-
-for updater in UPDATERS:
-    updater.run()
+# TODO: update PIP packages
+do_update('pacman -Syu', 'pacman packages', as_root=True)
+do_update('yay -Syua --needed' +
+          (' --devel' if options.git else ''), 'aur packages')
 
 if options.extra:
-    for updater in EXTRA_UPDATERS:
-        updater.run()
+    do_update('pacman -Fy', 'pacman file database', as_root=True)
+    do_update('nvim +:PlugUpdate +:qa', 'neovim plugins')
+    do_update('nvim +:CocUpdate +:qa', 'neovim coc extensions')
+    do_update('flatpak update -y', 'global flatpak applications', as_root=True)
+    do_update('flatpak update --user -y', 'user flatpak applications')
+    do_update('cargo install-update --all' +
+              (' --git' if options.git else ''), 'cargo crates')
+    do_update('rustup update', 'rust toolchains')
