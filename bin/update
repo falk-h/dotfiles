@@ -27,9 +27,13 @@ class Format:
     RESET: Final[str] = '\033[0m'
     RED: Final[str] = '\033[31m'
 
+def print_error(*args: str, end: str = '\n') -> None:
+    """Concatenates arguments and prints them in bold red text"""
+    print_bold(Format.RED, *args, end=end)
+
 def print_bold(*args: str, end: str = '\n') -> None:
     """Concatenates arguments and prints them in bold"""
-    print(bold, *args, reset, sep='', end=end)
+    print(Format.BOLD, *args, Format.RESET, sep='', end=end)
 
 
 class Updater:
@@ -82,7 +86,7 @@ class Updater:
                 self.__run()
             except sp.CalledProcessError as err:
                 command_str: str = ' '.join(self.command)
-                print_bold(
+                print_bold(Format.RED,
                     f'Command `{command_str}` failed with return code {err.returncode}')
 
 
