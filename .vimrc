@@ -388,9 +388,6 @@ set number
 " Quickly time out on keycodes, but never time out on mappings.
 set notimeout ttimeout ttimeoutlen=200
 
-" Use <F11> to toggle between 'paste' and 'nopaste'.
-set pastetoggle=<F11>
-
 " Add the g flag to substitutions by default.
 set gdefault
 
@@ -893,6 +890,10 @@ let g:leader.t.s = [
     \':set spell!' ..
     \'| echo &spell?"Spellcheck enabled":"Spellcheck disabled"',
     \'Spellcheck']
+let g:leader.t.p = [
+    \':set paste!' ..
+    \'| echo &paste?"Paste on":"Paste off"',
+    \'Paste']
 let g:leader.t.w = [
     \':set list!' ..
     \'| echo &list?"Showing whitespace":"Hiding whitespace"',
