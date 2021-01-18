@@ -130,6 +130,16 @@ bindkey . rationalise-dot
 # without this, typing a . aborts incremental history search
 bindkey -M isearch . self-insert
 
+# Make X applications work in WSL 2
+if [[ $(< /proc/version) =~ microsoft ]]; then
+    export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+    export LIBGL_ALWAYS_INDIRECT=1
+    dbus_status=$(service dbus status)
+    if [[ $dbus_status = *"is not running"* ]]; then
+      sudo service dbus --full-restart
+    fi
+fi
+
 # Function to add mode to the right prompt
 function zle-line-init zle-keymap-select {
     RPS1="${${KEYMAP/vicmd/%B%F{9\}NORMAL%f%b}/(main|viins)/%F{$prompt_color\}INSERT%f}"
