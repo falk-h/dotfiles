@@ -136,6 +136,8 @@ do_update('yay -Syua --needed' +
 
 if options.extra:
     do_update('pacman -Fy', 'pacman file database', as_root=True)
+    do_update('apt update', 'apt package database', as_root=True)
+    do_update('apt upgrade', 'apt packages', as_root=True)
     do_update('nvim +:PlugUpdate +:qa', 'neovim plugins')
     do_update('nvim +:CocUpdate +:qa', 'neovim coc extensions')
     do_update('flatpak update -y', 'global flatpak applications', as_root=True)
