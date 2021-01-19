@@ -4,7 +4,8 @@
     },
     "diagnostic-languageserver.formatFiletypes": {
         "bash": "shfmt-bash",
-        "sh": "shfmt-posix"
+        "sh": "shfmt-posix",
+        "tex": "latexindent"
     },
     "diagnostic-languageserver.formatters": {
         "shfmt-posix": {
@@ -29,6 +30,13 @@
                 "-sr",
                 "-ln",
                 "bash"
+            ]
+        },
+        "latexindent": {
+            "command": "latexindent",
+            "args": [
+                "-l",
+                "-m"
             ]
         }
     },

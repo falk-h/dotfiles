@@ -56,6 +56,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'honza/vim-snippets'
     " Some Rust features.
     Plug 'rust-lang/rust.vim'
+    " TeX support
+    Plug 'lervag/vimtex'
 call plug#end()
 
 " Colorscheme
