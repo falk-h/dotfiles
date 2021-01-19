@@ -39,8 +39,12 @@
     "latex.build.args": [
         "-pdf",
         "-interaction=nonstopmode",
-        "-synctex=1",
-        "-pv"
+        "-synctex=1"
+    ],
+    "latex.forwardSearch.executable": "zathura",
+    "latex.forwardSearch.args": [
+        "--synctex-forward=%l:1:%f",
+        "%p"
     ],
     "latex.build.onSave": true,
     "latex.lint.onChange": true,

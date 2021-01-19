@@ -1,0 +1,7 @@
+set guioptions "v"
+set highlight-active-color "#000000"
+set highlight-color "#999999"
+set highlight-transparency 0.2
+set page-padding 10
+set scroll-step 120
+set window-title-basename true

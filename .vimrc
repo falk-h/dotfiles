@@ -162,6 +162,9 @@ augroup vimrc
     " Highlight column 50 in commit messages.
     autocmd FileType gitcommit set colorcolumn=50
 
+    " Forward search with K in TeX files.
+    autocmd FileType tex nnoremap K :call CocActionAsync('runCommand', 'latex.ForwardSearch')<CR>
+
     if has('spell')
         " Turn on spelling automatically for some text files.
         autocmd FileType markdown,rst,asciidoc,gitcommit,tex setlocal spell
