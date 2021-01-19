@@ -93,6 +93,7 @@ let g:coc_global_extensions = [
     \'coc-html',
     \'coc-snippets',
     \'coc-tabnine',
+    \'coc-texlab',
     \'coc-vimtex']
 
 " Some language servers have issues with backup files, see #649.
@@ -153,18 +154,21 @@ augroup vimrc
     " Automatically wrap text longer than 80 characters.
     " See also 'formatoptions'.
     autocmd FileType markdown,rst,asciidoc setlocal textwidth=80
+    " Disable text wrapping and colorcolumn for LaTeX.
+    autocmd FileType tex setlocal textwidth=0
+    autocmd FileType tex setlocal colorcolumn=
     " Avoid splitting words when wrapping lines.
-    autocmd FileType markdown,rst,asciidoc,gitcommit setlocal linebreak
+    autocmd FileType markdown,rst,asciidoc,gitcommit,tex setlocal linebreak
     " Highlight column 50 in commit messages.
     autocmd FileType gitcommit set colorcolumn=50
 
     if has('spell')
         " Turn on spelling automatically for some text files.
-        autocmd FileType markdown,rst,asciidoc,gitcommit setlocal spell
+        autocmd FileType markdown,rst,asciidoc,gitcommit,tex setlocal spell
 
         " Autocorrect the word under the cursor. The default mapping for &
         " doesn't seem all that useful.
-        autocmd FileType markdown,rst,asciidoc,gitcommit nnoremap <buffer> & 1z=
+        autocmd FileType markdown,rst,asciidoc,gitcommit,tex nnoremap <buffer> & 1z=
     endif
 
     " Highlight the symbol and its references when holding the cursor.

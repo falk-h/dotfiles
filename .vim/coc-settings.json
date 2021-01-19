@@ -4,8 +4,7 @@
     },
     "diagnostic-languageserver.formatFiletypes": {
         "bash": "shfmt-bash",
-        "sh": "shfmt-posix",
-        "tex": "latexindent"
+        "sh": "shfmt-posix"
     },
     "diagnostic-languageserver.formatters": {
         "shfmt-posix": {
@@ -31,19 +30,20 @@
                 "-ln",
                 "bash"
             ]
-        },
-        "latexindent": {
-            "command": "latexindent",
-            "args": [
-                "-l",
-                "-m"
-            ]
         }
     },
     "list.normalMappings": {
         "<C-n>": "do:next",
         "<C-p>": "do:previous"
     },
+    "latex.build.args": [
+        "-pdf",
+        "-interaction=nonstopmode",
+        "-synctex=1",
+        "-pv"
+    ],
+    "latex.build.onSave": true,
+    "latex.lint.onChange": true,
     "coc.preferences.extensionUpdateCheck": "daily",
     "coc.preferences.currentFunctionSymbolAutoUpdate": true,
     "suggest.enablePreview": true,
