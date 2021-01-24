@@ -89,7 +89,7 @@ let g:coc_global_extensions = [
     \'coc-diagnostic',
     \'coc-clangd',
     \'coc-tsserver',
-    \'coc-python',
+    \'coc-pyright',
     \'coc-pairs',
     \'coc-yaml',
     \'coc-html',
