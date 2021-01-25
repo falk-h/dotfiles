@@ -529,7 +529,7 @@ if exists('+signcolumn')
 endif
 
 " Make fzf's window 12 rows high.
-let g:fzf_layout = {'down': 12}
+let g:fzf_layout = {'window': { 'width': 1.0, 'height': 12, 'yoffset': 1.0 } }
 
 " Make fzf's preview window take up 70% of the width (default is 50%), and use
 " C-/ to toggle the preview window (default).
