@@ -1,6 +1,11 @@
 #!/bin/zsh
+# User binaries and things installed with cargo and PIP
 export PATH="$HOME/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
+# APT user config
+export APT_CONFIG="$HOME/.apt.conf"
+
+# Manpages for crates installed via cargo
 if which rustup &> /dev/null; then
     export MANPATH="$(rustup toolchain list -v | grep '(default)' | cut -f 2)/share/man:${MANPATH:-$(manpath)}"
 fi
