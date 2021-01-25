@@ -765,8 +765,13 @@ cabbrev WAQ wqa
 
 " Unbind space, and use it as leader.
 let g:mapleader = "\<Space>"
-nnoremap <silent> <leader> :WhichKey "<Space>"<CR>
-vnoremap <silent> <leader> :WhichKeyVisual "<Space>"<CR>
+nnoremap <silent> <leader> :<c-u>WhichKey! g:leader<CR>
+vnoremap <silent> <leader> :<c-u>WhichKeyVisual! g:leader<CR>
+
+" Use - as local leader.
+let g:maplocalleader = "\<BS>"
+nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader<CR>
+vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader<CR>
 
 " Leader mappings.
 let g:leader = {}
@@ -928,3 +933,10 @@ let g:leader.w['='] = ['<C-W>=', 'Balance windows']
 let g:leader.x = [':ScratchInsert', 'Open scratch buffer']
 
 call which_key#register('<Space>', "g:leader")
+
+" Local leader mappings.
+let g:localleader = {}
+
+let g:localleader.h = [':CocCommand clangd.switchSourceHeader', 'Switch between source and header']
+
+call which_key#register('<BS>', "g:localleader")
