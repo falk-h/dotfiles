@@ -782,7 +782,7 @@ let g:leader[','] = [':Buffers', 'Switch buffer']
 
 let g:leader.a   = ['<Plug>(coc-codeaction)',          'Code action']
 
-let g:leader.A   = ['<Plug>(coc-codeaction-selected)', 'Code action on selected']
+let g:leader.A   = ['<Plug>(coc-codeaction-line)', 'Code action on line']
 
 let g:leader.b   = {'name':     '+Buffer'}
 let g:leader.b.d = [':bdelete', 'Delete']
