@@ -556,6 +556,10 @@ let g:which_key_run_map_on_popup = 1
 " half of the number column.
 let g:which_key_disable_default_offset = 1
 
+" Which-key colors.
+highlight link WhichKeySeperator Constant
+highlight link WhichKeyDesc Label
+
 " Mappings
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
