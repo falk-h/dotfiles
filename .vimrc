@@ -10,7 +10,13 @@ call plug#begin('~/.vim/plugged')
     " Register vim-plug as a plugin to get documentation for it in vim.
     Plug 'junegunn/vim-plug'
     " Completions using language servers. (see :CocConfig for configuration)
+    Plug 'junegunn/fzf'
+    " UI implementation for fzf.
+    Plug 'junegunn/fzf.vim'
+    " Autodetect build system.
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Use fzf instead of coc's fuzzy finder.
+    Plug 'antoinemadec/coc-fzf', {'branch': 'release'}
     " Spacemacs style popup for keybindings.
     Plug 'liuchengxu/vim-which-key'
     " Remember cursor position in files.
@@ -45,10 +51,6 @@ call plug#begin('~/.vim/plugged')
     " Support for EditorConfig per-project style definition files.
     Plug 'editorconfig/editorconfig-vim'
     " File finder.
-    Plug 'junegunn/fzf'
-    " UI implementation for fzf.
-    Plug 'junegunn/fzf.vim'
-    " Autodetect build system.
     Plug 'johnsyweb/vim-makeshift'
     " Fancy startup screen.
     Plug 'mhinz/vim-startify'
@@ -560,6 +562,10 @@ let g:which_key_disable_default_offset = 1
 highlight link WhichKeySeperator Constant
 highlight link WhichKeyDesc Label
 
+" Make CocFzf look like regular fzf.
+let g:coc_fzf_preview = ''
+let g:coc_fzf_opts = []
+
 " Mappings
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -597,7 +603,9 @@ else
 endif
 
 " Show the outline of the current file.
-nnoremap <expr> gO &ft=='man' ? "gO" : ":CocList outline<CR>"
+" TODO: Run a function that checks if coc has any results and fall back to
+" build-in gO if not.
+nnoremap <expr> gO &ft=='man' ? "gO" : ":CocFzfList outline<CR>"
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -788,19 +796,21 @@ let g:leader.b   = {'name':     '+Buffer'}
 let g:leader.b.d = [':bdelete', 'Delete']
 
 let g:leader.c   = {'name':                        '+Coc'}
-let g:leader.c.a = [':CocList diagnostics',        'Diagnostics']
-let g:leader.c.c = [':CocList commands',           'Commands']
+let g:leader.c.a = [':CocFzfList diagnostics --current-buf', 'Diagnostics (current buffer)']
+let g:leader.c.A = [':CocFzfList diagnostics',               'Diagnostics']
+let g:leader.c.c = [':CocFzfList commands',         'Commands']
 let g:leader.c.e = [':CocList extensions',         'Extensions']
 let g:leader.c.f = ['<Plug>(coc-format)',          'Format']
 let g:leader.c.F = [':Format',                     'Format selected']
 let g:leader.c.j = [':CocNext',                    'Next']
 let g:leader.c.k = [':CocPrev',                    'Previous']
 let g:leader.c.l = ['<Plug>(coc-openlink)',        'Open link']
-let g:leader.c.o = [':CocList outline',            'Outline']
+let g:leader.c.o = [':CocFzfList outline',         'Outline']
 let g:leader.c.O = [':OR',                         'Organize imports']
-let g:leader.c.p = [':CocListResume',              'Resume']
+let g:leader.c.p = [':CocFzfListResume',           'Resume']
 let g:leader.c.r = ['<Plug>(coc-rename)',          'Rename']
-let g:leader.c.s = [':CocList -I symbols',         'Symbols']
+let g:leader.c.s = [':CocFzfList symbols',         'Symbols']
+let g:leader.c.S = [':CocFzfList snippets',        'Snippets']
 let g:leader.c.R = [':CocRebuild',                 'Rebuild extensions']
 let g:leader.c.U = [':CocUpdateSync',              'Update extensions']
 let g:leader.c.z = [':Fold',                       'Fold']
