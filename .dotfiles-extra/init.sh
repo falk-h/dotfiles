@@ -12,7 +12,7 @@ dotfiles() {
 
 get_url() {
     if try "Checking for SSH key" [ -f "$HOME/.ssh/id_rsa" ] > /dev/null; then
-        if try "Checking if the key works" ssh -T "git@$hoster" > /dev/null; then
+        if try "Checking if the key works" ssh -T "git@$hoster" 2>&1 | grep -q success; then
             echo "git@$hoster:$repo.git"
             return
         fi
