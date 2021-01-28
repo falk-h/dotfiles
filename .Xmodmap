@@ -1,2 +1,4 @@
-keycode 197 = udiaeresis Udiaeresis udiaeresis Udiaeresis dead_diaeresis VoidSymbol dead_diaeresis
-keycode 202 = ssharp U1e9e ssharp U1e9e
+keycode  52 = adiaeresis Adiaeresis adiaeresis Adiaeresis braceright VoidSymbol braceright VoidSymbol adiaeresis Adiaeresis braceright VoidSymbol adiaeresis Adiaeresis braceright VoidSymbol
+keycode  34 = odiaeresis Odiaeresis odiaeresis Odiaeresis bracketleft VoidSymbol bracketleft VoidSymbol odiaeresis Odiaeresis bracketleft VoidSymbol odiaeresis Odiaeresis bracketleft VoidSymbol
+keycode  26 = period colon period VoidSymbol colon VoidSymbol colon VoidSymbol period VoidSymbol colon VoidSymbol period VoidSymbol colon VoidSymbol
+keycode  25 = comma semicolon comma VoidSymbol dead_cedilla VoidSymbol dead_cedilla VoidSymbol comma VoidSymbol dead_cedilla VoidSymbol comma VoidSymbol dead_cedilla VoidSymbol
