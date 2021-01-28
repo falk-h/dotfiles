@@ -66,11 +66,11 @@ if ! try "Checking out" dotfiles checkout > /dev/null; then
     files=$(dotfiles checkout 2>&1 | grep -E -e "\s+\." -e "\s+README.md" | awk '{print $1}')
     for file in $files; do
         mkdir -p "$dotfile_dir/$(dirname "$file")"
-	mv "$file" "$dotfile_dir/$file"
+        mv "$file" "$dotfile_dir/$file"
     done
 
     if ! try "  Checking out again..." dotfiles checkout; then
-	exit 1
+        exit 1
     fi
 fi
 
