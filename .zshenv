@@ -15,6 +15,6 @@ for editor in nvim vim vi nano; do
 done
 export VISUAL="$EDITOR"
 
-for browser in firefox-developer-edition firefox firefox-beta chromium w3m elinks links lynx; do
+for browser in x-www-browser firefox-developer-edition firefox firefox-beta chromium w3m elinks links lynx; do
     which "$browser" &> /dev/null && export BROWSER="$browser" && break
 done
