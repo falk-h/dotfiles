@@ -143,8 +143,11 @@ zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
 
 # Function to add mode to the right prompt
 function zle-line-init zle-keymap-select {
-    RPS1="${${KEYMAP/vicmd/%B%F{9\}NORMAL%f%b}/(main|viins)/%F{$prompt_color\}INSERT%f}"
-    # RPS2="$RPS1"
+    case "$KEYMAP" in
+        vicmd) RPS1='%B%F{red}NORMAL%b%f';;
+        main)  RPS1="%F{$prompt_color}INSERT%f";;
+        *) RPS1='';;
+    esac
     zle reset-prompt
 }
 zle -N zle-line-init
