@@ -26,6 +26,16 @@ bindkey "^[[A" up-line-or-search
 # Assume dvorak layout for spelling corrections
 setopt dvorak
 
+# Make completion menu smaller
+setopt list_packed
+
+# Use OS locking when writing to the history file. Might have better
+# performance, but might also not work.
+setopt hist_fcntl_lock
+
+# Enable shorthand for loops
+setopt short_loops
+
 # ctrl-s will no longer freeze the terminal. From grml-zsh-config.
 stty erase "^?"
 
