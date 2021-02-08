@@ -11,6 +11,9 @@ bindkey '^?' backward-delete-char
 bindkey '^W'  backward-kill-word
 bindkey '^H' backward-delete-word
 
+# ctrl-delete
+bindkey "\e[3;5~" kill-word
+
 # ctrl-r starts searching history backward
 bindkey '^R' fzf-history-widget
 # Search history in normal mode
