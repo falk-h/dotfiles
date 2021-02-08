@@ -46,7 +46,7 @@ KEYTIMEOUT=1
 HISTSIZE=100000
 
 # Toggle stopping programs with ^Z
-fancy-ctrl-z () {
+function fancy_ctrl_z {
     if [[ $#BUFFER -eq 0 ]]; then
         BUFFER="fg"
         zle accept-line -w
@@ -55,9 +55,9 @@ fancy-ctrl-z () {
         zle clear-screen -w
     fi
 }
-zle -N fancy-ctrl-z
-bindkey '^Z' fancy-ctrl-z
-bindkey -a '^Z' fancy-ctrl-z
+zle -N fancy_ctrl_z
+bindkey '^Z' fancy_ctrl_z
+bindkey -a '^Z' fancy_ctrl_z
 
 # Aliases
 alias cb='popd 1> /dev/null' # silent popd
@@ -78,12 +78,11 @@ if whence nvim &> /dev/null; then
     alias man='MANPAGER="nvim +Man!" man'
 fi
 
-function dotfiles() {
+function dotfiles {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
 }
 
-function g() {
-
+function g {
     if [[ $# -eq 0 ]]; then
         gdb
         return
@@ -101,8 +100,7 @@ function g() {
 }
 
 # mkdir and cd
-function mcdir()
-{
+function mcdir {
     mkdir -p -- "$1" &&
     cd -P -- "$1"
 }
@@ -114,15 +112,15 @@ BASE16_SHELL="$HOME/.dotfiles-submodules/base16-shell/"
     && eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 # just type '...' to get '../..'
-rationalise-dot() {
-local MATCH
-if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
-  LBUFFER+=/
-  zle self-insert
-  zle self-insert
-else
-  zle self-insert
-fi
+function rationalise-dot {
+    local MATCH
+    if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
+        LBUFFER+=/
+        zle self-insert
+        zle self-insert
+    else
+        zle self-insert
+    fi
 }
 zle -N rationalise-dot
 bindkey . rationalise-dot
@@ -130,25 +128,25 @@ bindkey . rationalise-dot
 bindkey -M isearch . self-insert
 
 # Make X applications work in WSL 2
-if [[ $(< /proc/version) =~ microsoft ]]; then
+if [[ $(< /proc/version) =~ microsoft ]] {
     wsl=1
     export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
     export LIBGL_ALWAYS_INDIRECT=1
     dbus_status=$(service dbus status)
-    if [[ $dbus_status = *"is not running"* ]]; then
+    if [[ $dbus_status = *"is not running"* ]] {
       sudo service dbus --full-restart
-    fi
-fi
+    }
+}
 
 # Set prompt color according to host
 # Also affects the color of the mode indicator
 hostname="$(uname -n)"
 prompt_color=blue
-case "$hostname" in
+case "$hostname" {
     dt|lt) prompt_color=blue;;
     pi)    prompt_color=green;;
     tv)    prompt_color=yellow;;
-esac
+}
 zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
 
 # Function to add mode to the right prompt
@@ -168,9 +166,9 @@ source ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
 source ~/.dotfiles-submodules/fzf/shell/completion.zsh
 source ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-if ! [[ -n "$wsl" ]]; then
+if ! [[ -n "$wsl" ]] {
     source ~/.dotfiles-submodules/zsh-notify/notify.plugin.zsh
-fi
+}
 
 zstyle ':notify:*' success-icon "$HOME/.dotfiles-extra/pictures/Pog.png"
 zstyle ':notify:*' error-icon "$HOME/.dotfiles-extra/pictures/Nog.png"
