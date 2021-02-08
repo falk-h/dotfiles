@@ -28,6 +28,78 @@ bindkey -a "^[[A" up-line-or-search
 bindkey "^[[B" down-line-or-search
 bindkey "^[[A" up-line-or-search
 
+# Autocorrect word with &
+bindkey -a '&' spell-word
+
+# Look up manpages with K
+bindkey -a 'K' run-help
+
+# vim-surround emulation
+autoload -Uz surround
+zle -N delete-surround surround
+zle -N add-surround surround
+zle -N change-surround surround
+bindkey -a cs change-surround
+bindkey -a ds delete-surround
+bindkey -a ys add-surround
+bindkey -M visual S add-surround
+
+# Make Y behave sensibly
+bindkey -a 'Y' vi-yank-eol
+
+function incr {
+    zle -f vichange
+    do_increment ${NUMERIC:-1}
+}
+
+function decr {
+    zle -f vichange
+    do_increment -${NUMERIC:-1}
+}
+
+zle -N incr
+bindkey -a "^A" incr
+zle -N decr
+bindkey -a "^X" decr
+
+function do_increment {
+    typeset -i cur_start=$CURSOR
+    CURSOR+=1
+
+    # Find first number to the right of the cursor
+    until [[ $BUFFER[$CURSOR] =~ [0-9] ]] {
+        zle -M $CURSOR
+        if [[ $CURSOR -ge ${#BUFFER} ]] {
+            # Didn't find a number. Abort!
+            CURSOR=$cur_start
+            return 0
+        }
+        CURSOR+=1
+    }
+
+    # Continue until we're just past it
+    while [[ $BUFFER[$CURSOR+1] =~ [0-9] && $CURSOR -le ${#BUFFER} ]] {
+        CURSOR+=1
+    }
+
+    if [[ $LBUFFER =~ -?[0-9]+$ ]] {
+        zle -M $MATCH
+        typeset -i num=$MATCH
+    } else {
+        # Didn't find a number. Abort!
+        CURSOR=$cur_start
+        return 0
+    }
+
+    num_len=${#num}
+    num+=${1:-1} # Increment by $1, or 1 as a default increment
+    LBUFFER=${LBUFFER:0:-$num_len}$num
+    CURSOR+=-1 # Adjust the cursor to be at the last digit of the number
+}
+
+# Highlight the visual selection with a grey background
+zle_highlight=(region:bg=239)
+
 # Assume dvorak layout for spelling corrections
 setopt dvorak
 
