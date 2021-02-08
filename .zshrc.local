@@ -149,17 +149,73 @@ case "$hostname" {
 }
 zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
 
-# Function to add mode to the right prompt
-function zle-line-init zle-keymap-select {
+
+# Prompt
+prompt off
+setopt prompt_subst
+prompt_mode='%(3V.%U.)'
+prompt_user="%F{$prompt_color}%n%f%b"
+prompt_separator="%B@%b"
+prompt_host='%m'
+prompt_jobs='%(1j.%F{yellow}%j%f .)'
+prompt_level='%(2L.%F{green}$((SHLVL - 1))%f .)'
+prompt_path='%(2V.:%B%2v%b.)'
+prompt_vcs='${vcs_info_msg_0_}'
+prompt_signal='%(?..%F{red}%v%f )'
+prompt_char='%B%(!.#.>)%b'
+PS1="$prompt_signal$prompt_level$prompt_jobs$prompt_mode$prompt_user$prompt_separator$prompt_host$prompt_path$prompt_vcs%u$prompt_char"
+PS2='%_%B>%b'
+PS3='?%B#%b'
+PS4='+%N:%i:%_%B>%b'
+RPS2='%^'
+
+function make_prompt {
+    local exitstatus=$?
+    setopt localoptions noxtrace
+    psvar=()
+    psvar[1]=$signals[$exitstatus-127] # Get signal name
+    [[ -z $psvar[1] ]] && psvar[1]=$exitstatus # Fall back to signal number
+    [[ $PWD != ~ ]] && psvar[2]="$(make_path)" # Print path when not in ~
+
+    update_mode_indicator
+    vcs_info # Set up VCS info in prompt
+}
+
+function update_mode_indicator {
     case "$KEYMAP" in
-        vicmd) RPS1='%B%F{red}NORMAL%b%f';;
-        main)  RPS1="%F{$prompt_color}INSERT%f";;
+        vicmd) psvar[3]=1;;
+        main)  psvar[3]=();;
         *) RPS1='';;
     esac
     zle reset-prompt
 }
-zle -N zle-line-init
-zle -N zle-keymap-select
+zle -N zle-line-init make_prompt
+zle -N zle-keymap-select update_mode_indicator
+
+# Returns the path to the current working directory with all the parts of the
+# path abbreviated.
+function make_path {
+    [[ $PWD == ~ ]] && echo '~' && return
+    [[ $PWD == / ]] && echo '/' && return
+    typeset ret=''
+    typeset -a directories=("${(@s./.)PWD/$HOME/~}")
+    [[ $directories[1] != '~' ]] && ret+=/
+    last_dir=$directories[-1]
+    for dir in $directories[1,-2]; {
+        ret+=$dir[1]
+        [[ $dir[1] == . ]] && ret+=$dir[2]
+        ret+=/
+    }
+    echo ${ret}${last_dir}
+}
+
+zstyle ':vcs_info:*' formats " %c[%f%F{$prompt_color}%b%f%u]%f" "zsh: %r"
+zstyle ':vcs_info:*' actionformats " %c[%f%F{$prompt_color}%b%f|%F{red}%a%f%u]%f" "zsh: %r"
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b%F{red}:%F{yellow}%r"
+# Change to check-for-staged-changes if this is slow in large repos
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr "%F{green}"
+zstyle ':vcs_info:*' unstagedstr "%F{red}"
 
 # Plugins
 source ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
