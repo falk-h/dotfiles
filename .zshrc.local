@@ -121,6 +121,7 @@ bindkey -M isearch . self-insert
 
 # Make X applications work in WSL 2
 if [[ $(< /proc/version) =~ microsoft ]]; then
+    wsl=1
     export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
     export LIBGL_ALWAYS_INDIRECT=1
     dbus_status=$(service dbus status)
@@ -149,17 +150,14 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-# Syntax highlighting, autosuggestions, and fzf
-plugins=(
-    ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
-    ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
-    ~/.dotfiles-submodules/fzf/shell/completion.zsh
-    ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    ~/.dotfiles-submodules/zsh-notify/notify.plugin.zsh
-)
-for plugin in $plugins; do
-    [ -f "$plugin" ] && source "$plugin" || echo "Missing $plugin"
-done
+# Plugins
+source ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
+source ~/.dotfiles-submodules/fzf/shell/completion.zsh
+source ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if ! [[ -n "$wsl" ]]; then
+    source ~/.dotfiles-submodules/zsh-notify/notify.plugin.zsh
+fi
 
 zstyle ':notify:*' success-icon "$HOME/.dotfiles-extra/pictures/Pog.png"
 zstyle ':notify:*' error-icon "$HOME/.dotfiles-extra/pictures/Nog.png"
