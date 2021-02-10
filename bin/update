@@ -142,6 +142,6 @@ if options.extra:
     do_update('nvim +:CocUpdate +:qa', 'neovim coc extensions')
     do_update('flatpak update -y', 'global flatpak applications', as_root=True)
     do_update('flatpak update --user -y', 'user flatpak applications')
+    do_update('rustup update', 'rust toolchains')
     do_update('cargo install-update --all' +
               (' --git' if options.git else ''), 'cargo crates')
-    do_update('rustup update', 'rust toolchains')
