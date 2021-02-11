@@ -249,15 +249,13 @@ PS3='?%B#%b'
 PS4='+%N:%i:%_%B>%b'
 RPS2='%^'
 
-function make_prompt {
+function precmd {
     local exitstatus=$?
     setopt localoptions noxtrace
     psvar=()
     psvar[1]=$signals[$exitstatus-127] # Get signal name
     [[ -z $psvar[1] ]] && psvar[1]=$exitstatus # Fall back to signal number
     [[ $PWD != ~ ]] && psvar[2]="$(make_path)" # Print path when not in ~
-
-    update_mode_indicator
     vcs_info # Set up VCS info in prompt
 }
 
@@ -269,7 +267,7 @@ function update_mode_indicator {
     esac
     zle reset-prompt
 }
-zle -N zle-line-init make_prompt
+zle -N zle-line-init update_mode_indicator
 zle -N zle-keymap-select update_mode_indicator
 
 # Returns the path to the current working directory with all the parts of the
