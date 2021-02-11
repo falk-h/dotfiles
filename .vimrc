@@ -68,11 +68,13 @@ if has('termguicolors')
     set termguicolors
 endif
 
+" Color scheme.
+let s:theme = 'base16-helios'
+execute(':colorscheme ' .. s:theme)
+
 " Access colors present in 256 colorspace.
 " See https://github.com/chriskempson/base16-vim#256-colorspace.
 let base16colorspace = 256
-" Don't forget to change the colorscheme in g:lightline when changing this.
-colorscheme base16-tomorrow-night-eighties
 
 " Don't use vim-gitgutter's predefined mappings because they break which-key.
 let g:gitgutter_map_keys = 0
@@ -467,7 +469,7 @@ let g:lightline = {
     \   'fileformat': '%{&fileformat==#"unix"?"LF":&fileformat==#"dos"?"CRLF":"CR"}',
     \   'readonly': "%{&readonly?\"\uE0A2\":\"\"}",
     \ },
-    \ 'colorscheme': 'base16_tomorrow_night_eighties',
+    \ 'colorscheme': substitute(s:theme, '-', '_', 'g'),
     \ 'component_function': {
     \   'fugitive': 'LightlineFugitive',
     \   'function': 'LightlineFunction',

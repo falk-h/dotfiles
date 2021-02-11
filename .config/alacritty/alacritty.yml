@@ -173,48 +173,48 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
-# Base16 Eighties 256 - alacritty color config
-# Chris Kempson (http://chriskempson.com)
+# Base16 Helios 256 - alacritty color config
+# Alex Meyer (https://github.com/reyemxela)
 colors:
   # Default colors
   primary:
-    background: '0x2d2d2d'
-    foreground: '0xd3d0c8'
+    background: '0x1d2021'
+    foreground: '0xd5d5d5'
 
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
-    text: '0x2d2d2d'
-    cursor: '0xd3d0c8'
+    text: '0x1d2021'
+    cursor: '0xd5d5d5'
 
   # Normal colors
   normal:
-    black:   '0x2d2d2d'
-    red:     '0xf2777a'
-    green:   '0x99cc99'
-    yellow:  '0xffcc66'
-    blue:    '0x6699cc'
-    magenta: '0xcc99cc'
-    cyan:    '0x66cccc'
-    white:   '0xd3d0c8'
+    black:   '0x1d2021'
+    red:     '0xd72638'
+    green:   '0x88b92d'
+    yellow:  '0xf19d1a'
+    blue:    '0x1e8bac'
+    magenta: '0xbe4264'
+    cyan:    '0x1ba595'
+    white:   '0xd5d5d5'
 
   # Bright colors
   bright:
-    black:   '0x747369'
-    red:     '0xf2777a'
-    green:   '0x99cc99'
-    yellow:  '0xffcc66'
-    blue:    '0x6699cc'
-    magenta: '0xcc99cc'
-    cyan:    '0x66cccc'
-    white:   '0xf2f0ec'
+    black:   '0x6f7579'
+    red:     '0xd72638'
+    green:   '0x88b92d'
+    yellow:  '0xf19d1a'
+    blue:    '0x1e8bac'
+    magenta: '0xbe4264'
+    cyan:    '0x1ba595'
+    white:   '0xe5e5e5'
 
   indexed_colors:
-    - { index: 16, color: '0xf99157' }
-    - { index: 17, color: '0xd27b53' }
-    - { index: 18, color: '0x393939' }
-    - { index: 19, color: '0x515151' }
-    - { index: 20, color: '0xa09f93' }
-    - { index: 21, color: '0xe8e6df' }
+    - { index: 16, color: '0xeb8413' }
+    - { index: 17, color: '0xc85e0d' }
+    - { index: 18, color: '0x383c3e' }
+    - { index: 19, color: '0x53585b' }
+    - { index: 20, color: '0xcdcdcd' }
+    - { index: 21, color: '0xdddddd' }
 
 # Visual Bell
 #
