@@ -86,7 +86,6 @@ function do_increment {
     }
 
     if [[ $LBUFFER =~ -?[0-9]+$ ]] {
-        zle -M $MATCH
         typeset -i num=$MATCH
     } else {
         # Didn't find a number. Abort!
