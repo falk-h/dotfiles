@@ -89,9 +89,10 @@ let g:coc_global_extensions = [
     \'coc-diagnostic',
     \'coc-clangd',
     \'coc-tsserver',
-    \'coc-pyright',
+    \'coc-jedi',
     \'coc-pairs',
     \'coc-yaml',
+    \'coc-pyright',
     \'coc-html',
     \'coc-snippets',
     \'coc-tabnine',
@@ -520,6 +521,14 @@ function! LightlineFugitive()
         endif
     endif
     return ''
+endfunction
+
+autocmd TextYankPost * call OCSYank()
+
+function! OCSYank()
+    if v:event.regname ==# ""
+        echo v:event.regname
+    endif
 endfunction
 
 " Always show the signcolumn, otherwise it would shift the text each time
