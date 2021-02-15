@@ -99,6 +99,9 @@ function do_increment {
     CURSOR+=-1 # Adjust the cursor to be at the last digit of the number
 }
 
+# ctrl-backspace in FZF
+export FZF_DEFAULT_OPTS='--bind=ctrl-h:backward-kill-word'
+
 # Highlight the visual selection with a grey background
 zle_highlight=(region:bg=239)
 
@@ -296,6 +299,12 @@ source ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 if ! [[ -n "$wsl" ]] {
     source ~/.dotfiles-submodules/zsh-notify/notify.plugin.zsh
 }
+
+# ^F to always trigger FZF (context-aware)
+export FZF_COMPLETION_TRIGGER=''
+bindkey '^F' fzf-completion
+bindkey -a '^F' fzf-completion
+bindkey '^I' $fzf_default_completion
 
 zstyle ':notify:*' success-icon "$HOME/.dotfiles-extra/pictures/Pog.png"
 zstyle ':notify:*' error-icon "$HOME/.dotfiles-extra/pictures/Nog.png"
