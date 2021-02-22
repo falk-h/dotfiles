@@ -7,6 +7,8 @@ set timeout
 
 " TODO: Load plugins only when needed
 call plug#begin('~/.vim/plugged')
+    " Theme
+    Plug 'srcery-colors/srcery-vim'
     " Register vim-plug as a plugin to get documentation for it in vim.
     Plug 'junegunn/vim-plug'
     " Completions using language servers. (see :CocConfig for configuration)
@@ -27,10 +29,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'mtth/scratch.vim'
     " Lightweight statusbar.
     Plug 'itchyny/lightline.vim'
-    " Color scheme.
-    Plug 'chriskempson/base16-vim'
-    " Color scheme for lightline.
-    Plug 'mike-hearn/base16-vim-lightline'
     " Show Git changes in the line number column.
     Plug 'airblade/vim-gitgutter'
     " Git plugin, somewhat like magit.
@@ -62,19 +60,16 @@ call plug#begin('~/.vim/plugged')
     Plug 'lervag/vimtex'
 call plug#end()
 
-" Colorscheme
-" Use 24-bit colors (I think).
-if has('termguicolors')
-    set termguicolors
-endif
 
 " Color scheme.
-let s:theme = 'base16-helios'
-execute(':colorscheme ' .. s:theme)
-
-" Access colors present in 256 colorspace.
-" See https://github.com/chriskempson/base16-vim#256-colorspace.
-let base16colorspace = 256
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+set t_Co=256
+let g:srcery_italic = 1
+colorscheme srcery
 
 " Don't use vim-gitgutter's predefined mappings because they break which-key.
 let g:gitgutter_map_keys = 0
@@ -469,7 +464,7 @@ let g:lightline = {
     \   'fileformat': '%{&fileformat==#"unix"?"LF":&fileformat==#"dos"?"CRLF":"CR"}',
     \   'readonly': "%{&readonly?\"\uE0A2\":\"\"}",
     \ },
-    \ 'colorscheme': substitute(s:theme, '-', '_', 'g'),
+    \ 'colorscheme': 'srcery',
     \ 'component_function': {
     \   'fugitive': 'LightlineFugitive',
     \   'function': 'LightlineFunction',
@@ -561,8 +556,9 @@ let g:which_key_run_map_on_popup = 1
 let g:which_key_disable_default_offset = 1
 
 " Which-key colors.
-highlight link WhichKeySeperator Constant
-highlight link WhichKeyDesc Label
+highlight link WhichKeySeperator Operator
+highlight link WhichKeyFloating Label
+highlight link WhichKeyDesc String
 
 " Make CocFzf look like regular fzf.
 let g:coc_fzf_preview = ''

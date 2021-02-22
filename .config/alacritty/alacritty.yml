@@ -173,48 +173,34 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
-# Base16 Helios 256 - alacritty color config
-# Alex Meyer (https://github.com/reyemxela)
+# Colors (Srcery)
 colors:
   # Default colors
   primary:
-    background: '0x1d2021'
-    foreground: '0xd5d5d5'
-
-  # Colors the cursor will use if `custom_cursor_colors` is true
-  cursor:
-    text: '0x1d2021'
-    cursor: '0xd5d5d5'
+    background: '#1c1b19'
+    foreground: '#fce8c3'
 
   # Normal colors
   normal:
-    black:   '0x1d2021'
-    red:     '0xd72638'
-    green:   '0x88b92d'
-    yellow:  '0xf19d1a'
-    blue:    '0x1e8bac'
-    magenta: '0xbe4264'
-    cyan:    '0x1ba595'
-    white:   '0xd5d5d5'
+    black:   '#1c1b19'
+    red:     '#ef2f27'
+    green:   '#519f50'
+    yellow:  '#fbb829'
+    blue:    '#2c78bf'
+    magenta: '#e02c6d'
+    cyan:    '#0aaeb3'
+    white:   '#d0bfa1'
 
   # Bright colors
   bright:
-    black:   '0x6f7579'
-    red:     '0xd72638'
-    green:   '0x88b92d'
-    yellow:  '0xf19d1a'
-    blue:    '0x1e8bac'
-    magenta: '0xbe4264'
-    cyan:    '0x1ba595'
-    white:   '0xe5e5e5'
-
-  indexed_colors:
-    - { index: 16, color: '0xeb8413' }
-    - { index: 17, color: '0xc85e0d' }
-    - { index: 18, color: '0x383c3e' }
-    - { index: 19, color: '0x53585b' }
-    - { index: 20, color: '0xcdcdcd' }
-    - { index: 21, color: '0xdddddd' }
+    black:   '#918175'
+    red:     '#f75341'
+    green:   '#98bc37'
+    yellow:  '#fed06e'
+    blue:    '#68a8e4'
+    magenta: '#ff5c8f'
+    cyan:    '#53fde9'
+    white:   '#fce8c3'
 
 # Visual Bell
 #
