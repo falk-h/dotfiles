@@ -139,7 +139,7 @@ if options.extra:
     do_update('apt update', 'apt package database', as_root=True)
     do_update('apt upgrade', 'apt packages', as_root=True)
     do_update('nvim +:PlugUpdate +:qa', 'neovim plugins')
-    do_update('nvim +:CocUpdate +:qa', 'neovim coc extensions')
+    do_update('nvim +:CocUpdateSync +:qa', 'neovim coc extensions')
     do_update('flatpak update -y', 'global flatpak applications', as_root=True)
     do_update('flatpak update --user -y', 'user flatpak applications')
     do_update('rustup update', 'rust toolchains')
