@@ -50,6 +50,9 @@ bindkey -M visual S add-surround
 # Make Y behave sensibly
 bindkey -a 'Y' vi-yank-eol
 
+# Tab backwards in the completion menu
+bindkey '^[[Z' reverse-menu-complete
+
 function incr {
     zle -f vichange
     do_increment ${NUMERIC:-1}
