@@ -106,7 +106,7 @@ set nowritebackup
 " delays and poor user experience.
 set updatetime=100
 
-" Don't pass messages to |ins-completion-menu|.
+" Don't give messages about completion menu matches.
 set shortmess+=c
 
 " Show the number of the current search result and the total number of search
