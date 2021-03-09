@@ -228,6 +228,29 @@ case "$hostname" {
 }
 zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
 
+# Array of .env files that have already been sourced
+typeset -a DOTENV_SOURCED=()
+function dotenv {
+    typeset -r DOTENV_FILE='.env'
+    typeset file="$PWD/$DOTENV_FILE"
+    if [[ -f "$file" && ! ("$DOTENV_SOURCED[(Ie)$file]") ]] {
+        echo -n "Source $DOTENV_FILE? [Y/n/i] "
+        read -k 1 answer
+        [[ "$answer" != $'\n' ]] && echo
+        case "$answer" {
+            [yY])
+                setopt localoptions allexport
+                source "$file"
+                ;;
+            [iI]) ;; # Continue and pretend that we've already sourced the file
+            [nN]) return ;;
+            *) dotenv ;; # Ask again on invalid answer
+        }
+        DOTENV_SOURCED+=("$file")
+    }
+}
+autoload -U add-zsh-hook
+add-zsh-hook chpwd dotenv
 
 # Prompt
 prompt off
