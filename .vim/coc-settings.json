@@ -60,6 +60,9 @@
     "list.nextKeymap": "<C-n>",
     "list.previousKeymap": "<C-p>",
     "list.source.diagnostics.pathFormat": "short",
+    "rust-analyzer.lens.run": false,
+    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
+    "rust-analyzer.procMacro.enable": true,
     "suggest.completionItemKindLabels": {
         "keyword": "\uf1de",
         "variable": "\ue79b",
