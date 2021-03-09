@@ -77,6 +77,9 @@ let g:gitgutter_map_keys = 0
 " Close gitgutter previews when escape is pressed.
 let g:gitgutter_close_preview_on_escape = 1
 
+" Give gitgutter the absolute path to the git executable. Recommended by the docs.
+let g:gitgutter_git_executable = '/usr/bin/git'
+
 " Coc extensions to install. These can also be installed with :CocInstall, but
 " I much prefer specifying them declaratively. FIXME: This caused Vim to
 " segfault when adding 'coc-diagnostic'. Investigate.
