@@ -1,2 +1,13 @@
+[alias]
+b = "build"
+br = "build --release"
+ba = "build --all-targets"
+c = "check"
+cl = "clippy"
+r = "run"
+rr = "run --release"
+re = "run --example"
+t = "test"
+
 # [build]
 # rustc-wrapper = "sccache"
