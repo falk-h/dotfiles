@@ -1,6 +1,9 @@
 # default value of indentation
 defaultIndent: "    "
 
+noAdditionalIndentGlobal:
+    keyEqualsValuesBracesBrackets: 1
+
 modifyLineBreaks:
     preserveBlankLines: 1
     condenseMultipleBlankLinesInto: 1
@@ -37,8 +40,8 @@ modifyLineBreaks:
         environments:
             quotation: 0
         ifElseFi: 0
-        optionalArguments: 0
-        mandatoryArguments: 0
+        optionalArguments: 1
+        mandatoryArguments: 1
         items: 0
         specialBeginEnd: 1
         afterHeading: 0

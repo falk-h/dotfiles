@@ -77,6 +77,9 @@ let g:gitgutter_map_keys = 0
 " Close gitgutter previews when escape is pressed.
 let g:gitgutter_close_preview_on_escape = 1
 
+" Give gitgutter the absolute path to the git executable. Recommended by the docs.
+let g:gitgutter_git_executable = '/usr/bin/git'
+
 " Coc extensions to install. These can also be installed with :CocInstall, but
 " I much prefer specifying them declaratively. FIXME: This caused Vim to
 " segfault when adding 'coc-diagnostic'. Investigate.
@@ -86,9 +89,10 @@ let g:coc_global_extensions = [
     \'coc-diagnostic',
     \'coc-clangd',
     \'coc-tsserver',
-    \'coc-pyright',
+    \'coc-jedi',
     \'coc-pairs',
     \'coc-yaml',
+    \'coc-pyright',
     \'coc-html',
     \'coc-snippets',
     \'coc-tabnine',
@@ -103,7 +107,7 @@ set nowritebackup
 " delays and poor user experience.
 set updatetime=100
 
-" Don't pass messages to |ins-completion-menu|.
+" Don't give messages about completion menu matches.
 set shortmess+=c
 
 " Show the number of the current search result and the total number of search
@@ -517,6 +521,14 @@ function! LightlineFugitive()
         endif
     endif
     return ''
+endfunction
+
+autocmd TextYankPost * call OCSYank()
+
+function! OCSYank()
+    if v:event.regname ==# ""
+        echo v:event.regname
+    endif
 endfunction
 
 " Always show the signcolumn, otherwise it would shift the text each time
