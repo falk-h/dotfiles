@@ -145,8 +145,8 @@ let g:ft_man_no_sect_fallback = 1
 
 augroup vimrc
     autocmd!
-    " Quit help buffers with q.
-    autocmd FileType help nnoremap <buffer> q :silent quit<CR>
+    " Quit help and man buffers with q.
+    autocmd FileType help,man nnoremap <buffer> q :silent quit<CR>
 
     " Use K to look up other manpages.
     autocmd FileType man nmap <buffer> K <C-]>
