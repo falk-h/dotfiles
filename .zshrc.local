@@ -353,5 +353,3 @@ zstyle ':notify:*' expire-time 10000
 zstyle ':notify:*' enable-on-ssh yes
 zstyle ':notify:*' success-title 'Command succeeded after #{time_elapsed}'
 zstyle ':notify:*' error-title 'Command failed after #{time_elapsed}'
-
-export DOTNET_CLI_TELEMETRY_OPTOUT=1

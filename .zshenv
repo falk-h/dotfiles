@@ -5,6 +5,8 @@ export PATH="$HOME/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 # APT user config
 export APT_CONFIG="$HOME/.apt.conf"
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 # Manpages for crates installed via cargo
 if which rustup &> /dev/null; then
     export MANPATH="$(rustup toolchain list -v | grep '(default)' | cut -f 2)/share/man:${MANPATH:-$(manpath)}"
