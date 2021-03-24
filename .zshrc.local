@@ -168,6 +168,19 @@ function dotfiles {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" $@
 }
 
+function merge_main {
+    head=$(< ~/.dotfiles/HEAD)
+    current_branch=${head##*/}
+    if [[ $current_branch = main ]]; then
+        echo "On branch main"
+    else
+        dotfiles switch main \
+            && dotfiles pull \
+            && dotfiles switch "$current_branch" \
+            && dotfiles merge main --no-edit
+    fi
+}
+
 function g {
     if [[ $# -eq 0 ]]; then
         gdb
