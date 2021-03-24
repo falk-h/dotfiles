@@ -131,7 +131,7 @@ options: Options = parse_args()
 # TODO: add npm -g outdated --parseable --depth=0 | cut -d: -f2 | xargs -r -n1 sudo npm -g install
 # TODO: update PIP packages
 do_update('pacman -Syu', 'pacman packages', as_root=True)
-do_update('yay -Syua --needed' +
+do_update('paru -Syua --needed' +
           (' --devel' if options.git else ''), 'aur packages')
 
 if options.extra:
