@@ -253,7 +253,7 @@ function dotenv {
         read -k 1 answer
         [[ "$answer" != $'\n' ]] && echo
         case "$answer" {
-            [yY])
+            [yY$'\n'])
                 setopt localoptions allexport
                 source "$file"
                 ;;
