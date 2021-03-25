@@ -160,6 +160,7 @@ fi
 alias gdb='gdb -q' # Hide the license header
 alias rgdb='rust-gdb -q' # Hide the license header
 alias cgdb='cuda-gdb -q' # Hide the license header
+alias todo='rg --trim "(TODO|FIXME|HACK|BUG|OPTIMIZE)"'
 if whence nvim &> /dev/null; then
     alias man='MANPAGER="nvim +Man!" man'
 fi
