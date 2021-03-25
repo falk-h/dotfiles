@@ -190,6 +190,9 @@ augroup vimrc
     " Use autocmd to force lightline update. Recommended in
     " coc-status-lightline.
     autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+
+    " Highlight yanked text
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200, higroup="Search"}
 augroup end
 
 if has('spell') && has('syntax')
