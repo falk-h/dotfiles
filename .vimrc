@@ -795,8 +795,6 @@ vnoremap <silent> <leader> :<c-u>WhichKeyVisual! g:leader<CR>
 
 " Use - as local leader.
 let g:maplocalleader = "\<BS>"
-nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader<CR>
-vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader<CR>
 
 " Leader mappings.
 let g:leader = {}
@@ -962,8 +960,31 @@ let g:leader.x = [':ScratchInsert', 'Open scratch buffer']
 call which_key#register('<Space>', "g:leader")
 
 " Local leader mappings.
-let g:localleader = {}
+augroup vimrc_localleader
+    autocmd!
+    let g:localleader_clangd = {}
+    let g:localleader_clangd.h = [':CocCommand clangd.switchSourceHeader', 'Switch between source and header']
+    let g:localleader_rust_analyzer = {}
+    let g:localleader_rust_analyzer.c = [':CocCommand rust-analyzer.openCargoToml', 'Open Cargo.toml']
+    let g:localleader_rust_analyzer.d = [':CocCommand rust-analyzer.openDocs', 'Open docs in browser']
+    let g:localleader_rust_analyzer.e = [':CocCommand rust-analyzer.explainError', 'Explain error']
+    let g:localleader_rust_analyzer.f = [':CocCommand rust-analyzer.reload', 'Reload file']
+    let g:localleader_rust_analyzer.F = [':CocCommand rust-analyzer.reloadWorkspace', 'Reload workspace']
+    let g:localleader_rust_analyzer.i = [':CocCommand rust-analyzer.toggleInlayHintns', 'Toggle inlay hints']
+    let g:localleader_rust_analyzer.h = [':CocCommand rust-analyzer.viewHir', 'View HIR']
+    let g:localleader_rust_analyzer.p = [':CocCommand rust-analyzer.parentModule', 'Go to parent module']
+    let g:localleader_rust_analyzer.r = [':CocCommand rust-analyzer.run', 'Run']
+    let g:localleader_rust_analyzer.s = [':CocCommand rust-analyzer.ssr', 'SSR']
+    let g:localleader_rust_analyzer.t = [':CocCommand rust-analyzer.peekTests', 'Peek tests']
+    let g:localleader_rust_analyzer.y = [':CocCommand rust-analyzer.syntaxTree', 'Syntax tree']
+    let g:localleader_rust_analyzer.v = [':CocCommand rust-analyzer.analyzerStatus', 'Server status']
+    let g:localleader_rust_analyzer.V = [':CocCommand rust-analyzer.serverVersion', 'Server version']
+    let g:localleader_rust_analyzer.x = [':CocCommand rust-analyzer.expandMacro', 'Expand macro']
 
-let g:localleader.h = [':CocCommand clangd.switchSourceHeader', 'Switch between source and header']
-
-call which_key#register('<BS>', "g:localleader")
+    autocmd FileType c,cpp call which_key#register('<BS>', "g:localleader_clangd")
+    autocmd FileType c,cpp nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader_clangd<CR>
+    autocmd FileType c,cpp vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader_clangd<CR>
+    autocmd FileType rust call which_key#register('<BS>', "g:localleader_rust_analyzer")
+    autocmd FileType rust nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader_rust_analyzer<CR>
+    autocmd FileType rust vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader_rust_analyzer<CR>
+augroup end
