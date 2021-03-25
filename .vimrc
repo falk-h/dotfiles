@@ -143,6 +143,12 @@ endif
 " Don't search in other sections if the page wasn't found.
 let g:ft_man_no_sect_fallback = 1
 
+set formatoptions+=n " Recognize lists.
+set formatoptions-=l " Break long lines in insert mode.
+
+" Always prefer 80 columns unless overwritten by autocommands.
+set textwidth=80
+
 augroup vimrc
     autocmd!
     " Quit help and man buffers with q.
@@ -151,19 +157,17 @@ augroup vimrc
     " Use K to look up other manpages.
     autocmd FileType man nmap <buffer> K <C-]>
 
-    " Ensure that colorcolumn always shows the current textwidth. TODO: Fix
-    "autocmd BufEnter * let &colorcolumn = &textwidth == 0 ? 0 : &textwidth + 1
-
     " Automatically wrap text longer than 80 characters.
     " See also 'formatoptions'.
     autocmd FileType markdown,rst,asciidoc setlocal textwidth=80
     " Disable text wrapping and colorcolumn for LaTeX.
-    autocmd FileType tex setlocal textwidth=0
-    autocmd FileType tex setlocal colorcolumn=
+    autocmd FileType tex setlocal textwidth=0 colorcolumn=
     " Avoid splitting words when wrapping lines.
     autocmd FileType markdown,rst,asciidoc,gitcommit,tex setlocal linebreak
     " Highlight column 50 in commit messages.
     autocmd FileType gitcommit set colorcolumn=50
+    " Rust uses longer lines.
+    autocmd FileType rust setl colorcolumn=100 linebreak textwidth=80
 
     " Forward search with K in TeX files.
     autocmd FileType tex nnoremap K :call CocActionAsync('runCommand', 'latex.ForwardSearch')<CR>
