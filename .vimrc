@@ -811,8 +811,8 @@ let g:leader.b   = {'name':     '+Buffer'}
 let g:leader.b.d = [':bdelete', 'Delete']
 
 let g:leader.c   = {'name':                        '+Coc'}
-let g:leader.c.a = [':CocFzfList diagnostics --current-buf', 'Diagnostics (current buffer)']
-let g:leader.c.A = [':CocFzfList diagnostics',               'Diagnostics']
+let g:leader.c.a = [':CocList diagnostics --current-buf', 'Diagnostics (current buffer)']
+let g:leader.c.A = [':CocList diagnostics',               'Diagnostics']
 let g:leader.c.c = [':CocFzfList commands',         'Commands']
 let g:leader.c.e = [':CocList extensions',         'Extensions']
 let g:leader.c.f = ['<Plug>(coc-format)',          'Format']
