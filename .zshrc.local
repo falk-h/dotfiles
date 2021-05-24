@@ -160,6 +160,7 @@ fi
 alias gdb='gdb -q' # Hide the license header
 alias rgdb='rust-gdb -q' # Hide the license header
 alias cgdb='cuda-gdb -q' # Hide the license header
+alias todo='rg --trim "(TODO|FIXME|HACK|BUG|OPTIMIZE)"'
 if whence nvim &> /dev/null; then
     alias man='MANPAGER="nvim +Man!" man'
 fi
@@ -252,7 +253,7 @@ function dotenv {
         read -k 1 answer
         [[ "$answer" != $'\n' ]] && echo
         case "$answer" {
-            [yY])
+            [yY$'\n'])
                 setopt localoptions allexport
                 source "$file"
                 ;;

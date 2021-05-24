@@ -7,9 +7,6 @@ set scroll-step 120
 set window-title-basename true
 
 ## Colors
-set recolor true
-set recolor-lightcolor          \#1C1B19
-set recolor-darkcolor           \#D0BFA1
 set highlight-color             \#98BC37
 set highlight-active-color      \#519F50
 set completion-bg               \#262626

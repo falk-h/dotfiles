@@ -143,27 +143,31 @@ endif
 " Don't search in other sections if the page wasn't found.
 let g:ft_man_no_sect_fallback = 1
 
+set formatoptions+=n " Recognize lists.
+set formatoptions-=l " Break long lines in insert mode.
+
+" Always prefer 80 columns unless overwritten by autocommands.
+set textwidth=80
+
 augroup vimrc
     autocmd!
-    " Quit help buffers with q.
-    autocmd FileType help nnoremap <buffer> q :silent quit<CR>
+    " Quit help and man buffers with q.
+    autocmd FileType help,man nnoremap <buffer> q :silent quit<CR>
 
     " Use K to look up other manpages.
     autocmd FileType man nmap <buffer> K <C-]>
-
-    " Ensure that colorcolumn always shows the current textwidth. TODO: Fix
-    "autocmd BufEnter * let &colorcolumn = &textwidth == 0 ? 0 : &textwidth + 1
 
     " Automatically wrap text longer than 80 characters.
     " See also 'formatoptions'.
     autocmd FileType markdown,rst,asciidoc setlocal textwidth=80
     " Disable text wrapping and colorcolumn for LaTeX.
-    autocmd FileType tex setlocal textwidth=0
-    autocmd FileType tex setlocal colorcolumn=
+    autocmd FileType tex setlocal textwidth=0 colorcolumn=
     " Avoid splitting words when wrapping lines.
     autocmd FileType markdown,rst,asciidoc,gitcommit,tex setlocal linebreak
     " Highlight column 50 in commit messages.
     autocmd FileType gitcommit set colorcolumn=50
+    " Rust uses longer lines.
+    autocmd FileType rust setl colorcolumn=100 linebreak textwidth=80
 
     " Forward search with K in TeX files.
     autocmd FileType tex nnoremap K :call CocActionAsync('runCommand', 'latex.ForwardSearch')<CR>
@@ -186,6 +190,9 @@ augroup vimrc
     " Use autocmd to force lightline update. Recommended in
     " coc-status-lightline.
     autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+
+    " Highlight yanked text
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200, higroup="Search"}
 augroup end
 
 if has('spell') && has('syntax')
@@ -788,8 +795,6 @@ vnoremap <silent> <leader> :<c-u>WhichKeyVisual! g:leader<CR>
 
 " Use - as local leader.
 let g:maplocalleader = "\<BS>"
-nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader<CR>
-vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader<CR>
 
 " Leader mappings.
 let g:leader = {}
@@ -806,8 +811,8 @@ let g:leader.b   = {'name':     '+Buffer'}
 let g:leader.b.d = [':bdelete', 'Delete']
 
 let g:leader.c   = {'name':                        '+Coc'}
-let g:leader.c.a = [':CocFzfList diagnostics --current-buf', 'Diagnostics (current buffer)']
-let g:leader.c.A = [':CocFzfList diagnostics',               'Diagnostics']
+let g:leader.c.a = [':CocList diagnostics --current-buf', 'Diagnostics (current buffer)']
+let g:leader.c.A = [':CocList diagnostics',               'Diagnostics']
 let g:leader.c.c = [':CocFzfList commands',         'Commands']
 let g:leader.c.e = [':CocList extensions',         'Extensions']
 let g:leader.c.f = ['<Plug>(coc-format)',          'Format']
@@ -955,8 +960,31 @@ let g:leader.x = [':ScratchInsert', 'Open scratch buffer']
 call which_key#register('<Space>', "g:leader")
 
 " Local leader mappings.
-let g:localleader = {}
+augroup vimrc_localleader
+    autocmd!
+    let g:localleader_clangd = {}
+    let g:localleader_clangd.h = [':CocCommand clangd.switchSourceHeader', 'Switch between source and header']
+    let g:localleader_rust_analyzer = {}
+    let g:localleader_rust_analyzer.c = [':CocCommand rust-analyzer.openCargoToml', 'Open Cargo.toml']
+    let g:localleader_rust_analyzer.d = [':CocCommand rust-analyzer.openDocs', 'Open docs in browser']
+    let g:localleader_rust_analyzer.e = [':CocCommand rust-analyzer.explainError', 'Explain error']
+    let g:localleader_rust_analyzer.f = [':CocCommand rust-analyzer.reload', 'Reload file']
+    let g:localleader_rust_analyzer.F = [':CocCommand rust-analyzer.reloadWorkspace', 'Reload workspace']
+    let g:localleader_rust_analyzer.i = [':CocCommand rust-analyzer.toggleInlayHintns', 'Toggle inlay hints']
+    let g:localleader_rust_analyzer.h = [':CocCommand rust-analyzer.viewHir', 'View HIR']
+    let g:localleader_rust_analyzer.p = [':CocCommand rust-analyzer.parentModule', 'Go to parent module']
+    let g:localleader_rust_analyzer.r = [':CocCommand rust-analyzer.run', 'Run']
+    let g:localleader_rust_analyzer.s = [':CocCommand rust-analyzer.ssr', 'SSR']
+    let g:localleader_rust_analyzer.t = [':CocCommand rust-analyzer.peekTests', 'Peek tests']
+    let g:localleader_rust_analyzer.y = [':CocCommand rust-analyzer.syntaxTree', 'Syntax tree']
+    let g:localleader_rust_analyzer.v = [':CocCommand rust-analyzer.analyzerStatus', 'Server status']
+    let g:localleader_rust_analyzer.V = [':CocCommand rust-analyzer.serverVersion', 'Server version']
+    let g:localleader_rust_analyzer.x = [':CocCommand rust-analyzer.expandMacro', 'Expand macro']
 
-let g:localleader.h = [':CocCommand clangd.switchSourceHeader', 'Switch between source and header']
-
-call which_key#register('<BS>', "g:localleader")
+    autocmd FileType c,cpp call which_key#register('<BS>', "g:localleader_clangd")
+    autocmd FileType c,cpp nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader_clangd<CR>
+    autocmd FileType c,cpp vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader_clangd<CR>
+    autocmd FileType rust call which_key#register('<BS>', "g:localleader_rust_analyzer")
+    autocmd FileType rust nnoremap <silent> <localleader> :<c-u>WhichKey! g:localleader_rust_analyzer<CR>
+    autocmd FileType rust vnoremap <silent> <localleader> :<c-u>WhichKeyVisual! g:localleader_rust_analyzer<CR>
+augroup end
