@@ -1,0 +1,36 @@
+[package]
+edition = "2021"
+name = "dotfile-installer"
+description = "Dotfile installer"
+publish = false
+version = "0.1.0"
+
+[dependencies]
+log = "0.4"
+
+[dependencies.chrono]
+version = "0.4"
+default-features = false
+features = ["clock"]
+
+[dependencies.clap]
+version = "3.2"
+features = ["cargo"]
+
+[dependencies.nix]
+version = "0.24"
+default-features = false
+features = ["fs", "user"]
+
+[dependencies.simplelog]
+version = "0.12"
+default-features = false
+features = ["termcolor"]
+
+[dev-dependencies]
+tempfile = "3.3"
+
+[dev-dependencies.simplelog]
+version = "0.12"
+default-features = false
+features = ["termcolor", "test"]

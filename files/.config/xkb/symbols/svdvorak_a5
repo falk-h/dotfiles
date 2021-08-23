@@ -1,0 +1,57 @@
+// Svdvorak A5
+partial alphanumeric_keys
+xkb_symbols "a5" {
+
+   include "se(basic)"
+
+   name[Group1]="Swedish (Svdvorak A5)";
+
+   key <AE01> { [ 1, exclam,     onesuperior,   onesubscript ] };
+   key <AE02> { [ 2, quotedbl,   twosuperior,   twosubscript ] };
+   key <AE03> { [ 3, numbersign, threesuperior, threesubscript ] };
+   key <AE04> { [ 4, currency,   foursuperior,  foursubscript ] };
+   key <AE05> { [ 5, percent,    fivesuperior,  fivesubscript ] };
+   key <AE06> { [ 6, ampersand,  sixsuperior,   sixsubscript ] };
+   key <AE07> { [ 7, slash,      sevensuperior, sevensubscript ] };
+   key <AE08> { [ 8, parenleft,  eightsuperior, eightsubscript ] };
+   key <AE09> { [ 9, parenright, ninesuperior,  ninesubscript ] };
+   key <AE10> { [ 0, equal,      zerosuperior,  zerosubscript ] };
+
+   key <AD01> { [      aring,      Aring,    braceleft                   ] };
+   key <AD02> { [      comma,  semicolon,   braceright                   ] };
+   key <AD03> { [     period,      colon,  bracketleft                   ] };
+   key <AD04> { [          p,          P, bracketright                   ] };
+   key <AD05> { [          y,          Y,       dollar                   ] };
+   key <AD06> { [          f,          F,        grave                   ] };
+   key <AD07> { [          g,          G,     question                   ] };
+   key <AD08> { [          c,          C,    ampersand                   ] };
+   key <AD09> { [          r,          R,         less,    lessthanequal ] };
+   key <AD10> { [          l,          L,      greater, greaterthanequal ] };
+   key <AD11> { [ odiaeresis, Odiaeresis,       oslash,           Oslash ] };
+
+   key <AC01> { [     a,          A,        plus,  plusminus ] };
+   key <AC02> { [     o,          O,       slash             ] };
+   key <AC03> { [     e,          E,   parenleft,   EuroSign ] };
+   key <AC04> { [     u,          U,  parenright             ] };
+   key <AC05> { [     i,          I,         bar             ] };
+   key <AC06> { [     d,          D,    asterisk             ] };
+   key <AC07> { [     h,          H, asciicircum             ] };
+   key <AC08> { [     t,          T,  numbersign             ] };
+   key <AC09> { [     n,          N,    quotedbl             ] };
+   key <AC10> { [     s,          S,  asciitilde,   approxeq ] };
+   key <AC11> { [ minus, underscore,  udiaeresis, Udiaeresis ] };
+   key <BKSL> { [  less,    greater,         bar             ] }; // TODO
+
+   //// I don't think this key exists on ANSI layouts
+   key <LSGT> { [ odiaeresis, Odiaeresis                       ] };
+   key <AB01> { [ adiaeresis, Adiaeresis, apostrophe           ] };
+   key <AB02> { [          q,          Q,      equal, notequal ] };
+   key <AB03> { [          j,          J,         at           ] };
+   key <AB04> { [          k,          K,     exclam           ] };
+   key <AB05> { [          x,          X,  backslash           ] };
+   key <AB06> { [          b,          B,    percent           ] };
+   key <AB07> { [          m,          M,     ssharp,    U1E9E ] };
+   key <AB08> { [          w,          W,      acute           ] };
+   key <AB09> { [          v,          V                       ] }; // TODO
+   key <AB10> { [          z,          Z                       ] }; // TODO
+};

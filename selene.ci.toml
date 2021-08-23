@@ -1,0 +1,6 @@
+# Use the stdlib from nvim.yml with a relative path so that this works in CI
+std = "nvim"
+
+[rules]
+# Globals are needed when vimscript should call Lua functions
+global_usage = "allow"

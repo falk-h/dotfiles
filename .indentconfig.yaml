@@ -1,4 +1,0 @@
-# Tells latexindent where to look for settings.
-
-paths:
-    - /home/fh/.latexindent.yaml

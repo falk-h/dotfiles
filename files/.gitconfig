@@ -1,0 +1,73 @@
+[include]
+    path = .gitconfig.secret
+
+[commit]
+    verbose = true
+
+[alias]
+    tree = log --graph --oneline --all --color --decorate
+    t = tree -10
+    squash = rebase -i --autosquash
+    dt = difftool
+
+[init]
+    defaultBranch = main
+
+[branch]
+    # Inherit the upstream branch from the "parent" branch when creating a new
+    # branch. For example, when branching from master, the new branch will also
+    # be set up to track origin/master.
+    autoSetupMerge = inherit
+
+[pack]
+    threads = 0 # Pack in parallel
+
+[index]
+    recordEndOfIndexEntrios = true # Supposedly reduces index load time
+
+[checkout]
+    workers = -1 # Use one worker per core when checking out
+
+[fetch]
+    parallel = 0 # Work in parallel
+
+[submodule]
+    fetchJobs = 0 # Work in parallel
+
+[advice]
+    detachedHead = false
+    skippedCherryPicks = false
+
+[pager]
+    difftool = true
+
+[diff]
+    tool = difftastic
+
+[difftool]
+    prompt = false
+
+[difftool "difftastic"]
+    cmd = difft "$LOCAL" "$REMOTE"
+
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[diff]
+    colorMoved = default
+
+[delta]
+    features = line-numbers decorations
+    whitespace-error-style = 22 reverse
+    plus-style = "syntax #013400"
+    minus-style = "syntax #340001"
+    syntax-theme = Monokai Extended
+    navigate = true
+
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none

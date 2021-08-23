@@ -1,0 +1,36 @@
+#!/bin/zsh
+
+# This script prints a list of users using the most CPU time.
+
+typeset -a output
+output=("${(@f)$(ps -Ao user,pcpu)}")
+output=($output[2,-1]) # Strip header
+
+typeset -A cpu
+for line in $output[@]; do
+    typeset user=$line[(w)1]
+    typeset usage=$line[(w)2]
+    (( cpu[$user] += usage ))
+done
+
+typeset -i maxlen=5
+for usage in $cpu; do
+    typeset -i usage_int=$usage
+    if (( ${#usage_int} > maxlen )); then
+        maxlen=${#usage_int}
+    fi
+done
+maxlen+=1 # For the period
+
+for user in ${(k)cpu}; do
+    if (( cpu[$user] > 1.0 )); then
+        typeset -a userinfo=("${(@s.:.)$(getent passwd $user)}")
+        typeset name=$userinfo[5]
+        if [[ -n $name ]]; then
+            name="$name ($user)"
+        else
+            name=$user
+        fi
+        printf '%*.1f%% %s\n' $maxlen $cpu[$user] $name
+    fi
+done | sort -rh

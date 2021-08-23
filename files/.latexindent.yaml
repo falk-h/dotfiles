@@ -1,0 +1,135 @@
+---
+# default value of indentation
+defaultIndent: "    "
+
+noAdditionalIndentGlobal:
+  keyEqualsValuesBracesBrackets: 1
+
+modifyLineBreaks:
+  preserveBlankLines: 1
+  condenseMultipleBlankLinesInto: 1
+  oneSentencePerLine:
+    manipulateSentences: 0
+    removeSentenceLineBreaks: 0
+    textWrapSentences: 0
+    sentenceIndent: ""
+    sentencesFollow:
+      par: 1
+      blankLine: 1
+      fullStop: 1
+      exclamationMark: 1
+      questionMark: 1
+      rightBrace: 0
+      commentOnPreviousLine: 1
+      other: 0
+    sentencesBeginWith:
+      A-Z: 1
+      a-z: 0
+      other: 0
+    sentencesEndWith:
+      basicFullStop: 0
+      betterFullStop: 1
+      exclamationMark: 1
+      questionMark: 1
+      other: 0
+  textWrapOptions:
+    columns: 0
+    separator: ""
+    perCodeBlockBasis: 0
+    all: 0
+    alignAtAmpersandTakesPriority: 1
+    environments:
+      quotation: 0
+    ifElseFi: 0
+    optionalArguments: 1
+    mandatoryArguments: 1
+    items: 0
+    specialBeginEnd: 1
+    afterHeading: 0
+    preamble: 0
+    filecontents: 0
+    masterDocument: 0
+  removeParagraphLineBreaks:
+    all: 0
+    beforeTextWrap: 0
+    alignAtAmpersandTakesPriority: 1
+    environments:
+      quotation: 0
+    ifElseFi: 0
+    optionalArguments: 0
+    mandatoryArguments: 0
+    items: 0
+    specialBeginEnd: 0
+    afterHeading: 0
+    preamble: 0
+    filecontents: 0
+    masterDocument: 0
+    paragraphsStopAt:
+      environments: 1
+      verbatim: 1
+      commands: 0
+      ifElseFi: 0
+      items: 0
+      specialBeginEnd: 0
+      heading: 0
+      filecontents: 0
+      comments: 0
+  environments:
+    BeginStartsOnOwnLine: 0
+    BodyStartsOnOwnLine: 0
+    EndStartsOnOwnLine: 0
+    EndFinishesWithLineBreak: 0
+    equation*:
+      BeginStartsOnOwnLine: 0
+      BodyStartsOnOwnLine: 0
+      EndStartsOnOwnLine: 0
+      EndFinishesWithLineBreak: 0
+  ifElseFi:
+    IfStartsOnOwnLine: 0
+    BodyStartsOnOwnLine: 0
+    OrStartsOnOwnLine: 0
+    OrFinishesWithLineBreak: 0
+    ElseStartsOnOwnLine: 0
+    ElseFinishesWithLineBreak: 0
+    FiStartsOnOwnLine: 0
+    FiFinishesWithLineBreak: 0
+    ifnum:
+      IfStartsOnOwnLine: 0
+      BodyStartsOnOwnLine: 0
+      OrStartsOnOwnLine: 0
+      OrFinishesWithLineBreak: 0
+      ElseStartsOnOwnLine: 0
+      ElseFinishesWithLineBreak: 0
+      FiStartsOnOwnLine: 0
+      FiFinishesWithLineBreak: 0
+  commands:
+    CommandStartsOnOwnLine: 0
+    CommandNameFinishesWithLineBreak: 0
+  optionalArguments:
+    LSqBStartsOnOwnLine: 0
+    OptArgBodyStartsOnOwnLine: 0
+    RSqBStartsOnOwnLine: 0
+    RSqBFinishesWithLineBreak: 0
+  mandatoryArguments:
+    LCuBStartsOnOwnLine: 0
+    MandArgBodyStartsOnOwnLine: 0
+    RCuBStartsOnOwnLine: 0
+    RCuBFinishesWithLineBreak: 0
+  keyEqualsValuesBracesBrackets:
+    KeyStartsOnOwnLine: 0
+    EqualsStartsOnOwnLine: 0
+    EqualsFinishesWithLineBreak: 0
+  items:
+    ItemStartsOnOwnLine: 0
+    ItemFinishesWithLineBreak: 0
+  namedGroupingBracesBrackets:
+    NameStartsOnOwnLine: 0
+    NameFinishesWithLineBreak: 0
+  specialBeginEnd:
+    SpecialBeginStartsOnOwnLine: 0
+    SpecialBodyStartsOnOwnLine: 0
+    SpecialEndStartsOnOwnLine: 0
+    SpecialEndFinishesWithLineBreak: 0
+  verbatim:
+    VerbatimBeginStartsOnOwnLine: 0
+    VerbatimEndFinishesWithLineBreak: 0

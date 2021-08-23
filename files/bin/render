@@ -1,0 +1,33 @@
+#!/bin/zsh
+set -eu
+
+declare -ra FILES=(README.md README.adoc)
+
+declare file
+if [[ $# -lt 1 ]]; then
+    for f in $FILES; do
+        if [[ -f $f && -r $f ]]; then
+            file=$f
+            break
+        fi
+    done
+else
+    file=$1
+fi
+
+if [[ -z $file ]]; then
+    echo "No file specified and no file found automaatically" >&2
+    echo "Tried $FILES" >&2
+    exit 1
+fi
+
+declare tmp
+tmp=$(mktemp)
+trap "sleep 2; rm $tmp" EXIT
+
+case ${file:e} in
+    asciidoc|adoc) asciidoctor $file -o $tmp -a source-highlighter=rouge;;
+    markdown|md)   cmark $file -t html > $tmp;;
+esac
+
+$BROWSER $tmp

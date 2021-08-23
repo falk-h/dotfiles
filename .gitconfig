@@ -1,9 +1,0 @@
-[include]
-    path = .gitconfig.secret
-
-[commit]
-    gpgsign = true
-    verbose = true
-
-[alias]
-    tree = log --graph --oneline --all

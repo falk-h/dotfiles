@@ -1,0 +1,513 @@
+#!/bin/zsh
+
+# Use vim cli mode
+bindkey -v
+bindkey '^P' up-history
+bindkey '^N' down-history
+
+# Backspace working even after returning from command mode
+bindkey '^?' backward-delete-char
+
+# ctrl-w and ctrl-backspace delete the previous word in insert mode
+bindkey '^W'  backward-kill-word
+bindkey '^H' backward-delete-word
+
+# ctrl-delete
+bindkey "\e[3;5~" kill-word
+
+# ctrl-r starts searching history backward
+bindkey '^R' fzf-history-widget
+# Search history in normal mode
+bindkey -a '/' fzf-history-widget
+bindkey -a '?' fzf-history-widget
+
+# Redo like in Vim
+bindkey -a '^R' redo
+
+# Make arrow keys and jk search history
+bindkey -a 'j' down-line-or-search
+bindkey -a 'k' up-line-or-search
+bindkey -a "^[[B" down-line-or-search
+bindkey -a "^[[A" up-line-or-search
+bindkey "^[[B" down-line-or-search
+bindkey "^[[A" up-line-or-search
+
+# Autocorrect word with &
+bindkey -a '&' spell-word
+
+# Look up manpages with K
+bindkey -a 'K' run-help
+
+# vim-surround emulation
+autoload -Uz surround
+zle -N delete-surround surround
+zle -N add-surround surround
+zle -N change-surround surround
+bindkey -a cs change-surround
+bindkey -a ds delete-surround
+bindkey -a ys add-surround
+bindkey -M visual S add-surround
+
+# Make Y behave sensibly
+bindkey -a 'Y' vi-yank-eol
+
+# Tab backwards in the completion menu
+bindkey '^[[Z' reverse-menu-complete
+
+function incr {
+    zle -f vichange
+    do_increment ${NUMERIC:-1}
+}
+
+function decr {
+    zle -f vichange
+    do_increment -${NUMERIC:-1}
+}
+
+zle -N incr
+bindkey -a "^A" incr
+zle -N decr
+bindkey -a "^X" decr
+
+function do_increment {
+    typeset -i cur_start=$CURSOR
+    CURSOR+=1
+
+    # Find first number to the right of the cursor
+    until [[ $BUFFER[$CURSOR] =~ [0-9] ]] {
+        if [[ $CURSOR -ge $#BUFFER ]] {
+            # Didn't find a number. Abort!
+            CURSOR=$cur_start
+            return 0
+        }
+        CURSOR+=1
+    }
+
+    # Continue until we're just past it
+    while [[ $BUFFER[$CURSOR+1] =~ [0-9] && $CURSOR -le $#BUFFER ]] {
+        CURSOR+=1
+    }
+
+    if [[ $LBUFFER =~ -?[0-9]+$ ]] {
+        typeset -i num=$MATCH
+    } else {
+        # Didn't find a number. Abort!
+        CURSOR=$cur_start
+        return 0
+    }
+
+    num_len=$#num
+    num+=${1:-1} # Increment by $1, or 1 as a default increment
+    LBUFFER=${LBUFFER:0:-$num_len}$num
+    CURSOR+=-1 # Adjust the cursor to be at the last digit of the number
+}
+
+function find_matching_delims {
+    typeset -r left_char=$1
+    typeset -r right_char=$2
+    typeset -ri inside=$3 # 0 if we're changing around delimiters, 1 if we're changing inside
+
+    # Loop through the right part of the buffer.
+    typeset -i level=1
+    typeset -i rindex=0
+    for ((i=1; i <= $#RBUFFER; i++)); do
+        if [[ $RBUFFER[i] == $right_char ]]; then
+            let level--
+        elif [[ $RBUFFER[i] == $left_char ]]; then
+            let level++
+        fi
+        if (( level == 0 )); then
+            rindex=$i
+            break
+        fi
+    done
+
+    # Loop through the left part of the buffer.
+    level=1
+    typeset -i lindex=0
+    for ((i=$#LBUFFER; i >= 1; i--)); do
+        if [[ $LBUFFER[i] == $left_char ]]; then
+            let level--
+        elif [[ $LBUFFER[i] == $right_char ]]; then
+            let level++
+        fi
+        if (( level == 0 )); then
+            lindex=$i
+            break
+        fi
+    done
+
+    if (( lindex != 0 && rindex != 0 )); then
+        MARK=$((rindex - inside + CURSOR))
+        CURSOR=$((lindex + inside - 1))
+        return 0
+    else
+        return 1
+    fi
+}
+
+function vi_delim_operator {
+    zle -f vichange
+
+    typeset left_char
+    typeset right_char
+    typeset -r char=$KEYS[-1] # Last key the user typed
+    case $char in
+        'b'|'('|')') left_char='('; right_char=')';;
+        'B'|'{'|'}') left_char='{'; right_char='}';;
+        '['|']') left_char='['; right_char=']';;
+        '<'|'>') left_char='<'; right_char='>';;
+        # TODO: Make this smarter
+        '/'|'"'|"'"|'`') left_char=$char; right_char=$char;;
+        *) zle -M "Unknown key in vi_delim_operator"; return 1;;
+    esac
+
+    typeset -ri cur_orig=$CURSOR
+    # Make sure we find a pair whose left delimiter is under the cursor.
+    [[ $RBUFFER[1] == $left_char ]] && let CURSOR++
+
+    typeset -i inside=0
+    if [[ $WIDGET = *-inside ]]; then
+        inside=1
+    else
+        inside=0
+    fi
+
+    # Try to change in a pair if we're inside one.
+    find_matching_delims $left_char $right_char $inside && return
+
+    typeset -ri cur_save=$CURSOR
+    # The cursor wasn't in a pair, now what?
+    # Let's try going to the right until we find an opening delimiter.
+    while (( CURSOR++ < $#BUFFER )); do
+        if [[ $LBUFFER[-1] == $left_char ]]; then
+            find_matching_delims $left_char $right_char $inside && return
+        fi
+    done
+
+    # No dice! Let's try going to the left.
+    CURSOR=$cur_save
+    while (( CURSOR-- > 0 )); do
+        if [[ $RBUFFER[1] == $right_char ]]; then
+            find_matching_delims $left_char $right_char $inside && return
+        fi
+    done
+
+    # Still nothing... Reset $CURSOR and tell the operator that we failed.
+    CURSOR=$cur_orig
+    return 1
+}
+
+zle -N vi-delim-operator-around vi_delim_operator
+zle -N vi-delim-operator-inside vi_delim_operator
+
+delims=('b' '(' ')' 'B' '{' '}' '[' ']' '<' '>' '/' '"' "'" '`')
+for char in $delims[@]; do
+    bindkey -M viopp "i$char" vi-delim-operator-inside
+    bindkey -M viopp "a$char" vi-delim-operator-around
+done
+
+# ctrl-backspace in FZF
+export FZF_DEFAULT_OPTS='--bind=ctrl-h:backward-kill-word'
+
+# Don't show people logging on/off
+export WATCH=""
+
+# Highlight the visual selection with a grey background
+zle_highlight=(region:bg=239)
+
+# Assume dvorak layout for spelling corrections
+setopt dvorak
+
+# Make completion menu smaller
+setopt list_packed
+
+# Use OS locking when writing to the history file. Might have better
+# performance, but might also not work.
+setopt hist_fcntl_lock
+
+# Enable shorthand for loops
+setopt short_loops
+
+# Don't run background jobs at a lower priority.
+setopt no_bg_nice
+
+# Only ask for completions if they wouldn't fit on the screen.
+LISTMAX=0
+
+# ctrl-s will no longer freeze the terminal. From grml-zsh-config.
+stty erase "^?"
+
+# Eliminate the wait time after pressing escape
+KEYTIMEOUT=1
+
+# Increase history size (default was 5000)
+HISTSIZE=$((1024 * 2 ** 10))
+SAVEHIST=$((2 * HISTSIZE))
+
+# Make ASAN work
+ulimit -v unlimited
+
+# Toggle stopping programs with ^Z
+function fancy_ctrl_z {
+    if [[ $#BUFFER -eq 0 ]]; then
+        BUFFER="fg"
+        zle .accept-line -w
+    else
+        zle .push-input -w
+        zle .clear-screen -w
+    fi
+}
+zle -N fancy_ctrl_z
+bindkey '^Z' fancy_ctrl_z
+bindkey -a '^Z' fancy_ctrl_z
+
+# Tried to use tput colors here, but that breaks ninja's line truncation (adding
+# '...' and cutting off long lines), presumably because it counts bytes or
+# Unicode codepoints and not the actual displayed length in the terminal.
+# [finished/total (running) overall_rate]
+export NINJA_STATUS="[%f/%t %rr %o/s] "
+
+# Could add --mouse here, but that breaks selecting text with tmux
+export LESS="--ignore-case --follow-name --wheel-lines=6"
+
+# Aliases
+if command -v exa &> /dev/null; then
+    alias exa='exa -Fhb'
+    alias ls=exa
+    alias tree='exa -T'
+fi
+alias cb='popd 1> /dev/null' # silent popd
+alias :q=exit
+alias hibernate='sudo systemctl hibernate'
+alias cal='cal -m' # cal with monday as the week's first day
+alias bc='bc -lq' # bc with floats, without header
+alias -g dd='dd status=progress'
+alias rm='rm -I'
+alias vim="$VISUAL"
+alias vi="$VISUAL"
+if [[ "$VISUAL" =~ "vim" ]]; then
+    alias vimdiff="$VISUAL -d"
+fi
+alias todo='rg --trim "(TODO|FIXME|HACK|OPTIMIZE)"'
+if whence nvim &> /dev/null; then
+    alias man='MANPAGER="nvim +Man!" man'
+fi
+alias fd='fd --no-ignore-vcs --hidden --glob'
+
+alias ga='git add'
+alias gap='git add --patch'
+alias gcp='git cherry-pick'
+alias gcpa='git cherry-pick --abort'
+alias gcpc='git cherry-pick --continue'
+alias gc='git commit'
+alias gca='git commit --amend'
+alias gcan='git commit --amend --no-edit'
+alias gcf='git commit --fixup'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gdss='git diff --staged --stat'
+alias gdst='git diff --stat'
+alias gl='git log'
+alias gp='git push'
+alias gpf='git push --force'
+alias gpl='git pull'
+alias grb='git rebase --autostash'
+alias grbi='git rebase --interactive --autosquash --autostash'
+alias grba='git rebase --abort'
+alias grbc='git rebase --continue'
+alias gs='git status'
+alias gsw='git switch'
+alias gswc='git switch --create'
+alias gswd='git switch --detach'
+alias gt='git tree'
+
+function g {
+    if [[ $# -eq 0 ]]; then
+        gdb
+        return
+    fi
+
+    local prg="$1"
+    shift
+
+    if ! [[ -f "$prg" ]]; then
+        echo "$prg: No such file" 1>&2
+        return 1
+    fi
+
+    gdb "$prg" -ex "run $*"
+}
+
+# mkdir and cd
+function mcdir {
+    mkdir -p -- "$1" &&
+    cd -P -- "$1"
+}
+
+function ws {
+    local root
+    if root=$(git rev-parse --show-toplevel 2>/dev/null); then
+        cd $root
+    else
+        echo 'Not in a git directory!'
+        return 1
+    fi
+}
+
+# just type '...' to get '../..'
+function rationalise-dot {
+    local MATCH
+    if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
+        LBUFFER+=/
+        zle self-insert
+        zle self-insert
+    else
+        zle self-insert
+    fi
+}
+zle -N rationalise-dot
+bindkey . rationalise-dot
+# without this, typing a . aborts incremental history search
+bindkey -M isearch . self-insert
+
+# Make X applications work in WSL 2
+if [[ $(< /proc/version) =~ microsoft ]] {
+    wsl=1
+    export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+    export LIBGL_ALWAYS_INDIRECT=1
+    dbus_status=$(service dbus status)
+    if [[ $dbus_status = *"is not running"* ]] {
+      sudo service dbus --full-restart
+    }
+}
+
+# Set prompt color according to host
+# Also affects the color of the mode indicator
+hostname="$(uname -n)"
+prompt_color=blue
+case "$hostname" {
+    pi) prompt_color=green;;
+    tv) prompt_color=yellow;;
+}
+zstyle ':prompt:grml:*:items:user' pre "%B%F{$prompt_color}"
+
+# Array of .env files that have already been sourced
+typeset -a DOTENV_SOURCED=()
+function dotenv {
+    typeset -r DOTENV_FILE='.env'
+    typeset file="$PWD/$DOTENV_FILE"
+    if [[ -f "$file" && ! ("$DOTENV_SOURCED[(Ie)$file]") ]] {
+        echo -n "Source $DOTENV_FILE? [Y/n/i] "
+        read -k 1 answer
+        [[ "$answer" != $'\n' ]] && echo
+        case "$answer" {
+            [yY$'\n'])
+                setopt localoptions allexport
+                source "$file"
+                ;;
+            [iI]) ;; # Continue and pretend that we've already sourced the file
+            [nN]) return ;;
+            *) dotenv ;; # Ask again on invalid answer
+        }
+        DOTENV_SOURCED+=("$file")
+    }
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd dotenv
+
+# Prompt
+prompt off
+setopt prompt_subst
+local -r SHLVL_OFFSET=2 # This will need to be adjusted depending on how many nested zsh instances are usually running
+PS1='%(?..%F{red}%v%f )'                                                   # Return code of the last command
+PS1+="%($((SHLVL_OFFSET + 1))L.%F{yellow}\$((SHLVL - $SHLVL_OFFSET))%f .)" # Shell nesting level
+PS1+='%(1j.%F{green}%j%f .)'                                               # Number of background jobs
+PS1+='%(3V.%U.)'                                                           # Vi editing mode
+PS1+="%F{$prompt_color}%n%f%b"                                             # Username
+PS1+="%B@%b"                                                               # Separator between username and hostname
+PS1+='%m'                                                                  # Hostname
+PS1+='%(2V.:%B%2v%b.)'                                                     # Current working dir
+PS1+='${vcs_info_msg_0_}'                                                  # Git info
+PS1+='%u'                                                                  # Disable underlining of the prompt for the final > or # character
+PS1+='%(3V.%F{17}.%F{16})%B%(!.#.>)%b%f'                                   # A # if root, else >
+PS2='%_%B>%b'
+PS3='?%B#%b'
+PS4='+%N:%i:%_%B>%b'
+RPS2='%^'
+
+zstyle ':vcs_info:*' formats " %c[%f%F{$prompt_color}%b%f%u]%f"
+zstyle ':vcs_info:*' actionformats " %c[%f%F{$prompt_color}%b%f|%F{red}%a%f%u]%f"
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b%F{red}:%F{yellow}%r"
+# Change to check-for-staged-changes if this is slow in large repos
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr "%F{green}"
+zstyle ':vcs_info:*' unstagedstr "%F{red}"
+zstyle ':vcs_info:*' max-exports 1 # Only set the first vcs_info_msg_N_ variable
+autoload -Uz vcs_info
+add-zsh-hook precmd vcs_info # Set up VCS info in prompt
+
+# Sets psvar[1] equal to the exit status of the last command
+function psvar_exitstatus {
+    local exitstatus=$?
+    psvar=()
+    psvar[1]=$signals[$exitstatus-127] # Get signal name
+    [[ -z $psvar[1] ]] && psvar[1]=$exitstatus # Fall back to signal number
+}
+add-zsh-hook precmd psvar_exitstatus
+
+# Sets psvar[2] to the path to the current working directory with all the parts of the path abbreviated.
+function psvar_path {
+    [[ $PWD == ~ ]] && psvar[2]='' && return
+    [[ $PWD == / ]] && psvar[2]='/' && return
+    typeset -a directories=("${(@s./.)PWD/$HOME/~}")
+    typeset ret=''
+    [[ $directories[1] != '~' ]] && ret+=/
+    for dir in $directories[1,-2]; {
+        ret+=$dir[1]
+        [[ $dir[1] == . ]] && ret+=$dir[2]
+        ret+=/
+    }
+    psvar[2]=$ret$directories[-1]
+}
+add-zsh-hook precmd psvar_path
+
+# Sets psvar[3] to 1 if in normal mode
+function psvar_mode_indicator {
+    case "$KEYMAP" in
+        vicmd) psvar[3]=1;;
+        main)  psvar[3]=();;
+        *) RPS1='';;
+    esac
+    zle reset-prompt
+}
+zle -N zle-line-init psvar_mode_indicator
+zle -N zle-keymap-select psvar_mode_indicator
+
+# Plugins
+source ~/.dotfiles-submodules/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.dotfiles-submodules/fzf/shell/key-bindings.zsh
+source ~/.dotfiles-submodules/fzf/shell/completion.zsh
+source ~/.dotfiles-submodules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if ! [[ -n "$wsl" ]] {
+    source ~/.dotfiles-submodules/zsh-notify/notify.plugin.zsh
+}
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+if [[ -n "$fzf_default_completion" ]] {
+    # ^F to always trigger FZF (context-aware)
+    export FZF_COMPLETION_TRIGGER=''
+    bindkey '^F' fzf-completion
+    bindkey -a '^F' fzf-completion
+    bindkey '^I' $fzf_default_completion
+}
+
+zstyle ':notify:*' success-icon "$HOME/.dotfiles-extra/pictures/Pog.png"
+zstyle ':notify:*' error-icon "$HOME/.dotfiles-extra/pictures/Nog.png"
+zstyle ':notify:*' command-complete-timeout 15
+zstyle ':notify:*' expire-time 10000
+zstyle ':notify:*' enable-on-ssh yes
+zstyle ':notify:*' success-title 'Command succeeded after #{time_elapsed}'
+zstyle ':notify:*' error-title 'Command failed after #{time_elapsed}'

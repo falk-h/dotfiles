@@ -1,0 +1,19 @@
+[alias]
+b = "build"
+br = "build --release"
+bra = "build --release --all-targets"
+bar = "build --release --all-targets"
+ba = "build --all-targets"
+c = "check"
+cl = "clippy"
+i = "install"
+in = "install"
+r = "run"
+rr = "run --release"
+re = "run --example"
+rm = "uninstall"
+se = "search"
+t = "test"
+
+[target.'cfg(all(target_arch = "x86_64", target_os = "linux"))']
+rustflags = ["-C", "target-cpu=native"]

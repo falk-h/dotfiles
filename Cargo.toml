@@ -1,0 +1,6 @@
+# This file exists so that the whole repo is a Cargo workspace. This is a
+# workaround for the fact that actions-rs/cargo does not support specifying a
+# working directory.
+
+[workspace]
+members = ["installer"]

@@ -1,0 +1,8 @@
+# Use the stdlib from nvim.yml with an absolute path to make this work when
+# editing the neovim config from outside this repo. Note that this depends on
+# this repo being checked out at ~/dotfiles, so this won't work in CI.
+std = "/home/fh/dotfiles/nvim"
+
+[rules]
+# Globals are needed when vimscript should call Lua functions
+global_usage = "allow"

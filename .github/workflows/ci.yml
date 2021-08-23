@@ -1,0 +1,72 @@
+---
+name: CI tests
+on:  # yamllint disable-line rule:truthy
+  - push
+  - pull_request
+
+jobs:
+  scripts:
+    name: Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          ignore_names: .zshrc .zshrc.local .zshenv .zlogout
+          check_together: "yes"
+
+  submodule-updates:
+    name: Submodule updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Check for updates
+        run: ./update_submodules.sh --check
+
+  installer:
+    name: Installer
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: --deny warnings
+      CARGO_TERM_COLOR: always
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build
+        run: cargo build --all-features --verbose
+      - name: Test
+        run: cargo test --all-features --verbose
+      - name: Clippy
+        run: cargo clippy --all-features --verbose -- --deny warnings
+
+  lua:
+    name: Lua
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run selene
+        uses: NTBBloodbath/selene-action@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --config selene.ci.toml .
+      - name: Run StyLua
+        uses: JohnnyMorganz/stylua-action@v1.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --check --config-path files/.config/stylua/stylua.toml .

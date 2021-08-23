@@ -1,0 +1,9 @@
+# Defines a selene standard library for checking neovim Lua stuff.
+# Note that this file has to be named nvim.yml, and not nvim.yaml.
+---
+base: lua51
+globals:
+  vim:
+    any: true
+  jit:
+    any: true

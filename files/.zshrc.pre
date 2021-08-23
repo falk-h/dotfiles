@@ -1,0 +1,19 @@
+# File that's loaded before ~/.zshrc and ~/.zshrc.local.
+# This is needed to set up $fpath before ~/.zshrc calls compinit.
+
+# User zsh functions
+fpath=(~/.zshfuncs $fpath)
+
+# Populate the directory
+if command -v rustup &> /dev/null; then
+    local rustup=$fpath[1]/_rustup
+    if ! [[ -f $rustup ]]; then
+        echo "Creating ${(D)rustup}"
+        rustup completions zsh > $rustup
+    fi
+    local cargo=$fpath[1]/_cargo
+    if ! [[ -f $cargo ]]; then
+        echo "Creating ${(D)cargo}"
+        rustup completions zsh cargo > $cargo
+    fi
+fi

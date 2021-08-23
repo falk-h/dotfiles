@@ -1,0 +1,12 @@
+#!/bin/sh
+# This script is a fix for the fact that rustup does not ship a `rust-analyzer`
+# symlink for some reason, even though it ships symlinks for cargo, rustc,
+# rustfmt, etc. The script also installs rust-analyzer if it's not installed
+# for the current toolchain.
+
+if ! path=$(rustup which rust-analyzer); then
+    rustup component add rust-analyzer
+    path=$(rustup which rust-analyzer)
+fi
+
+exec "$path" "$@"

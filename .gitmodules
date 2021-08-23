@@ -1,15 +1,15 @@
-[submodule ".dotfiles-submodules/vim-plug"]
-	path = .dotfiles-submodules/vim-plug
-	url = https://github.com/junegunn/vim-plug.git
-[submodule ".dotfiles-submodules/zsh-autosuggestions"]
-	path = .dotfiles-submodules/zsh-autosuggestions
+[submodule "submodules/zsh-autosuggestions"]
+	path = submodules/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
-[submodule ".dotfiles-submodules/zsh-syntax-highlighting"]
-	path = .dotfiles-submodules/zsh-syntax-highlighting
+[submodule "submodules/zsh-syntax-highlighting"]
+	path = submodules/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule ".dotfiles-submodules/fzf"]
-	path = .dotfiles-submodules/fzf
+[submodule "submodules/fzf"]
+	path = submodules/fzf
 	url = https://github.com/junegunn/fzf.git
-[submodule ".dotfiles-submodules/zsh-notify"]
-	path = .dotfiles-submodules/zsh-notify
+[submodule "submodules/zsh-notify"]
+	path = submodules/zsh-notify
 	url = https://github.com/falk-h/zsh-notify.git
+#[submodule "files/.local/share/nvim/pack/packer/start/packer.nvim"]
+#	path = .local/share/nvim/pack/packer/start/packer.nvim
+#	url = https://github.com/wbthomason/packer.nvim

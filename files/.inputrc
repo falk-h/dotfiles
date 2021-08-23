@@ -1,0 +1,38 @@
+# Vi bindings
+set editing-mode vi
+
+# Show mode in prompt
+set show-mode-in-prompt on
+set vi-cmd-mode-string \1\x1B[1;31m\2N \1\x1B[0m\2
+set vi-ins-mode-string \1\x1B[1;34m\2I \1\x1B[0m\2
+
+# Maybe make pasting work better sometimes idk
+set enable-bracketed-paste on
+
+# Make readline wait less after pressing escape
+set keyseq-timeout 100
+
+# Make tab completion more like zsh
+set show-all-if-ambiguous on
+set menu-complete-display-prefix on
+TAB: menu-complete
+
+# Display the common prefix to all completion options in a different color
+set colored-completion-prefix on
+
+# Display completions in different colors depending on their file type
+set colored-stats on
+
+# Ignore case for completion
+set completion-ignore-case on
+
+# Treat _ and - as equivalent for completion
+set completion-map-case on
+
+# Normal mode bindings
+set keymap vi-command
+# Nothing yet...
+
+# Insert mode bindings
+set keymap vi-insert
+Control-l: clear-screen
