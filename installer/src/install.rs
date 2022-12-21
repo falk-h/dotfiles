@@ -35,7 +35,7 @@ pub fn install() {
     log::info!("Dotfile directory: {}", file_root);
 
     log::info!("Checking out submodules");
-    checkout_submodules(&repo_root);
+    checkout_submodules(repo_root);
     log::info!("Checkout done");
 
     log::debug!("Finding dotfiles");
