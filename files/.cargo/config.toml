@@ -17,3 +17,8 @@ t = "test"
 
 [target.'cfg(all(target_arch = "x86_64", target_os = "linux"))']
 rustflags = ["-C", "target-cpu=native"]
+
+[build]
+# Cache compilations with sccache. This should speed up builds, but may cause
+# problems.
+rustc-wrapper = "sccache"
