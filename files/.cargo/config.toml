@@ -15,8 +15,18 @@ rm = "uninstall"
 se = "search"
 t = "test"
 
-[target.'cfg(all(target_arch = "x86_64", target_os = "linux"))']
-rustflags = ["-C", "target-cpu=native"]
+# Optimize for the current system's CPU when building for x86_64.
+# For some reason, this causes the `aes` crate to break:
+#
+#  error[E0432]: unresolved import `aesni`
+#    --> /home/fh/.cargo/registry/src/github.com-1ecc6299db9ec823/aes-0.6.0/src/lib.rs:66:9
+#     |
+#  66 | pub use aesni::{Aes128, Aes192, Aes256};
+#     |         ^^^^^ use of undeclared crate or module `aesni`
+#
+# Something related to detection of x86_64 CPU features?
+# [target.'cfg(all(target_arch = "x86_64", target_os = "linux"))']
+# rustflags = ["-C", "target-cpu=native"]
 
 [build]
 # Cache compilations with sccache. This should speed up builds, but may cause
