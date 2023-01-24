@@ -18,7 +18,7 @@ version = "3.2"
 features = ["cargo"]
 
 [dependencies.nix]
-version = "0.24"
+version = "0.26"
 default-features = false
 features = ["fs", "user"]
 
