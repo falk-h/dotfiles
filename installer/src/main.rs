@@ -3,46 +3,34 @@ mod install;
 mod logging;
 mod path;
 
-use clap::{app_from_crate, App, AppSettings, Arg};
+use clap::{Arg, ArgAction, Command};
 use simplelog::LevelFilter;
 
 fn main() {
-    // Force a recompile if Cargo.toml is changed since app_from_crate! reads values from Cargo.toml.
+    // Force a recompile if Cargo.toml is changed since clap::command reads values from Cargo.toml.
     const _: &str = include_str!("../Cargo.toml");
-    let args = app_from_crate!()
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+    let args = clap::command!()
+        .arg_required_else_help(true)
         .args(&[
             Arg::new("verbose")
                 .short('v')
                 .long("verbose")
                 .help("Increases verbosity")
-                .multiple_occurrences(true),
+                .action(ArgAction::Count),
             Arg::new("quiet")
                 .short('q')
                 .long("quiet")
                 .help("Decreases verbosity")
-                .multiple_occurrences(true),
+                .action(ArgAction::Count),
         ])
-        .subcommands(vec![
-            App::new("install").about("Creates symlinks for all dotfiles in your home directory")
-        ])
+        .subcommand(Command::new("install").about("Creates symlinks for all dotfiles in your home directory"))
         .get_matches();
 
-    let log_levels = [
-        LevelFilter::Off,
-        LevelFilter::Error,
-        LevelFilter::Warn,
-        LevelFilter::Info,
-        LevelFilter::Debug,
-        LevelFilter::Trace,
-    ];
+    let log_levels: Vec<_> = LevelFilter::iter().collect();
     let default_log_level = 3;
-    let verbose = args.occurrences_of("verbose").try_into().unwrap_or(isize::MAX);
-    let quiet = args.occurrences_of("quiet").try_into().unwrap_or(isize::MAX);
-    let log_level_index = (default_log_level + verbose - quiet)
-        .try_into()
-        .unwrap_or(0)
-        .min(log_levels.len() - 1);
+    let verbose: usize = args.get_count("verbose").into();
+    let quiet: usize = args.get_count("quiet").into();
+    let log_level_index = (default_log_level + verbose - quiet).clamp(0, log_levels.len() - 1);
     let log_level = log_levels[log_level_index];
 
     logging::init(log_level);

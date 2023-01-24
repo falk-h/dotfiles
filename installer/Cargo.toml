@@ -14,11 +14,11 @@ default-features = false
 features = ["clock"]
 
 [dependencies.clap]
-version = "3.2"
+version = "4.1"
 features = ["cargo"]
 
 [dependencies.nix]
-version = "0.24"
+version = "0.26"
 default-features = false
 features = ["fs", "user"]
 
