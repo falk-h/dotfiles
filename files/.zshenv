@@ -1,5 +1,10 @@
 #!/bin/zsh
 
+# Set up Nix if it's installed
+if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+    source ~/.nix-profile/etc/profile.d/nix.sh
+fi
+
 # User binaries, manpages and things installed with cargo and PIP
 export PATH="$HOME/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
