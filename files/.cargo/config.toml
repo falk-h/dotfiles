@@ -1,19 +1,19 @@
 [alias]
 b = "build"
+ba = "build --all-targets"
+bar = "build --release --all-targets"
 br = "build --release"
 bra = "build --release --all-targets"
-bar = "build --release --all-targets"
-ba = "build --all-targets"
 c = "check"
 cl = "clippy"
 i = "install"
 in = "install"
 r = "run"
-rr = "run --release"
 re = "run --example"
-rm = "uninstall"
+rr = "run --release"
 se = "search"
 t = "test"
+un = "uninstall"
 
 # Optimize for the current system's CPU when building for x86_64.
 # For some reason, this causes the `aes` crate to break:
