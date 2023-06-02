@@ -218,13 +218,19 @@ return require('packer').startup(function(use)
                     diagnostics.yamllint, -- YAML
                     diagnostics.zsh, -- zsh (only syntax)
 
+                    formatting.cbfmt, -- Formatting of codeblocks inside markdown
                     formatting.clang_format, -- C, C++, and similar
                     formatting.cmake_format, -- CMake
+                    formatting.mdformat.with { -- Markdown
+                        extra_args = {
+                            '--wrap',
+                            '80',
+                        },
+                    },
                     formatting.jq.with { -- JSON
                         extra_args = { '--indent', '4' },
                     },
                     formatting.latexindent, -- LaTeX
-                    formatting.prettierd, -- Markdown, YAML, HTML, ...
                     formatting.shfmt.with { -- Bash
                         extra_filetypes = { 'zsh' },
                         extra_args = {
