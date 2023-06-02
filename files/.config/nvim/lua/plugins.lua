@@ -259,16 +259,17 @@ return require('packer').startup(function(use)
                 verthoriz = '╋',
             }
 
-            local defaults = require('kanagawa.colors').setup()
             require('kanagawa').setup {
                 dimInactive = true,
                 globalStatus = true,
-                overrides = {
-                    ExtraWhitespace = { bg = defaults.samuraiRed },
-                    WhichKeySeperator = { link = 'Operator' },
-                    WhichKeyFloat = { link = 'Label' },
-                    WhichKeyDesc = { link = 'String' },
-                },
+                overrides = function(colors)
+                    return {
+                        ExtraWhitespace = { bg = colors.samuraiRed },
+                        WhichKeySeperator = { link = 'Operator' },
+                        WhichKeyFloat = { link = 'Label' },
+                        WhichKeyDesc = { link = 'String' },
+                    }
+                end,
             }
 
             vim.cmd 'colorscheme kanagawa'
