@@ -62,12 +62,10 @@ return require('packer').startup(function(use)
                 show_filename = false,
                 status_symbol = '',
             }
-            vim.api.nvim_create_autocmd('LspAttach', {
-                callback = function(event)
-                    local client = vim.lsp.get_client_by_id(event.data.client_id)
-                    lsp_status.on_attach(client)
-                end,
-            })
+            require('util').autocmd('LspAttach', function(event)
+                local client = vim.lsp.get_client_by_id(event.data.client_id)
+                lsp_status.on_attach(client)
+            end, 'Set up lsp-status.nvim when an LSP server attaches to a buffer')
         end,
     }
     use 'neovim/nvim-lspconfig'
