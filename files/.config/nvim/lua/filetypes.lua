@@ -73,9 +73,8 @@ local mappings = {
     },
 }
 
--- selene: allow(unused_variable) This called via an autocommand
-function set_filetype_settings(ctx)
-    local filetype = ctx.match
+function set_filetype_settings(event)
+    local filetype = event.match
 
     vim.g.ft_test = filetype
     for option, filetypes in pairs(options) do
@@ -88,7 +87,7 @@ function set_filetype_settings(ctx)
     local which_key = require 'which-key'
     local map = mappings[filetype]
     if map then
-        local map_with_buf = vim.tbl_extend('force', map, { buffer = vim.fn.bufnr() })
+        local map_with_buf = vim.tbl_extend('force', map, { buffer = 0 }) -- 0 is current buffer
         which_key.add(map_with_buf)
     end
 end
