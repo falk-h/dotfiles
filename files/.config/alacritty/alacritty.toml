@@ -1,0 +1,63 @@
+[[colors.indexed_colors]]
+color = "#ffa066"
+index = 16
+
+[[colors.indexed_colors]]
+color = "#ff5d62"
+index = 17
+
+[colors.bright]
+black = "#727169"
+blue = "#7fb4ca"
+cyan = "#7aa89f"
+green = "#98bb6c"
+magenta = "#938aa9"
+red = "#e82424"
+white = "#dcd7ba"
+yellow = "#e6c384"
+
+[colors.cursor]
+cursor = "#fbb829"
+text = "CellBackground"
+
+[colors.normal]
+black = "#090618"
+blue = "#7e9cd8"
+cyan = "#6a9589"
+green = "#76946a"
+magenta = "#957fb8"
+red = "#c34043"
+white = "#c8c093"
+yellow = "#c0a36e"
+
+[colors.primary]
+background = "#181820"
+foreground = "#dcd7ba"
+
+[colors.selection]
+background = "#2d4f67"
+foreground = "#c8c093"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 13
+
+[font.normal]
+family = "BlexMono Nerd Font Mono"
+style = "Medium"
+
+[mouse]
+hide_when_typing = true
+
+[scrolling]
+multiplier = 6
+
+[window]
+decorations = "none"
+dynamic_padding = true
+
+[window.dimensions]
+columns = 88
+lines = 28
