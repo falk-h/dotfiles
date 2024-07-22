@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim' -- Packer can manage itself
 
@@ -61,6 +62,12 @@ return require('packer').startup(function(use)
                 show_filename = false,
                 status_symbol = '',
             }
+            vim.api.nvim_create_autocmd('LspAttach', {
+                callback = function(event)
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
+                    lsp_status.on_attach(client)
+                end,
+            })
         end,
     }
     use 'neovim/nvim-lspconfig'
@@ -72,6 +79,7 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lsp-document-symbol',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
             'hrsh7th/cmp-path',
             'nvim-lua/plenary.nvim',
             'petertriho/cmp-git',
@@ -134,6 +142,7 @@ return require('packer').startup(function(use)
                     { name = 'nvim_lsp' },
                     { name = 'luasnip' },
                 }, {
+                    { name = 'nvim_lsp_signature_help' },
                     { name = 'nvim_lsp_document_symbol' },
                     { name = 'buffer' },
                 }),
@@ -174,15 +183,6 @@ return require('packer').startup(function(use)
             })
 
             require('cmp_git').setup()
-        end,
-    }
-
-    use {
-        'ray-x/lsp_signature.nvim',
-        config = function()
-            require('lsp_signature').setup {
-                hint_enable = false,
-            }
         end,
     }
 
