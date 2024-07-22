@@ -273,9 +273,14 @@ export LESS="--ignore-case --follow-name --wheel-lines=6"
 
 # Aliases
 if command -v exa &> /dev/null; then
-    alias exa='exa -Fhb'
+    alias exa='exa -F -h -b'
     alias ls=exa
     alias tree='exa -T'
+fi
+if command -v eza &> /dev/null; then
+    alias eza='eza -F -h -b'
+    alias ls=eza
+    alias tree='eza -T'
 fi
 alias cb='popd 1> /dev/null' # silent popd
 alias :q=exit
@@ -353,6 +358,44 @@ function ws {
         echo 'Not in a git directory!'
         return 1
     fi
+}
+
+# Notify on command completion
+function n {
+    typeset -i ret=$? # Only used if we don't have any args
+
+    if (( $# == 0 )); then
+        try-send-notification $ret
+        return
+    fi
+
+    "$@"
+    ret=$?
+    try-send-notification $ret "$*"
+    return $ret
+}
+
+# Helper for `n`
+function try-send-notification {
+    typeset ret=$1
+    typeset body=${2-} # May be empty
+
+    if ! command -v notify-send &> /dev/null; then
+        print 'n: no `notify-send` in PATH' >&2
+        return
+    fi
+
+    typeset summary
+    typeset icon
+    if (( $ret == 0 )); then
+        summary='Done!'
+        icon=emblem-system
+    else
+        summary="Failed ($ret)"
+        icon=face-worried
+    fi
+
+    notify-send --transient --icon $icon $summary $body
 }
 
 # just type '...' to get '../..'

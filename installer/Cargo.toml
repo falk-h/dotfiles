@@ -28,7 +28,7 @@ default-features = false
 features = ["termcolor"]
 
 [dev-dependencies]
-tempfile = "3.3"
+tempfile = "3.5"
 
 [dev-dependencies.simplelog]
 version = "0.12"

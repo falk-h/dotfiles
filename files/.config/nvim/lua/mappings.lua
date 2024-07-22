@@ -106,229 +106,187 @@ end
 local goto_diagnostic_opts = { severity = { min = vim.diagnostic.severity.WARN } }
 
 -- stylua: ignore start
-which_key.register({
-    ['.'] = { find_files_wrapper,                                                   'Find file in cwd' },
-    [' '] = { git_files_or_find_files,                                              'Find file in project' },
-    [','] = { u.bind(telescope.buffers, { sort_mru = true, sort_lastused = true }), 'Switch buffer' },
-    a     = { vim.lsp.buf.code_action,                                              'Code action' },
-    A     = { vim.lsp.codelens.run,                                                 'Run code lens' },
-    -- F     = { '<cmd>call v:lua.format(v:false)<CR>',                                'Format' }, -- TODO: Make this work when there's no language server
-    F     = { u.bind(vim.lsp.buf.format, { async = true }),                         'Format file' },
-    k     = { '<cmd>Man<CR>',                                                       'Open manpage' },
-    m     = { '<cmd>silent wall | LMakeshiftBuild<CR>',                             'Save and make' },
-    M     = { '<cmd>LMakeshiftBuild<CR>',                                           'Make' },
-    r     = { telescope.oldfiles,                                                   'Most recently used files' },
-    R     = { '<cmd>Startify<CR>',                                                  'Home screen' },
+-- selene: allow(mixed_table)
+which_key.add {
+    -- Normal mode
+    { '<C-K>',   telescope.grep_string,       desc = 'rg current word' },
+    { '<C-L>',   '<cmd>nohl|lclose<CR><c-l>', desc = 'Redraw' },
+    { '<C-N>',   '<cmd>lnext!<CR>',           desc = 'Next in location list' },
+    { '<C-S-N>', '<cmd>lprevious!<CR>',       desc = 'Previous in location list' }, -- FIXME: Not sure if this works
+    { '<C-P>',   '<cmd>put<CR>',              desc = 'Paste linewise' },
+    { '<C-S-P>', '<cmd>put!<CR>',             desc = 'Paste linewise behind' }, -- FIXME: Not sure if this works
 
-    l = {
-        name = 'LSP',
-        a    = { u.bind(telescope.diagnostics, { bufnr = 0 }), 'Diagnostics (current buffer)' },
-        A    = { telescope.diagnostics,                        'Diagnostics' },
-        r    = { vim.lsp.buf.rename,                           'Rename symbol' },
-    },
-
-    f = {
-        name = 'File/config',
-        a    = { '<cmd>edit ~/.config/alacritty/alacritty.yml<CR>', 'Open alacritty.yml' },
-        A    = { '<cmd>edit ~/.config/nvim/autocommands.yml<CR>',   'Open autocommands.lua' },
-        c    = { '<cmd>PackerCompile<CR>',                          'Compile plugins.lua' },
-        C    = { '<cmd>PackerClean<CR>',                            'Clean plugins' },
-        e    = { '<cmd>edit ~/.zshenv<CR>',                         'Open ~/.zshenv' },
-        f    = { '<cmd>edit ~/.config/nvim/lua/filetypes.lua<CR>',  'Open filetypes.lua' },
-        g    = { '<cmd>edit ~/.gvimrc<CR>',                         'Open ~/.gvimrc' },
-        G    = { '<cmd>edit ~/.config/gdb/gdbinit<CR>',             'Open gdbinit' },
-        i    = { '<cmd>PackerInstall<CR>',                          'Install plugins' },
-        m    = { '<cmd>edit ~/.config/nvim/lua/mappings.lua<CR>',   'Open mappings.lua' },
-        p    = { '<cmd>edit $MYVIMRC<CR>',                          'Open init.lua' },
-        P    = { '<cmd>edit ~/.config/nvim/lua/plugins.lua<CR>',    'Open plugins.lua' },
-        r    = { '<cmd>source $MYVIMRC<CR>',                        'Reload init.lua' },
-        u    = { '<cmd>PackerUpdate<CR>',                           'Update plugins' },
-        U    = { '<cmd>edit ~/.config/nvim/lua/util.lua<CR>',       'Open util.lua' },
-        o    = { '<cmd>edit ~/.config/nvim/old.vim<CR>',            'Open old.vim' },
-        O    = { '<cmd>edit ~/.config/nvim/lua/options.lua<CR>',    'Open options.lua' },
-        s    = { '<cmd>PackerSync<CR>',                             'Sync plugins' },
-        S    = { '<cmd>options<CR>',                                'Open options' },
-        z    = { '<cmd>edit ~/.zshrc.local<CR>',                    'Open ~/.zshrc.local' },
-        Z    = { '<cmd>edit ~/.zshrc<CR>',                          'Open ~/.zshrc' },
-    },
-
-    g = {
-        name = 'Git',
-        a    = { '<cmd>Git commit --amend<CR>', 'Commit --amend' },
-        b    = { '<cmd>Git blame<CR>',          'Blame' },
-        c    = { '<cmd>Git commit<CR>',         'Commit' },
-        d    = { gitsigns.preview_hunk,         'Diff' },
-        f    = { '<cmd>Git fetch<CR>',          'Fetch' },
-        g    = { '<cmd>Git<CR>',                'Status (g? for help)' },
-        l    = { '<cmd>Git log<CR>',            'Log' },
-        L    = { '<cmd>Gllog<CR>',              'Log to location list' },
-        s    = { gitsigns.stage_hunk,           'Stage hunk' },
-        S    = { '<cmd>Gwrite<CR>',             'Save and stage current file' },
-        x    = { gitsigns.reset_hunk,           'Reset hunk' },
-
-        F = {
-            name = 'Pull',
-            p    = { '<cmd>Git pull<CR>',             'Pull' },
-            a    = { '<cmd>Git pull --autostash<CR>', 'Pull --autostash' },
-        },
-
-        p = {
-            p = { '<cmd>Git push<CR>', 'Push' },
-        },
-    },
-
-    s = {
-        name  = 'Search',
-        ['/'] = { telescope.search_history,                              'Search history' },
-        [':'] = { telescope.command_history,                             'Command history' },
-        a     = { telescope.autocommands,                                'Autocommands' },
-        b     = { telescope.git_branches,                                'Git branches' },
-        B     = { telescope.current_buffer_fuzzy_find,                   'Lines in current buffer' },
-        c     = { telescope.git_bcommits,                                'Commits for current buffer' },
-        C     = { telescope.git_commits,                                 'Commits' },
-        e     = { telescope.commands,                                    'Commands' },
-        f     = { telescope.filetypes,                                   'File types' },
-        g     = { telescope.live_grep,                                   'Live grep' },
-        h     = { telescope.help_tags,                                   'Help' },
-        l     = { telescope.loclist,                                     'Location list' },
-        m     = { telescope.keymaps,                                     'Mappings' },
-        M     = { u.bind(telescope.man_pages, { sections = { 'ALL' } }), 'Manpages' },
-        n     = { telescope.treesitter,                                  'Treesitter identifiers' },
-        o     = { telescope.jumplist,                                    'Jumplist' },
-        O     = { telescope.vim_options,                                 'Options' },
-        p     = { telescope.planets,                                     'Planets' },
-        q     = { telescope.quickfix,                                    'Quickfix list' },
-        Q     = { telescope.quickfixhistory,                             'Quickfix history' },
-        r     = { telescope.registers,                                   'Registers' },
-        R     = { telescope.reloader,                                    'Reload Lua modules' },
-        s     = { telescope.resume,                                      'Resume previous search' },
-        t     = { telescope.tagstack,                                    'Tagstack' },
-        T     = { telescope.current_buffer_tags,                         'Tags in current buffer' },
-        w     = { telescope.lsp_document_symbols,                        'Symbols in document' },
-        W     = { telescope.lsp_workspace_symbols,                       'Symbols in workspace' },
-    },
-
-    t = {
-        name = 'Toggles',
-        g    = { toggle_gitnumhl,                                                                                  'Git line number highlighting' },
-        l    = { toggle_gitlinehl,                                                                                 'Git line highlighting' },
-        n    = { '<cmd>set number! | echo &number?"Line numbers enabled":"Line numbers disabled"<CR>',             'Line numbers' },
-        p    = { '<cmd>set paste! | echo &paste?"Paste on":"Paste off"<CR>',                                       'Paste' },
-        r    = { '<cmd>set rnu! | echo &rnu?"Relative line numbers enabled":"Relative line numbers disabled"<CR>', 'Relative line numbers' },
-        s    = { '<cmd>setl spell! | echo &spell?"Spellcheck enabled":"Spellcheck disabled"<CR>',                  'Spellcheck' },
-        w    = { '<cmd>set list! | echo &list?"Showing whitespace":"Hiding whitespace"<CR>',                       'Whitespace' },
-
-        S = {
-            name = 'Spellcheck languages',
-            d    = { '<cmd>setl spell spl=de_de,cjk | echo "Set language to " .. &spl[:-5]<CR>', 'German' },
-            e    = { '<cmd>setl spell spl=en_us,cjk | echo "Set language to " .. &spl[:-5]<CR>', 'English (US)' },
-            g    = { '<cmd>setl spell spl=de_de,cjk | echo "Set language to " .. &spl[:-5]<CR>', 'German' },
-            r    = { '<cmd>setl spell spl=en,sv,cjk | echo "Set language to " .. &spl[:-5]<CR>', 'Reset' },
-            s    = { '<cmd>setl spell spl=sv,cjk | echo "Set language to " .. &spl[:-5]<CR>',    'Swedish' },
-            u    = { '<cmd>setl spell spl=en_gb,cjk | echo "Set language to " .. &spl[:-5]<CR>', 'English (UK)' },
-        },
-    },
-
-    w = {
-        name = 'Workspace stuff',
-        a    = { vim.lsp.buf.add_workspace_folder,                                        'Add folder to workspace' },
-        l    = { function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List workspace folders' },
-        r    = { vim.lsp.buf.remove_workspace_folder,                                     'Remove folder from workspace' },
-    },
-}, { prefix = '<leader>' })
-
-which_key.register({
-    -- TODO
-    -- F = { '<cmd>call v:lua.format(v:true)<CR>', 'Format selection' },
-    F = { u.lsp_fallback(vim.lsp.buf.range_formatting, u.bind(format, true)), 'Format selection' },
-}, { prefix = '<leader>', mode = 'v' })
-
-which_key.register{
-    ['<C-K>']   = { telescope.grep_string,              'rg current word' },
-    ['<C-L>']   = { '<cmd>nohl|lclose<CR><c-l>',        'Redraw' },
-    ['<C-N>']   = { '<cmd>lnext!<CR>',                  'Next in location list' },
-    ['<C-S-N>'] = { '<cmd>lprevious!<CR>',              'Previous in location list' }, -- FIXME: Not sure if this works
-    ['<C-P>']   = { '<cmd>put<CR>',                     'Paste linewise' },
-    ['<C-S-P>'] = { '<cmd>put!<CR>',                    'Paste linewise behind' }, -- FIXME: Not sure if this works
     -- TODO: map range substitutions, see vim-subversive's GitHub repo.
     -- MASSIVE TODO:
-    S           = { '<Plug>(SubversiveSubstitute)',     'Subversive substitute' },
-    SS          = { '<Plug>(SubversiveSubstituteLine)', 'Subversive substitute line' },
-    Y           = { 'y$',                               'Yank to end of line' },
+    { 'S',  '<Plug>(SubversiveSubstitute)',     desc = 'Subversive substitute' },
+    { 'SS', '<Plug>(SubversiveSubstituteLine)', desc = 'Subversive substitute line' },
+    { 'Y',  'y$',                               desc = 'Yank to end of line' },
 
-    [']'] = {
-        name = 'Jump forwards',
-        c    = { gitsigns.next_hunk,                                     'Next Git hunk' },
-        g    = { u.bind(vim.diagnostic.goto_next, goto_diagnostic_opts), 'Next diagnostic' },
-    },
+    { ']', group = 'Jump formwards' },
+        { ']c', gitsigns.next_hunk,                                     desc = 'Next Git hunk' },
+        { ']g', u.bind(vim.diagnostic.goto_next, goto_diagnostic_opts), desc = 'Next diagnostic' },
 
-    ['['] = {
-        name = 'Jump backwards',
-        c    = { gitsigns.prev_hunk,                                     'Previous Git hunk' },
-        g    = { u.bind(vim.diagnostic.goto_prev, goto_diagnostic_opts), 'Previous diagnostic' },
-    },
+    { '[', group = 'Jump backwards' },
+        { '[c', gitsigns.prev_hunk,                                     desc = 'Previous Git hunk' },
+        { '[g', u.bind(vim.diagnostic.goto_prev, goto_diagnostic_opts), desc = 'Previous diagnostic' },
 
-    g = {
-        b = { u.bind(gitsigns.blame_line, { full = true, ignore_whitespace = true }), 'Git blame in popup' },
-        d = { telescope.lsp_definitions,                                              'Go to definition' },
-        -- D = { vim.lsp.buf.declaration,                                                'Go to declaration' },
-        h = { '<cmd>WhichKey<CR>',                                                    'Show base level which-key' },
-        i = { telescope.lsp_implementations,                                          'Go to implementation' },
-        K = { vim.lsp.buf.signature_help,                                             'Signature help' },
-        l = { u.bind(vim.diagnostic.open_float, nil),                                 'Show line diagnostics' },
-        m = { '<cmd>Man<CR>',                                                         'Open manpage' },
-        -- O = { TODO: Show outline },
-        r = { u.bind(telescope.lsp_references, { include_declaration = false }),      'Go to references' },
-        R = { vim.lsp.buf.rename,                                                     'Rename' },
-        s = { telescope.lsp_incoming_calls,                                           'Go to call sites' },
-        S = { telescope.lsp_outgoing_calls,                                           'Go to outgoing calls' },
-        t = { telescope.lsp_type_definitions,                                         'Go to type definition' },
-    },
+    { 'g', group = 'Misc.' },
+        { 'gb', u.bind(gitsigns.blame_line, { full = true, ignore_whitespace = true }), desc = 'Git blame in popup' },
+        { 'gd', telescope.lsp_definitions,                                              desc = 'Go to definition' },
+        -- { 'gD', vim.lsp.buf.declaration,                                                desc = 'Go to declaration' },
+        { 'gh', '<cmd>WhichKey<CR>',                                                    desc = 'Show base level which-key' },
+        { 'gi', telescope.lsp_implementations,                                          desc = 'Go to implementation' },
+        { 'gK', vim.lsp.buf.signature_help,                                             desc = 'Signature help' },
+        { 'gl', u.bind(vim.diagnostic.open_float, nil),                                 desc = 'Show line diagnostics' },
+        { 'gm', '<cmd>Man<CR>',                                                         desc = 'Open manpage' },
+        -- { 'gO', TODO: Show outline },
+        { 'gr', u.bind(telescope.lsp_references, { include_declaration = false }),      desc = 'Go to references' },
+        { 'gR', vim.lsp.buf.rename,                                                     desc = 'Rename' },
+        { 'gs', telescope.lsp_incoming_calls,                                           desc = 'Go to call sites' },
+        { 'gS', telescope.lsp_outgoing_calls,                                           desc = 'Go to outgoing calls' },
+        { 'gt', telescope.lsp_type_definitions,                                         desc = 'Go to type definition' },
 
-    z = {
-        ['='] = { telescope.spell_suggest, 'Fix spelling' },
-    },
+    { 'z=', telescope.spell_suggest, desc = 'Fix spelling' },
+
+    { 'K', 'v:lua.k_func()', desc = 'LSP hover, help or man', expr = true },
+
+    { '<leader>.', find_files_wrapper,                                                   desc = 'Find file in cwd' },
+    { '<leader> ', git_files_or_find_files,                                              desc = 'Find file in project' },
+    { '<leader>,', u.bind(telescope.buffers, { sort_mru = true, sort_lastused = true }), desc = 'Switch buffer' },
+    { '<leader>a', vim.lsp.buf.code_action,                                              desc = 'Code action' },
+    { '<leader>A', vim.lsp.codelens.run,                                                 desc = 'Run code lens' },
+ -- { '<leader>F', '<cmd>call v:lua.format(v:false)<CR>',                                desc = 'Format' }, -- TODO: Make this work when there's no language server
+    { '<leader>F', u.bind(vim.lsp.buf.format, { async = true }),                         desc = 'Format file' },
+    { '<leader>k', '<cmd>Man<CR>',                                                       desc = 'Open manpage' },
+    { '<leader>m', '<cmd>silent wall | LMakeshiftBuild<CR>',                             desc = 'Save and make' },
+    { '<leader>M', '<cmd>LMakeshiftBuild<CR>',                                           desc = 'Make' },
+    { '<leader>r', telescope.oldfiles,                                                   desc = 'Most recently used files' },
+    { '<leader>R', '<cmd>Startify<CR>',                                                  desc = 'Home screen' },
+
+    { '<leader>l', group = 'LSP' },
+        { '<leader>la', u.bind(telescope.diagnostics, { bufnr = 0 }), desc = 'Diagnostics (current buffer)' },
+        { '<leader>lA', telescope.diagnostics,                        desc = 'Diagnostics' },
+        { '<leader>lr', vim.lsp.buf.rename,                           desc = 'Rename symbol' },
+
+    { '<leader>f', group = 'File/config' },
+        { '<leader>fa', '<cmd>edit ~/.config/alacritty/alacritty.toml<CR>',  desc = 'Open alacritty.toml' },
+        { '<leader>fA', '<cmd>edit ~/.config/nvim/lua/autocommands.lua<CR>', desc = 'Open autocommands.lua' },
+        { '<leader>fc', '<cmd>PackerCompile<CR>',                            desc = 'Compile plugins.lua' },
+        { '<leader>fC', '<cmd>PackerClean<CR>',                              desc = 'Clean plugins' },
+        { '<leader>fe', '<cmd>edit ~/.zshenv<CR>',                           desc = 'Open ~/.zshenv' },
+        { '<leader>ff', '<cmd>edit ~/.config/nvim/lua/filetypes.lua<CR>',    desc = 'Open filetypes.lua' },
+        { '<leader>fg', '<cmd>edit ~/.gvimrc<CR>',                           desc = 'Open ~/.gvimrc' },
+        { '<leader>fG', '<cmd>edit ~/.config/gdb/gdbinit<CR>',               desc = 'Open gdbinit' },
+        { '<leader>fi', '<cmd>PackerInstall<CR>',                            desc = 'Install plugins' },
+        { '<leader>fm', '<cmd>edit ~/.config/nvim/lua/mappings.lua<CR>',     desc = 'Open mappings.lua' },
+        { '<leader>fp', '<cmd>edit $MYVIMRC<CR>',                            desc = 'Open init.lua' },
+        { '<leader>fP', '<cmd>edit ~/.config/nvim/lua/plugins.lua<CR>',      desc = 'Open plugins.lua' },
+        { '<leader>fr', '<cmd>source $MYVIMRC<CR>',                          desc = 'Reload init.lua' },
+        { '<leader>fu', '<cmd>PackerUpdate<CR>',                             desc = 'Update plugins' },
+        { '<leader>fU', '<cmd>edit ~/.config/nvim/lua/util.lua<CR>',         desc = 'Open util.lua' },
+        { '<leader>fo', '<cmd>edit ~/.config/nvim/old.vim<CR>',              desc = 'Open old.vim' },
+        { '<leader>fO', '<cmd>edit ~/.config/nvim/lua/options.lua<CR>',      desc = 'Open options.lua' },
+        { '<leader>fs', '<cmd>PackerSync<CR>',                               desc = 'Sync plugins' },
+        { '<leader>fS', '<cmd>options<CR>',                                  desc = 'Open options' },
+        { '<leader>fz', '<cmd>edit ~/.zshrc.local<CR>',                      desc = 'Open ~/.zshrc.local' },
+        { '<leader>fZ', '<cmd>edit ~/.zshrc<CR>',                            desc = 'Open ~/.zshrc' },
+
+    { '<leader>g', group = 'Git' },
+        { '<leader>ga', '<cmd>Git commit --amend<CR>', desc = 'Commit --amend' },
+        { '<leader>gb', '<cmd>Git blame<CR>',          desc = 'Blame' },
+        { '<leader>gc', '<cmd>Git commit<CR>',         desc = 'Commit' },
+        { '<leader>gd', gitsigns.preview_hunk,         desc = 'Diff' },
+        { '<leader>gf', '<cmd>Git fetch<CR>',          desc = 'Fetch' },
+        { '<leader>gg', '<cmd>Git<CR>',                desc = 'Status (g? for help)' },
+        { '<leader>gl', '<cmd>Git log<CR>',            desc = 'Log' },
+        { '<leader>gL', '<cmd>Gllog<CR>',              desc = 'Log to location list' },
+        { '<leader>gs', gitsigns.stage_hunk,           desc = 'Stage hunk' },
+        { '<leader>gS', '<cmd>Gwrite<CR>',             desc = 'Save and stage current file' },
+        { '<leader>gx', gitsigns.reset_hunk,           desc = 'Reset hunk' },
+
+        { '<leader>gF', group = 'Pull' },
+        { '<leader>gFp', '<cmd>Git pull<CR>',             desc = 'Pull' },
+        { '<leader>gFa', '<cmd>Git pull --autostash<CR>', desc = 'Pull --autostash' },
+
+        { '<leader>gp', group = 'Push' },
+        { '<leader>gpp', '<cmd>Git push<CR>', desc = 'Push (confirm)' },
+
+    { '<leader>s', group = 'Search' },
+        { '<leader>s/', telescope.search_history,                              desc = 'Search history' },
+        { '<leader>s:', telescope.command_history,                             desc = 'Command history' },
+        { '<leader>sa', telescope.autocommands,                                desc = 'Autocommands' },
+        { '<leader>sb', telescope.git_branches,                                desc = 'Git branches' },
+        { '<leader>sB', telescope.current_buffer_fuzzy_find,                   desc = 'Lines in current buffer' },
+        { '<leader>sc', telescope.git_bcommits,                                desc = 'Commits for current buffer' },
+        { '<leader>sC', telescope.git_commits,                                 desc = 'Commits' },
+        { '<leader>se', telescope.commands,                                    desc = 'Commands' },
+        { '<leader>sf', telescope.filetypes,                                   desc = 'File types' },
+        { '<leader>sg', telescope.live_grep,                                   desc = 'Live grep' },
+        { '<leader>sh', telescope.help_tags,                                   desc = 'Help' },
+        { '<leader>sl', telescope.loclist,                                     desc = 'Location list' },
+        { '<leader>sm', telescope.keymaps,                                     desc = 'Mappings' },
+        { '<leader>sM', u.bind(telescope.man_pages, { sections = { 'ALL' } }), desc = 'Manpages' },
+        { '<leader>sn', telescope.treesitter,                                  desc = 'Treesitter identifiers' },
+        { '<leader>so', telescope.jumplist,                                    desc = 'Jumplist' },
+        { '<leader>sO', telescope.vim_options,                                 desc = 'Options' },
+        { '<leader>sp', telescope.planets,                                     desc = 'Planets' },
+        { '<leader>sq', telescope.quickfix,                                    desc = 'Quickfix list' },
+        { '<leader>sQ', telescope.quickfixhistory,                             desc = 'Quickfix history' },
+        { '<leader>sr', telescope.registers,                                   desc = 'Registers' },
+        { '<leader>sR', telescope.reloader,                                    desc = 'Reload Lua modules' },
+        { '<leader>ss', telescope.resume,                                      desc = 'Resume previous search' },
+        { '<leader>st', telescope.tagstack,                                    desc = 'Tagstack' },
+        { '<leader>sT', telescope.current_buffer_tags,                         desc = 'Tags in current buffer' },
+        { '<leader>sw', telescope.lsp_document_symbols,                        desc = 'Symbols in document' },
+        { '<leader>sW', telescope.lsp_workspace_symbols,                       desc = 'Symbols in workspace' },
+
+    { '<leader>t', group = 'Toggles' },
+        { '<leader>tg',    toggle_gitnumhl,                                                                                  desc = 'Git line number highlighting' },
+        { '<leader>tl',    toggle_gitlinehl,                                                                                 desc = 'Git line highlighting' },
+        { '<leader>tn',    '<cmd>set number! | echo &number?"Line numbers enabled":"Line numbers disabled"<CR>',             desc = 'Line numbers' },
+        { '<leader>tp',    '<cmd>set paste! | echo &paste?"Paste on":"Paste off"<CR>',                                       desc = 'Paste' },
+        { '<leader>tr',    '<cmd>set rnu! | echo &rnu?"Relative line numbers enabled":"Relative line numbers disabled"<CR>', desc = 'Relative line numbers' },
+        { '<leader>ts',    '<cmd>setl spell! | echo &spell?"Spellcheck enabled":"Spellcheck disabled"<CR>',                  desc = 'Spellcheck' },
+        { '<leader>tw',    '<cmd>set list! | echo &list?"Showing whitespace":"Hiding whitespace"<CR>',                       desc = 'Whitespace' },
+
+        { '<leader>tS', group = 'Spellcheck languages' },
+            { '<leader>tSd',    '<cmd>setl spell spl=de_de,cjk | echo "Set language to " .. &spl[:-5]<CR>', desc = 'German' },
+            { '<leader>tSe',    '<cmd>setl spell spl=en_us,cjk | echo "Set language to " .. &spl[:-5]<CR>', desc = 'English (US)' },
+            { '<leader>tSg',    '<cmd>setl spell spl=de_de,cjk | echo "Set language to " .. &spl[:-5]<CR>', desc = 'German' },
+            { '<leader>tSr',    '<cmd>setl spell spl=en,sv,cjk | echo "Set language to " .. &spl[:-5]<CR>', desc = 'Reset' },
+            { '<leader>tSs',    '<cmd>setl spell spl=sv,cjk | echo "Set language to " .. &spl[:-5]<CR>',    desc = 'Swedish' },
+            { '<leader>tSu',    '<cmd>setl spell spl=en_gb,cjk | echo "Set language to " .. &spl[:-5]<CR>', desc = 'English (UK)' },
+
+    { '<leader>w', group = 'Workspace stuff' },
+        { '<leader>wa', vim.lsp.buf.add_workspace_folder,                                        desc = 'Add folder to workspace' },
+        { '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = 'List workspace folders' },
+        { '<leader>wr', vim.lsp.buf.remove_workspace_folder,                                     desc = 'Remove folder from workspace' },
+
+    -- Visual and select mode
+    { '<',     '<gv',                   desc = 'Indent left',          mode = 'v' },
+    { '>',     '>gv',                   desc = 'Indent right',         mode = 'v' },
+    { '<C-K>', '"vy:Rg <C-R>v<CR><CR>', desc = 'rg current selection', mode = 'v' },
+    { '<C-S>', ':\'<,\'>sort<CR>',      desc = 'Sort selection',       mode = 'v' },
+
+    { 'z#', [["vy?\V<C-R>=escape(@v,'/\')<CR><CR>]], desc = 'Search backwards for selection', mode = 'v' },
+    { 'z*', [["vy/\V<C-R>=escape(@v,'/\')<CR><CR>]], desc = 'Search forwards for selection',  mode = 'v' },
+
+    { '<leader>F', u.lsp_fallback(vim.lsp.buf.range_formatting, u.bind(format, true)), desc = 'Format selection', mode = 'v' },
+
+    -- Visual mode
+    { 'ih', '<cmd>Gitsigns select_hunk<CR>', desc = 'Git hunk', mode = 'x' },
+    { 'ah', '<cmd>Gitsigns select_hunk<CR>', desc = 'Git hunk', mode = 'x' },
+
+    -- Insert mode
+    { '<C-BS>',  '<C-w>',                  desc = 'Backspace word',       mode = 'i' },
+    { '<C-h>',   '<C-w>',                  desc = 'Backspace word',       mode = 'i' },
+    { '<Tab>',   'v:lua.tab_complete()',   desc = 'Tab complete',         mode = 'i' },
+    { '<S-Tab>', 'v:lua.s_tab_complete()', desc = 'Reverse tab complete', mode = 'i' },
+
+    -- Select mode
+    { '<Tab>',   'v:lua.tab_complete()',   desc = 'Tab complete',         expr = true, mode = 's' },
+    { '<S-Tab>', 'v:lua.s_tab_complete()', desc = 'Reverse tab complete', expr = true, mode = 's' },
 }
-
-which_key.register({
-    ['<']     = { '<gv',                   'Indent left' },
-    ['>']     = { '>gv',                   'Indent right' },
-    ['<C-K>'] = { '"vy:Rg <C-R>v<CR><CR>', 'rg current selection' },
-    ['<C-S>'] = { ':\'<,\'>sort<CR>',      'Sort selection'},
-
-    g = {
-        h = { '<cmd>WhichKey "" v<CR>', 'Show base level which-key' },
-    },
-
-    z = {
-        ['#'] = { [["vy?\V<C-R>=escape(@v,'/\')<CR><CR>]], 'Search backwards for selection' },
-        ['*'] = { [["vy/\V<C-R>=escape(@v,'/\')<CR><CR>]], 'Search forwards for selection' },
-    },
-}, { mode = 'v' })
-
-which_key.register({
-    ['<Tab>']     = { 'v:lua.tab_complete()',            'Tab complete'},
-    ['<S-Tab>']   = { 'v:lua.s_tab_complete()',          'Reverse tab complete'},
-}, { mode = 'i', expr = true })
-
-which_key.register({
-    ['<Tab>']     = { 'v:lua.tab_complete()',   'Tab complete'},
-    ['<S-Tab>']   = { 'v:lua.s_tab_complete()', 'Reverse tab complete'},
-}, { mode = 's', expr = true })
-
-which_key.register({
-    K = { 'v:lua.k_func()', 'LSP hover, help or man' },
-}, { expr = true })
-
-which_key.register({
-    ih = { '<cmd>Gitsigns select_hunk<CR>', 'Git hunk' },
-    ah = { '<cmd>Gitsigns select_hunk<CR>', 'Git hunk' },
-}, { mode = 'x' })
-
-which_key.register({
-    ['<C-BS>'] = { '<C-w>', 'Backspace word' },
-    ['<C-h>']  = { '<C-w>', 'Backspace word' },
-}, { mode = 'i' })
 -- stylua: ignore end
 
 -- For some reason, mappings in weird modes don't work properly with which-key

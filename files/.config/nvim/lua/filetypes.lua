@@ -45,36 +45,36 @@ local options = {
         tex       = 0,
     },
 }
-
-local mappings = {
-    asciidoc = {
-        ['&'] = { '1z=', 'Autocorrect' },
-    },
-    gitcommit = {
-        ['&'] = { '1z=', 'Autocorrect' },
-    },
-    help = {
-        q = { '<cmd>silent quit<CR>', 'Quit' }
-    },
-    markdown = {
-        ['&'] = { '1z=', 'Autocorrect' },
-    },
-    qf = { -- Quickfix window and location list
-        q = { ':quit', 'Close window' },
-    },
-    rst = {
-        ['&'] = { '1z=', 'Autocorrect' },
-    },
-    tex  = {
-        ['&'] = { '1z=', 'Autocorrect' },
-        -- K = {':call CocActionAsync("runCommand", "latex.ForwardSearch")<CR>', 'Forward search'} TODO
-    },
-}
 -- stylua: ignore end
 
--- selene: allow(unused_variable) This called via an autocommand
-function set_filetype_settings(ctx)
-    local filetype = ctx.match
+-- selene: allow(mixed_table)
+local mappings = {
+    asciidoc = {
+        { '&', '1z=', desc = 'Autocorrect' },
+    },
+    gitcommit = {
+        { '&', '1z=', desc = 'Autocorrect' },
+    },
+    help = {
+        { 'q', '<cmd>silent quit<CR>', desc = 'Quit' },
+    },
+    markdown = {
+        { '&', '1z=', desc = 'Autocorrect' },
+    },
+    qf = { -- Quickfix window and location list
+        { 'q', ':quit', desc = 'Close window' },
+    },
+    rst = {
+        { '&', '1z=', desc = 'Autocorrect' },
+    },
+    tex = {
+        { '&', '1z=', desc = 'Autocorrect' },
+        -- { 'K', call CocActionAsync("runCommand", "latex.ForwardSearch")<CR>', desc = 'Forward search'} TODO
+    },
+}
+
+function set_filetype_settings(event)
+    local filetype = event.match
 
     vim.g.ft_test = filetype
     for option, filetypes in pairs(options) do
@@ -87,8 +87,8 @@ function set_filetype_settings(ctx)
     local which_key = require 'which-key'
     local map = mappings[filetype]
     if map then
-        local buf = vim.fn.bufnr()
-        which_key.register(map, { buffer = buf })
+        local map_with_buf = vim.tbl_extend('force', map, { buffer = 0 }) -- 0 is current buffer
+        which_key.add(map_with_buf)
     end
 end
 

@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim' -- Packer can manage itself
 
@@ -61,6 +62,12 @@ return require('packer').startup(function(use)
                 show_filename = false,
                 status_symbol = '',
             }
+            vim.api.nvim_create_autocmd('LspAttach', {
+                callback = function(event)
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
+                    lsp_status.on_attach(client)
+                end,
+            })
         end,
     }
     use 'neovim/nvim-lspconfig'
@@ -72,6 +79,7 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lsp-document-symbol',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
             'hrsh7th/cmp-path',
             'nvim-lua/plenary.nvim',
             'petertriho/cmp-git',
@@ -134,6 +142,7 @@ return require('packer').startup(function(use)
                     { name = 'nvim_lsp' },
                     { name = 'luasnip' },
                 }, {
+                    { name = 'nvim_lsp_signature_help' },
                     { name = 'nvim_lsp_document_symbol' },
                     { name = 'buffer' },
                 }),
@@ -178,15 +187,6 @@ return require('packer').startup(function(use)
     }
 
     use {
-        'ray-x/lsp_signature.nvim',
-        config = function()
-            require('lsp_signature').setup {
-                hint_enable = false,
-            }
-        end,
-    }
-
-    use {
         'jose-elias-alvarez/null-ls.nvim',
         requires = 'nvim-lua/plenary.nvim',
         config = function()
@@ -218,13 +218,19 @@ return require('packer').startup(function(use)
                     diagnostics.yamllint, -- YAML
                     diagnostics.zsh, -- zsh (only syntax)
 
+                    formatting.cbfmt, -- Formatting of codeblocks inside markdown
                     formatting.clang_format, -- C, C++, and similar
                     formatting.cmake_format, -- CMake
+                    formatting.mdformat.with { -- Markdown
+                        extra_args = {
+                            '--wrap',
+                            '80',
+                        },
+                    },
                     formatting.jq.with { -- JSON
                         extra_args = { '--indent', '4' },
                     },
                     formatting.latexindent, -- LaTeX
-                    formatting.prettierd, -- Markdown, YAML, HTML, ...
                     formatting.shfmt.with { -- Bash
                         extra_filetypes = { 'zsh' },
                         extra_args = {
@@ -259,16 +265,17 @@ return require('packer').startup(function(use)
                 verthoriz = '╋',
             }
 
-            local defaults = require('kanagawa.colors').setup()
             require('kanagawa').setup {
                 dimInactive = true,
                 globalStatus = true,
-                overrides = {
-                    ExtraWhitespace = { bg = defaults.samuraiRed },
-                    WhichKeySeperator = { link = 'Operator' },
-                    WhichKeyFloat = { link = 'Label' },
-                    WhichKeyDesc = { link = 'String' },
-                },
+                overrides = function(colors)
+                    return {
+                        ExtraWhitespace = { bg = colors.samuraiRed },
+                        WhichKeySeperator = { link = 'Operator' },
+                        WhichKeyFloat = { link = 'Label' },
+                        WhichKeyDesc = { link = 'String' },
+                    }
+                end,
             }
 
             vim.cmd 'colorscheme kanagawa'
@@ -343,14 +350,14 @@ return require('packer').startup(function(use)
 
     use {
         'folke/which-key.nvim', -- Spacemacs style popup for keybindings
-        requires = 'windwp/nvim-autopairs',
+        requires = {
+            'windwp/nvim-autopairs',
+            'echasnovski/mini.icons',
+        },
         config = function()
             require('which-key').setup {
-                operators = {
-                    -- TODO
-                },
-                window = {
-                    padding = { 0, 0, 0, 0 },
+                win = {
+                    padding = { 0, 0 },
                 },
             }
             -- Set mappings from lua/mappings.lua
