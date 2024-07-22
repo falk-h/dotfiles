@@ -350,14 +350,14 @@ return require('packer').startup(function(use)
 
     use {
         'folke/which-key.nvim', -- Spacemacs style popup for keybindings
-        requires = 'windwp/nvim-autopairs',
+        requires = {
+            'windwp/nvim-autopairs',
+            'echasnovski/mini.icons',
+        },
         config = function()
             require('which-key').setup {
-                operators = {
-                    -- TODO
-                },
-                window = {
-                    padding = { 0, 0, 0, 0 },
+                win = {
+                    padding = { 0, 0 },
                 },
             }
             -- Set mappings from lua/mappings.lua

@@ -45,32 +45,33 @@ local options = {
         tex       = 0,
     },
 }
+-- stylua: ignore end
 
+-- selene: allow(mixed_table)
 local mappings = {
     asciidoc = {
-        ['&'] = { '1z=', 'Autocorrect' },
+        { '&', '1z=', desc = 'Autocorrect' },
     },
     gitcommit = {
-        ['&'] = { '1z=', 'Autocorrect' },
+        { '&', '1z=', desc = 'Autocorrect' },
     },
     help = {
-        q = { '<cmd>silent quit<CR>', 'Quit' }
+        { 'q', '<cmd>silent quit<CR>', desc = 'Quit' },
     },
     markdown = {
-        ['&'] = { '1z=', 'Autocorrect' },
+        { '&', '1z=', desc = 'Autocorrect' },
     },
     qf = { -- Quickfix window and location list
-        q = { ':quit', 'Close window' },
+        { 'q', ':quit', desc = 'Close window' },
     },
     rst = {
-        ['&'] = { '1z=', 'Autocorrect' },
+        { '&', '1z=', desc = 'Autocorrect' },
     },
-    tex  = {
-        ['&'] = { '1z=', 'Autocorrect' },
-        -- K = {':call CocActionAsync("runCommand", "latex.ForwardSearch")<CR>', 'Forward search'} TODO
+    tex = {
+        { '&', '1z=', desc = 'Autocorrect' },
+        -- { 'K', call CocActionAsync("runCommand", "latex.ForwardSearch")<CR>', desc = 'Forward search'} TODO
     },
 }
--- stylua: ignore end
 
 -- selene: allow(unused_variable) This called via an autocommand
 function set_filetype_settings(ctx)
@@ -87,8 +88,8 @@ function set_filetype_settings(ctx)
     local which_key = require 'which-key'
     local map = mappings[filetype]
     if map then
-        local buf = vim.fn.bufnr()
-        which_key.register(map, { buffer = buf })
+        local map_with_buf = vim.tbl_extend('force', map, { buffer = vim.fn.bufnr() })
+        which_key.add(map_with_buf)
     end
 end
 
