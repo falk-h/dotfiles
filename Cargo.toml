@@ -4,3 +4,4 @@
 
 [workspace]
 members = ["installer"]
+resolver = "2"
