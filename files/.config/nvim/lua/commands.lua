@@ -15,10 +15,6 @@ vim.api.nvim_create_user_command('Rg', rg, {
 vim.cmd [[
     cabbrev rg Rg
 
-    cabbrev sw SudoWrite
-    cabbrev Sw SudoWrite
-    cabbrev SW SudoWrite
-
     cabbrev W   w
     cabbrev Q   q
     cabbrev wQ  wq
