@@ -1,10 +1,12 @@
--- selene: allow(mixed_table)
-return require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim' -- Packer can manage itself
+local u = require 'util'
 
-    use {
+-- selene: allow(mixed_table)
+return {
+    {
         'nvim-treesitter/nvim-treesitter', -- Treesitter
-        run = ':TSUpdate',
+        build = function()
+            require('nvim-treesitter.install').update { with_sync = true }()
+        end,
         config = function()
             require('nvim-treesitter.configs').setup {
                 ensure_installed = 'all',
@@ -48,11 +50,11 @@ return require('packer').startup(function(use)
                 },
             }
         end,
-    }
-    use 'nvim-treesitter/nvim-treesitter-refactor'
-    use 'nvim-treesitter/nvim-treesitter-textobjects'
+    },
+    { 'nvim-treesitter/nvim-treesitter-refactor' },
+    { 'nvim-treesitter/nvim-treesitter-textobjects' },
 
-    use {
+    {
         'nvim-lua/lsp-status.nvim', -- LSP status in statusbar
         config = function()
             local lsp_status = require 'lsp-status'
@@ -67,12 +69,12 @@ return require('packer').startup(function(use)
                 lsp_status.on_attach(client)
             end, 'Set up lsp-status.nvim when an LSP server attaches to a buffer')
         end,
-    }
-    use 'neovim/nvim-lspconfig'
+    },
+    { 'neovim/nvim-lspconfig' },
 
-    use {
+    {
         'hrsh7th/nvim-cmp', -- Completion engine
-        requires = {
+        dependencies = {
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-nvim-lsp',
@@ -182,11 +184,11 @@ return require('packer').startup(function(use)
 
             require('cmp_git').setup()
         end,
-    }
+    },
 
-    use {
+    {
         'jose-elias-alvarez/null-ls.nvim',
-        requires = 'nvim-lua/plenary.nvim',
+        dependencies = 'nvim-lua/plenary.nvim',
         config = function()
             local null_ls = require 'null-ls'
             local code_actions = null_ls.builtins.code_actions
@@ -245,10 +247,13 @@ return require('packer').startup(function(use)
                 },
             }
         end,
-    }
+    },
 
-    use { -- Theme
+    { -- Theme
         'rebelot/kanagawa.nvim',
+        -- Make sure the colorscheme is always loaded on startup, and is always loaded first.
+        lazy = false,
+        priority = 1000,
         config = function()
             -- Highlight trailing whitespace, but not when typing at the end of the line
             vim.cmd 'match ExtraWhitespace /\\s\\+\\%#\\@<!$/'
@@ -278,51 +283,50 @@ return require('packer').startup(function(use)
 
             vim.cmd 'colorscheme kanagawa'
         end,
-    }
+    },
 
-    use {
+    {
         'nvim-telescope/telescope-fzf-native.nvim',
-        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
-    }
-    use {
-        'nvim-telescope/telescope.nvim',
-        requires = 'nvim-lua/plenary.nvim',
+        -- The extension needs to be loaded after telescope to tell telescope to use it.
+        dependencies = 'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
         config = function()
-            local telescope = require 'telescope'
-
-            telescope.setup {
-                defaults = {
-                    -- Switch between horizontal and vertical layout based on terminal width
-                    layout_strategy = 'flex',
-                    layout_config = {
-                        width = 0.999,
-                        height = 0.7,
-                        anchor = 'S',
-                        flex = {
-                            -- Use vertical layout when under 150 lines
-                            flip_columns = 150,
-                        },
-                        horizontal = {
-                            -- Slightly larger preview (default: 0.5)
-                            preview_width = 0.6,
-                        },
+            require('telescope').load_extension 'fzf'
+        end,
+    },
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = 'nvim-lua/plenary.nvim',
+        opts = {
+            defaults = {
+                -- Switch between horizontal and vertical layout based on terminal width
+                layout_strategy = 'flex',
+                layout_config = {
+                    width = 0.999,
+                    height = 0.7,
+                    anchor = 'S',
+                    flex = {
+                        -- Use vertical layout when under 150 lines
+                        flip_columns = 150,
                     },
-                    mappings = {
-                        i = {
-                            ['<ESC>'] = 'close', -- Don't go into normal mode on escape
-                            ['<C-h>'] = function() -- Make ctrl-backspace work as expected
-                                vim.api.nvim_input '<C-w>'
-                            end,
-                        },
+                    horizontal = {
+                        -- Slightly larger preview (default: 0.5)
+                        preview_width = 0.6,
                     },
                 },
-            }
+                mappings = {
+                    i = {
+                        ['<ESC>'] = 'close', -- Don't go into normal mode on escape
+                        ['<C-h>'] = function() -- Make ctrl-backspace work as expected
+                            vim.api.nvim_input '<C-w>'
+                        end,
+                    },
+                },
+            },
+        },
+    },
 
-            telescope.load_extension 'fzf'
-        end,
-    }
-
-    use {
+    {
         'tomtom/tcomment_vim', -- Comment operator
         config = function()
             vim.fn['tcomment#type#Define']('c', {
@@ -334,25 +338,24 @@ return require('packer').startup(function(use)
                 replacements = vim.g['tcomment#replacements_c'],
             })
         end,
-    }
+    },
 
-    use 'honza/vim-snippets' -- A collection of snippets
-    use {
+    {
         'L3MON4D3/LuaSnip', -- Snippet engine
+        dependencies = {
+            'honza/vim-snippets', -- A collection of snippets
+        },
         config = function()
             require('luasnip.loaders.from_vscode').lazy_load()
             require('luasnip.loaders.from_snipmate').lazy_load()
             require('luasnip.loaders.from_lua').lazy_load()
         end,
-    }
+    },
 
-    use {
+    {
         'folke/which-key.nvim', -- Spacemacs style popup for keybindings
-        requires = {
-            'windwp/nvim-autopairs',
-            'echasnovski/mini.icons',
-        },
         config = function()
+            -- TODO
             require('which-key').setup {
                 win = {
                     padding = { 0, 0 },
@@ -361,22 +364,21 @@ return require('packer').startup(function(use)
             -- Set mappings from lua/mappings.lua
             require 'mappings'
         end,
-    }
+    },
 
-    use 'farmergreg/vim-lastplace' -- Remember cursor position in files
+    { 'farmergreg/vim-lastplace' }, -- Remember cursor position in files
 
-    use 'axelf4/vim-strip-trailing-whitespace' -- Automatically strip trailing whitespace
+    { 'axelf4/vim-strip-trailing-whitespace' }, -- Automatically strip trailing whitespace
 
-    use {
+    {
         'nvim-lualine/lualine.nvim', -- Lightweight statusbar
-        requires = {
+        dependencies = {
             'kyazdani42/nvim-web-devicons',
             'nvim-lua/lsp-status.nvim',
             'tpope/vim-fugitive',
             'lewis6991/gitsigns.nvim',
             'rebelot/kanagawa.nvim',
         },
-        after = 'kanagawa.nvim',
         config = function()
             -- This works better than lualine's builtin diff source. Not sure how exactly.
             local function diff_source()
@@ -427,47 +429,47 @@ return require('packer').startup(function(use)
                 extensions = { 'fugitive', 'man' },
             }
         end,
-    }
+    },
 
-    use {
+    {
         'lewis6991/gitsigns.nvim',
-        config = function()
-            require('gitsigns').setup {
-                signcolumn = false,
-                numhl = true,
-                linehl = false,
-            }
-        end,
-    }
+        opts = {
+            signcolumn = false,
+            numhl = true,
+            linehl = false,
+        },
+    },
 
-    use 'tpope/vim-fugitive' -- Git plugin, somewhat like magit
+    { 'tpope/vim-fugitive' }, -- Git plugin, somewhat like magit
 
+    -- TODO
     -- use 'tpope/vim-surround' -- Text objects for working with things that are surrounded by other things
 
-    use 'tpope/vim-repeat' -- Lets vim-surround actions be repeated with '.'
+    { 'tpope/vim-repeat' }, -- Lets vim-surround actions be repeated with '.'
 
-    use 'tpope/vim-eunuch' -- Provides some UNIX utilities such as :SudoWrite and :Move
+    { 'tpope/vim-eunuch' }, -- Provides some UNIX utilities such as :SudoWrite and :Move
 
-    use 'wellle/targets.vim' -- Better text objects
+    { 'wellle/targets.vim' }, -- Better text objects
 
-    use 'svermeulen/vim-subversive' -- Provides commands for replacing text with the contents of the clipboard
+    { 'svermeulen/vim-subversive' }, -- Provides commands for replacing text with the contents of the clipboard
 
-    use {
+    {
         'windwp/nvim-autopairs', -- Automatically enter matching (){}[]""''
+        -- TODO: simplify if possible
         config = function()
             require('nvim-autopairs').setup()
         end,
-    }
+    },
 
-    use {
+    {
         'editorconfig/editorconfig-vim', -- Support for EditorConfig per-project style definition files
         config = function()
             -- Make EditorConfig not affect Fugitive buffers. This is recommended by the EditorConfig README
             vim.g.EditorConfig_exclude_patterns = { 'fugitive://.*' }
         end,
-    }
+    },
 
-    use {
+    {
         'johnsyweb/vim-makeshift', -- Autodetect build system
         config = function()
             -- Tell Makeshift about some extra build systems
@@ -476,9 +478,9 @@ return require('packer').startup(function(use)
                 ['Cargo.toml'] = 'cargo build',
             }
         end,
-    }
+    },
 
-    use { -- Fancy startup screen
+    { -- Fancy startup screen
         'mhinz/vim-startify',
         config = function()
             local util = require 'util'
@@ -521,12 +523,13 @@ return require('packer').startup(function(use)
             -- Use a relative path for files in or below the current dir
             vim.g.startify_relative_path = 1
         end,
-    }
+    },
 
-    use 'rust-lang/rust.vim' -- Some Rust features
-    use 'simrat39/rust-tools.nvim' -- Inlay hints with rust-analyzer
+    { 'rust-lang/rust.vim' }, -- Some Rust features
+    { 'simrat39/rust-tools.nvim' }, -- Inlay hints with rust-analyzer
 
+    -- TODO
     --use 'lervag/vimtex' -- TeX support
 
-    use 'jackguo380/vim-lsp-cxx-highlight'
-end)
+    { 'jackguo380/vim-lsp-cxx-highlight' },
+}

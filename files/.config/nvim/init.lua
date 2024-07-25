@@ -1,20 +1,16 @@
 -- Set options from lua/options.lua
 require 'options'
 
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    -- Install packer if it doesn't exist
-    print 'Installing packer...'
-    vim.fn.system { 'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path }
-    vim.cmd 'packadd packer.nvim'
-    print 'Installed packer!'
-    require 'plugins'
-    print 'Installing plugins... Restart nvim after installation is complete'
-    require('packer').sync()
-else
-    -- Otherwise just load the plugins
-    require 'plugins'
-end
+-- TODO: document better
+-- lazy.nvim expects leader and localleader to be mapped before loading plugins "so that mappings
+-- are correct". No idea what that means. Anyway, ideally, these would be set in mappings.lua, but
+-- mappings.lua creates mappings to functions defined in plugins, so it needs to be loaded after all
+-- of the plugins are loaded. Therefore, these are set here.
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '<BS>'
+
+-- Bootstrap the lazy.nvim plugin manager from lua/bootstrap-lazy.lua
+require 'bootstrap-lazy'
 
 -- Use Lua for filetype detection, see `:h new-filetype`
 vim.g.do_filetype_lua = 1

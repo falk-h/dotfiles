@@ -3,9 +3,6 @@ local gitsigns = require 'gitsigns'
 local telescope = require 'telescope.builtin'
 local u = require 'util'
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = '<BS>'
-
 -- TODO: Repplace with LSP formatting. See init.lua.
 local formatters = {
     c = 'clang-format --assume-filename=%',
@@ -178,13 +175,13 @@ which_key.add {
         { '<leader>fg', '<cmd>edit ~/.gvimrc<CR>',                           desc = 'Open ~/.gvimrc' },
         { '<leader>fG', '<cmd>edit ~/.config/gdb/gdbinit<CR>',               desc = 'Open gdbinit' },
         { '<leader>fi', '<cmd>PackerInstall<CR>',                            desc = 'Install plugins' },
+        -- TODO: { '<leader>fl', '<cmd>edit ~/.config/nvim/lua/lazy.lua<CR>',         desc = 'Open lazy.lua' },
         { '<leader>fm', '<cmd>edit ~/.config/nvim/lua/mappings.lua<CR>',     desc = 'Open mappings.lua' },
         { '<leader>fp', '<cmd>edit $MYVIMRC<CR>',                            desc = 'Open init.lua' },
         { '<leader>fP', '<cmd>edit ~/.config/nvim/lua/plugins.lua<CR>',      desc = 'Open plugins.lua' },
         { '<leader>fr', '<cmd>source $MYVIMRC<CR>',                          desc = 'Reload init.lua' },
         { '<leader>fu', '<cmd>PackerUpdate<CR>',                             desc = 'Update plugins' },
         { '<leader>fU', '<cmd>edit ~/.config/nvim/lua/util.lua<CR>',         desc = 'Open util.lua' },
-        { '<leader>fo', '<cmd>edit ~/.config/nvim/old.vim<CR>',              desc = 'Open old.vim' },
         { '<leader>fO', '<cmd>edit ~/.config/nvim/lua/options.lua<CR>',      desc = 'Open options.lua' },
         { '<leader>fs', '<cmd>PackerSync<CR>',                               desc = 'Sync plugins' },
         { '<leader>fS', '<cmd>options<CR>',                                  desc = 'Open options' },
